@@ -1,0 +1,36 @@
+# IDE
+.idea
+.vscode
+nbproject
+.buildpath
+.project
+.settings
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Composer
+/vendor
+composer.phar
+
+# Config locale (contient les credentials BDD — ne jamais versionner)
+/config/db.php
+
+# Fichiers générés par Yii2
+/runtime/logs/
+/runtime/cache/
+/runtime/debug/
+/web/assets/
+
+# Tests
+phpunit.phar
+/phpunit.xml
+tests/_output/*
+tests/_support/_generated
+
+# Vagrant / Docker (non utilisés en déploiement)
+/.vagrant
+Vagrantfile
+vagrant/
+docker-compose.yml

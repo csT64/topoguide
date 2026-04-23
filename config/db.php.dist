@@ -1,0 +1,13 @@
+<?php
+
+return [
+    'class'       => 'yii\db\Connection',
+    'dsn'         => 'mysql:host=localhost;dbname=topoguide;charset=utf8mb4',
+    'username'    => 'topoguide',
+    'password'    => 'REPLACE_ME',
+    'charset'     => 'utf8mb4',
+    // Activer en production :
+    //'enableSchemaCache'    => true,
+    //'schemaCacheDuration'  => 3600,
+    //'schemaCache'          => 'cache',
+];
