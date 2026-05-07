@@ -314,16 +314,18 @@ class TopoguideService
             $html = '';
             foreach ($j_etapes as $idx => $etape) {
                 if (is_array($etape)) {
-                    $step  = !empty($etape['Ordre'])      ? 'Etape ' . $etape['Ordre'] : 'Etape ' . ($idx + 1);
-                    $title = !empty($etape['NomEtape'])   ? $etape['NomEtape']         : '';
-                    $desc  = !empty($etape['Descriptif']) ? $etape['Descriptif']       : '';
+                    // V3 lowercase keys take priority over legacy uppercase keys
+                    $ordre = $etape['ordre'] ?? $etape['Ordre'] ?? null;
+                    $title = (string)($etape['nom_etape']  ?? $etape['NomEtape']   ?? '');
+                    $desc  = (string)($etape['descriptif'] ?? $etape['Descriptif'] ?? '');
+                    $step  = $ordre !== null ? (int)$ordre : ($idx + 1);
                 } else {
-                    $step  = 'Etape ' . ($idx + 1);
+                    $step  = $idx + 1;
                     $title = (string)$etape;
                     $desc  = '';
                 }
-                $html .= '<strong>' . trim(str_replace('Etape ', '', $step)) . '.</strong> ';
-                if (!empty($title)) {
+                $html .= '<strong>' . $step . '.</strong> ';
+                if ($title !== '') {
                     $html .= '<strong style="color:#1f5468">'
                            . trim($title)
                            . (str_ends_with(trim($title), '.') ? '' : '.')
