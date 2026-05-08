@@ -72,11 +72,31 @@ php8.4 /srv/topoguide/yii screenshot/run
 
 ---
 
+## Dépendances Composer notables
+
+| Package | Version | Rôle |
+|---|---|---|
+| `yiisoft/yii2-bootstrap5` | `~2.0.0` | UI Bootstrap 5 (requis, absent du template de base) |
+
+---
+
+## Droits fichiers
+
+| Dossier | Propriétaire | Groupe | Chmod |
+|---|---|---|---|
+| `web/assets` | `www-data` | `projetweb` | `775` |
+| `runtime` | `www-data` | `projetweb` | `775` |
+
+Groupe `projetweb` : contient `www-data` et l'utilisateur de session `triton`.
+
+---
+
 ## À confirmer / À faire
 
 - [ ] Version MariaDB locale
 - [ ] Version PHP sur recette et production
 - [ ] Présence de CutyCapt / Xvfb sur recette et production
 - [ ] Polices Futura (`futuramediumbt.ttf`, `FuturaHeavyfont.ttf`) à copier dans `fonts/`
-- [ ] VHost Apache local à créer et activer
+- [x] VHost Apache local créé : `/etc/apache2/sites-available/topoguide-local.conf`, activé avec `a2ensite`
+      - Utiliser `<VirtualHost 127.0.0.1:80>` (pas `*:80`) car d'autres vhosts écoutent sur `127.0.0.1:80`
 - [ ] Cron à configurer (voir `documentation/synthese_technique_topoguide.md` §9)
