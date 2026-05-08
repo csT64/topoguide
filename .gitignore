@@ -18,10 +18,12 @@ composer.phar
 /config/db.php
 
 # Fichiers générés par Yii2
-/runtime/logs/
-/runtime/cache/
-/runtime/debug/
+/runtime/*
+!/runtime/.gitignore
 /web/assets/
+
+# Cache captures cartes (généré par CutyCapt)
+/cache/
 
 # Tests
 phpunit.phar
