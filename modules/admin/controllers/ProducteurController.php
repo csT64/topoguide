@@ -78,7 +78,7 @@ class ProducteurController extends Controller
             mkdir($dir, 0775, true);
         }
 
-        $filename = $model->id . '_' . time() . '.' . $file->extension;
+        $filename = $model->id . '.png';
         $file->saveAs($dir . $filename);
         return $filename;
     }
