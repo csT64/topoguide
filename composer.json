@@ -52,7 +52,6 @@
             "yii\\composer\\Installer::postInstall"
         ],
         "publish-leaflet": [
-            "cp vendor/bower-asset/leaflet/dist/leaflet.js web/gmap/leaflet.js",
             "cp vendor/bower-asset/leaflet/dist/leaflet.css web/gmap/leaflet_min.css",
             "cp -r vendor/bower-asset/leaflet/dist/images web/gmap/images"
         ]
