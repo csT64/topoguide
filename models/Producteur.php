@@ -6,6 +6,8 @@ use yii\db\ActiveRecord;
 
 class Producteur extends ActiveRecord
 {
+    public ?string $logoFile = null;
+
     public static function tableName(): string
     {
         return 'producteur';
