@@ -23,6 +23,12 @@ sudo chown -R www-data:projetweb /home/srv/topoguide/web/assets /home/srv/topogu
 sudo chmod -R 775 /home/srv/topoguide/web/assets /home/srv/topoguide/runtime
 ```
 
+## Git
+
+- **Dépôt** : `https://github.com/csT64/topoguide`
+- **Branche de développement** : `claude/deploy-topoguide-taT2S`
+- **Pull local** : `git pull origin claude/deploy-topoguide-taT2S`
+
 ## Référence complète
 
 Voir `documentation/notes_environnement.md` pour tous les détails.

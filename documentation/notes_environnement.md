@@ -37,6 +37,17 @@ php8.4 /srv/topoguide/yii screenshot/run
 
 ---
 
+## Git
+
+| Paramètre | Valeur |
+|---|---|
+| Dépôt | `https://github.com/csT64/topoguide` |
+| Branche de développement | `claude/deploy-topoguide-taT2S` |
+| Pull local | `git pull origin claude/deploy-topoguide-taT2S` |
+| Propriété du dossier | `sudo chown -R triton:projetweb /home/srv/topoguide` |
+
+---
+
 ## Serveur web
 
 | Paramètre | Valeur |
