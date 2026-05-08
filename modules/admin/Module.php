@@ -16,6 +16,11 @@ class Module extends \yii\base\Module
                 'class' => AccessControl::class,
                 'rules' => [
                     [
+                        'allow'   => true,
+                        'actions' => ['login'],
+                        'roles'   => ['?', '@'],
+                    ],
+                    [
                         'allow' => true,
                         'roles' => ['@'],
                     ],
