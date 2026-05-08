@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <link rel="stylesheet" href="/gmap/leaflet_min.css" />
-<script src="https://unpkg.com/leaflet@1.9/dist/leaflet.js"></script>
+<script src="/gmap/leaflet.js"></script>
 <script src="/gmap/leaflet.gpx.js"></script>
 <style>
   html, body, #map { width: 100%; height: 100%; margin: 0; padding: 0; }

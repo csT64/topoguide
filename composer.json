@@ -53,7 +53,8 @@
         ],
         "publish-leaflet": [
             "cp vendor/bower-asset/leaflet/dist/leaflet.css web/gmap/leaflet_min.css",
-            "cp -r vendor/bower-asset/leaflet/dist/images web/gmap/images"
+            "cp -r vendor/bower-asset/leaflet/dist/images web/gmap/images",
+            "curl -sfo web/gmap/leaflet.js https://unpkg.com/leaflet@1.9/dist/leaflet.js || echo 'WARNING: leaflet.js download failed — copy it manually to web/gmap/leaflet.js'"
         ]
     },
     "extra": {
