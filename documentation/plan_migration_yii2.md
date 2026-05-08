@@ -595,11 +595,28 @@ Le batch peut également être déclenché depuis l'interface admin (`CarteContr
 - LogController : visualisation et vidage du log
 - DefaultController : tableau de bord
 
-### Phase 6 — Recette et bascule 🔄 EN COURS
-- Tests comparatifs PDF (ancienne vs nouvelle app)
-- Tests de génération de carte (nécessite CutyCapt)
-- Tests CRUD admin complets
-- Bascule VHost Apache recette
+### Phase 6 — Finalisation locale 🔄 EN COURS
+
+**Fait :**
+- PDF FR/EN/ES générés et affichés correctement
+- Interface admin fonctionnelle (login, CRUD itinéraires/producteurs/villes)
+- Pages cartes Leaflet opérationnelles
+- Assets rationalisés (`web/pix/pdf/`)
+
+**Reste à faire :**
+- [ ] Service systemd Xvfb dédié (`xvfb-topoguide`, display `:10`)
+- [ ] Mise à jour `ScreenshotService` → `DISPLAY=:10`
+- [ ] Test génération capture carte de bout en bout
+- [ ] Copie des polices Futura dans `fonts/`
+- [ ] Affinage des détails visuels du PDF
+- [ ] Test batch `screenshot/run`
+- [ ] Configuration cron
+
+### Phase 7 — Recette et bascule ⏳ À VENIR
+- Déploiement sur serveur de recette (`api.adt64.fr`)
+- Tests comparatifs PDF ancienne vs nouvelle app
+- Validation CRUD admin en recette
+- Bascule VHost Apache production
 - Installation Yii2 Basic ou Advanced
 - Configuration `params.php`, `db.php`, `web.php`
 - Modèles `Itineraire`, `Producteur`, `Ville` avec `rules()`
