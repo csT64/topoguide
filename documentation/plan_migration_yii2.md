@@ -567,7 +567,39 @@ Le batch peut également être déclenché depuis l'interface admin (`CarteContr
 
 ## 6. Plan de migration par phases
 
-### Phase 1 — Socle Yii2 *(~2 jours)*
+### Phase 1 — Socle Yii2 ✅ TERMINÉE
+- Installation Yii2 Basic, configuration Apache, BDD, droits fichiers
+- Modèles `Itineraire`, `Producteur`, `Ville` avec `rules()`
+- Modèles de recherche `ItineraireSearch`, `ProducteurSearch`, `VilleSearch`
+
+### Phase 2 — PDF topoguide ✅ TERMINÉE
+- `MYPDF`, `TopoguideHelpers`, `TopoguideService` en place
+- `TopoguideController::actionPdf()` fonctionnel
+- Génération PDF FR/EN/ES opérationnelle
+- Assets PDF rationalisés dans `web/pix/pdf/`
+- Quelques détails visuels PDF à affiner (en cours)
+
+### Phase 3 — Cartes Leaflet ✅ TERMINÉE
+- `GmapController` + vues `views/gmap/` (simple, gpx, kml)
+
+### Phase 4 — Batch screenshot ✅ TERMINÉE
+- `ScreenshotService` + `commands/ScreenshotController.php`
+- ⚠️ CutyCapt + Xvfb non encore installés sur la machine locale
+
+### Phase 5 — Module admin ✅ TERMINÉE
+- Authentification (login/logout)
+- CRUD Itinéraire (fr/en/es) — liste, vue, create, update
+- CRUD Producteur + upload logo
+- CRUD Ville
+- CarteController : liste statuts, aperçu, régénérer, supprimer
+- LogController : visualisation et vidage du log
+- DefaultController : tableau de bord
+
+### Phase 6 — Recette et bascule 🔄 EN COURS
+- Tests comparatifs PDF (ancienne vs nouvelle app)
+- Tests de génération de carte (nécessite CutyCapt)
+- Tests CRUD admin complets
+- Bascule VHost Apache recette
 - Installation Yii2 Basic ou Advanced
 - Configuration `params.php`, `db.php`, `web.php`
 - Modèles `Itineraire`, `Producteur`, `Ville` avec `rules()`
