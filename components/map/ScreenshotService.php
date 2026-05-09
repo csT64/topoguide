@@ -27,7 +27,7 @@ class ScreenshotService
 
         $logFile = Yii::getAlias(Yii::$app->params['logFile']);
         $cmd = sprintf(
-            'DISPLAY=:10 cutycapt --url=%s --out=%s --delay=4000 --min-width=1240 --min-height=877 2>>%s',
+            'XDG_RUNTIME_DIR=/tmp/runtime-www-data DISPLAY=:10 cutycapt --url=%s --out=%s --delay=4000 --min-width=1240 --min-height=877 2>>%s',
             escapeshellarg($url),
             escapeshellarg($output),
             escapeshellarg($logFile)
