@@ -12,8 +12,12 @@ class ScreenshotService
 
     public function __construct()
     {
-        $this->cachePath = Yii::$app->params['pathCacheGmap'];
+        $this->cachePath = Yii::getAlias(Yii::$app->params['pathCacheGmap']);
         $this->baseUrl   = rtrim(Yii::$app->params['baseUrlGmap'], '/');
+
+        if (!is_dir($this->cachePath)) {
+            mkdir($this->cachePath, 0775, true);
+        }
     }
 
     public function captureOne(Itineraire $iti): bool
@@ -23,7 +27,7 @@ class ScreenshotService
 
         $logFile = Yii::getAlias(Yii::$app->params['logFile']);
         $cmd = sprintf(
-            'DISPLAY=:10 cutycapt --url=%s --out=%s --delay=2000 2>>%s',
+            'DISPLAY=:10 cutycapt --url=%s --out=%s --delay=4000 --min-width=1240 --min-height=877 2>>%s',
             escapeshellarg($url),
             escapeshellarg($output),
             escapeshellarg($logFile)

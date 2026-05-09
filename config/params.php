@@ -2,7 +2,7 @@
 
 return [
     // Chemins système
-    'pathCacheGmap'  => '/cache/capture-gmap',
+    'pathCacheGmap'  => '@runtime/cache-gmap',
     'pathFontsTcpdf' => '@vendor/tecnickcom/tcpdf/fonts',
     'logFile'        => '@runtime/logs/topoguide.log',
 
