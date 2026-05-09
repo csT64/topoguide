@@ -21,14 +21,23 @@ class ScreenshotService
         $url    = $this->buildMapUrl($iti);
         $output = $this->cachePath . '/' . $iti->id . '.jpg';
 
+        $logFile = Yii::getAlias(Yii::$app->params['logFile']);
         $cmd = sprintf(
-            'DISPLAY=:10 cutycapt --url=%s --out=%s --delay=2000 2>/dev/null',
+            'DISPLAY=:10 cutycapt --url=%s --out=%s --delay=2000 2>>%s',
             escapeshellarg($url),
-            escapeshellarg($output)
+            escapeshellarg($output),
+            escapeshellarg($logFile)
         );
 
         exec($cmd, $out, $code);
-        return $code === 0 && file_exists($output);
+
+        if ($code !== 0 || !file_exists($output)) {
+            $msg = date('Y-m-d H:i:s') . " [screenshot] FAIL code=$code url=$url\n";
+            @file_put_contents($logFile, $msg, FILE_APPEND);
+            return false;
+        }
+
+        return true;
     }
 
     private function buildMapUrl(Itineraire $iti): string
