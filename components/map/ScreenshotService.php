@@ -5,6 +5,7 @@ namespace app\components\map;
 use Yii;
 use app\models\Itineraire;
 use HeadlessChromium\BrowserFactory;
+use HeadlessChromium\Clip;
 use HeadlessChromium\Page;
 
 class ScreenshotService
@@ -50,7 +51,7 @@ class ScreenshotService
             $page->screenshot([
                 'format'  => 'jpeg',
                 'quality' => 85,
-                'clip'    => ['x' => 0, 'y' => 0, 'width' => 1240, 'height' => 877],
+                'clip'    => new Clip(0, 0, 1240, 877),
             ])->saveToFile($output);
 
             $browser->close();
