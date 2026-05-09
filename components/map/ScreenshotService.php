@@ -37,7 +37,6 @@ class ScreenshotService
                 'windowSize'       => [1240, 877],
                 'userDataDir'      => '/tmp/chrome-topoguide',
                 'additionalArguments' => [
-                    '--disable-gpu',
                     '--disable-dev-shm-usage',
                     '--ignore-certificate-errors',
                 ],
