@@ -13,7 +13,7 @@
 <div id="map"></div>
 <script>
 var map = L.map('map').setView([<?= (float)$lat ?>, <?= (float)$lon ?>], <?= (int)$zoom ?>);
-L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors',
     maxZoom: 18
 }).addTo(map);
