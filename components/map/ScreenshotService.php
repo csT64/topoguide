@@ -43,10 +43,10 @@ class ScreenshotService
             ]);
 
             $page = $browser->createPage();
-            $page->navigate($url)->waitForNavigation(Page::NETWORK_IDLE, 10000);
+            $page->navigate($url)->waitForNavigation(Page::NETWORK_IDLE, 15000);
 
-            // Attendre que Leaflet soit prêt
-            $page->evaluate("new Promise(r => setTimeout(r, 2000))")->getReturnValue();
+            // Laisser le temps aux tuiles OSM de se charger complètement
+            $page->evaluate("new Promise(r => setTimeout(r, 5000))")->getReturnValue();
 
             $page->screenshot([
                 'format'  => 'jpeg',
