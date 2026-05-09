@@ -39,6 +39,7 @@ class ScreenshotService
                 'additionalArguments' => [
                     '--disable-gpu',
                     '--disable-dev-shm-usage',
+                    '--ignore-certificate-errors',
                 ],
             ]);
 
