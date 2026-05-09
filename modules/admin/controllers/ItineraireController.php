@@ -8,7 +8,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use app\models\Itineraire;
 use app\models\ItineraireSearch;
-use app\components\map\ScreenshotService;
+use app\components\map\StaticMapService;
 
 class ItineraireController extends Controller
 {
@@ -62,7 +62,7 @@ class ItineraireController extends Controller
     {
         Yii::$app->language = 'fr';
         $iti = $this->findModel($id, 'fr');
-        $ok  = (new ScreenshotService())->captureOne($iti);
+        $ok  = (new StaticMapService())->generate($iti);
         Yii::$app->session->addFlash(
             $ok ? 'success' : 'error',
             $ok ? "Carte $id générée." : "Échec de la capture pour $id."

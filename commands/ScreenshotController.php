@@ -6,15 +6,15 @@ use Yii;
 use yii\console\Controller;
 use yii\console\ExitCode;
 use app\models\Itineraire;
-use app\components\map\ScreenshotService;
+use app\components\map\StaticMapService;
 
 class ScreenshotController extends Controller
 {
     public function actionRun(): int
     {
         Yii::$app->language = 'fr';
-        $service   = new ScreenshotService();
-        $cachePath = Yii::$app->params['pathCacheGmap'];
+        $service   = new StaticMapService();
+        $cachePath = Yii::getAlias(Yii::$app->params['pathCacheGmap']);
 
         $ids = Itineraire::find()->select('id')->column();
         $nb  = 0;
@@ -38,7 +38,7 @@ class ScreenshotController extends Controller
                 if (!$iti) continue;
 
                 $this->stdout("Capture : $id ... ");
-                $ok = $service->captureOne($iti);
+                $ok = $service->generate($iti);
                 $this->stdout($ok ? "OK\n" : "ÉCHEC\n");
 
                 if ($ok) $nb++;
@@ -60,7 +60,7 @@ class ScreenshotController extends Controller
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
-        $ok = (new ScreenshotService())->captureOne($iti);
+        $ok = (new StaticMapService())->generate($iti);
         $this->stdout($ok ? "Capture $id générée.\n" : "Échec de la capture $id.\n");
         return $ok ? ExitCode::OK : ExitCode::UNSPECIFIED_ERROR;
     }
