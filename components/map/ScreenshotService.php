@@ -22,8 +22,7 @@ class ScreenshotService
         $output = $this->cachePath . '/' . $iti->id . '.jpg';
 
         $cmd = sprintf(
-            'xvfb-run --server-args="-screen 0, 1240x877x24" '
-            . 'cutycapt --url=%s --out=%s --delay=1000 2>/dev/null',
+            'DISPLAY=:10 cutycapt --url=%s --out=%s --delay=2000 2>/dev/null',
             escapeshellarg($url),
             escapeshellarg($output)
         );
