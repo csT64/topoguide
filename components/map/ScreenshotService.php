@@ -4,16 +4,20 @@ namespace app\components\map;
 
 use Yii;
 use app\models\Itineraire;
+use HeadlessChromium\BrowserFactory;
+use HeadlessChromium\Page;
 
 class ScreenshotService
 {
     private string $cachePath;
     private string $baseUrl;
+    private string $logFile;
 
     public function __construct()
     {
         $this->cachePath = Yii::getAlias(Yii::$app->params['pathCacheGmap']);
         $this->baseUrl   = rtrim(Yii::$app->params['baseUrlGmap'], '/');
+        $this->logFile   = Yii::getAlias(Yii::$app->params['logFile']);
 
         if (!is_dir($this->cachePath)) {
             mkdir($this->cachePath, 0775, true);
@@ -25,23 +29,39 @@ class ScreenshotService
         $url    = $this->buildMapUrl($iti);
         $output = $this->cachePath . '/' . $iti->id . '.jpg';
 
-        $logFile = Yii::getAlias(Yii::$app->params['logFile']);
-        $cmd = sprintf(
-            'XDG_RUNTIME_DIR=/tmp/runtime-www-data DISPLAY=:10 cutycapt --url=%s --out=%s --delay=4000 --min-width=1240 --min-height=877 2>>%s',
-            escapeshellarg($url),
-            escapeshellarg($output),
-            escapeshellarg($logFile)
-        );
+        try {
+            $factory = new BrowserFactory('chromium');
+            $browser = $factory->createBrowser([
+                'noSandbox'        => true,
+                'windowSize'       => [1240, 877],
+                'userDataDir'      => '/tmp/chrome-topoguide',
+                'additionalArguments' => [
+                    '--disable-gpu',
+                    '--disable-dev-shm-usage',
+                ],
+            ]);
 
-        exec($cmd, $out, $code);
+            $page = $browser->createPage();
+            $page->navigate($url)->waitForNavigation(Page::NETWORK_IDLE, 10000);
 
-        if ($code !== 0 || !file_exists($output)) {
-            $msg = date('Y-m-d H:i:s') . " [screenshot] FAIL code=$code url=$url\n";
-            @file_put_contents($logFile, $msg, FILE_APPEND);
+            // Attendre que Leaflet soit prêt
+            $page->evaluate("new Promise(r => setTimeout(r, 2000))")->getReturnValue();
+
+            $page->screenshot([
+                'format'  => 'jpeg',
+                'quality' => 85,
+                'clip'    => ['x' => 0, 'y' => 0, 'width' => 1240, 'height' => 877],
+            ])->saveToFile($output);
+
+            $browser->close();
+
+            return file_exists($output);
+
+        } catch (\Exception $e) {
+            $msg = date('Y-m-d H:i:s') . " [screenshot] FAIL url=$url error=" . $e->getMessage() . "\n";
+            @file_put_contents($this->logFile, $msg, FILE_APPEND);
             return false;
         }
-
-        return true;
     }
 
     private function buildMapUrl(Itineraire $iti): string
