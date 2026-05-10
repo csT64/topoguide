@@ -81,9 +81,9 @@ class ScreenshotController extends Controller
         $etapes = $iti->getEtapes();
         $this->stdout("étapes   : " . count($etapes) . " entrée(s)\n");
         foreach ($etapes as $i => $e) {
-            $lat = $e['lat'] ?? '?';
-            $lon = $e['lon'] ?? '?';
-            $nom = $e['nom'] ?? '?';
+            $lat = $e['latitudedecimalegooglemap']  ?? $e['lat'] ?? '?';
+            $lon = $e['longitudedecimalegooglemap'] ?? $e['lon'] ?? '?';
+            $nom = $e['nom_etape'] ?? $e['nom'] ?? '?';
             $this->stdout("  [$i] $nom — lat=$lat lon=$lon\n");
         }
 

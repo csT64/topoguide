@@ -176,16 +176,25 @@ class StaticMapService
             ];
         }
         foreach ($iti->getEtapes() as $i => $etape) {
-            if (!empty($etape['lat']) && !empty($etape['lon'])) {
+            $lat = $this->parseCoord($etape['latitudedecimalegooglemap']  ?? $etape['lat'] ?? null);
+            $lon = $this->parseCoord($etape['longitudedecimalegooglemap'] ?? $etape['lon'] ?? null);
+            if ($lat !== null && $lon !== null) {
                 $markers[] = [
-                    'lat'    => (float)$etape['lat'],
-                    'lon'    => (float)$etape['lon'],
+                    'lat'    => $lat,
+                    'lon'    => $lon,
                     'label'  => (string)($i + 1),
                     'depart' => false,
                 ];
             }
         }
         return $markers;
+    }
+
+    private function parseCoord(mixed $value): ?float
+    {
+        if ($value === null || $value === '') return null;
+        $clean = (float)preg_replace('/[^\d.\-]/', '', (string)$value);
+        return $clean != 0.0 ? $clean : null;
     }
 
     // ── Géométrie ─────────────────────────────────────────────────────────
