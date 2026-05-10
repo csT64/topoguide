@@ -49,7 +49,7 @@ class Itineraire extends ActiveRecord
 
     public function getTitle(): string
     {
-        return $this->titre_2 ?: ($this->raison_sociale ?: '');
+        return $this->raison_sociale ?: ($this->titre_2 ?: '');
     }
 
     public function getProducteurId(): string
