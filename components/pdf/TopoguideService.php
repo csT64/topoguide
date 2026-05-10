@@ -286,8 +286,8 @@ class TopoguideService
             $htmlParts = [];
             $sep = '';
             foreach ($j_poi as $poi) {
-                $nom  = is_array($poi) ? trim($poi['Nom'] ?? '')        : trim((string)$poi);
-                $desc = is_array($poi) ? trim($poi['Descriptif'] ?? '') : '';
+                $nom  = is_array($poi) ? trim($poi['nom'] ?? $poi['Nom'] ?? '')        : trim((string)$poi);
+                $desc = is_array($poi) ? trim($poi['descriptif'] ?? $poi['Descriptif'] ?? '') : '';
                 if ($nom !== '') {
                     $nom = '<strong style="color:#1f5468;">' . rtrim($nom, '.') . '.</strong> ';
                 }
@@ -346,7 +346,7 @@ class TopoguideService
 
             $html = $sep = '';
             foreach ($j_equipement as $equi) {
-                $nom = is_array($equi) ? ($equi['Nom'] ?? '') : (string)$equi;
+                $nom = is_array($equi) ? ($equi['nom'] ?? $equi['Nom'] ?? '') : (string)$equi;
                 if ($nom !== '') {
                     $html .= $sep . '&bull; ' . $nom;
                     $sep = '<br>';
@@ -365,7 +365,7 @@ class TopoguideService
 
             $html = $sep = '';
             foreach ($j_attention as $poi) {
-                $desc = is_array($poi) ? ($poi['Descriptif'] ?? '') : (string)$poi;
+                $desc = is_array($poi) ? ($poi['descriptif'] ?? $poi['Descriptif'] ?? '') : (string)$poi;
                 if ($desc !== '') {
                     $html .= $sep . '&bull; ' . trim($desc);
                     $sep = '<br>';
