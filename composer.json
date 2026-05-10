@@ -17,8 +17,7 @@
         "yiisoft/yii2": "~2.0.51",
         "yiisoft/yii2-symfonymailer": "~2.0.3",
         "tecnickcom/tcpdf": "~6.7.0",
-        "bower-asset/leaflet": "^1.9",
-        "chrome-php/chrome": "*"
+        "bower-asset/leaflet": "^1.9"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

@@ -66,16 +66,6 @@ class StaticMapService
             $this->originX = $cx - $this->width  / 2 / self::TILE_SIZE;
             $this->originY = $cy - $this->height / 2 / self::TILE_SIZE;
 
-            $this->log("DEBUG {$iti->id}: zoom={$this->zoom} bbox=[$minLat,$maxLat,$minLon,$maxLon] track=" . count($trackPoints) . "pts markers=" . count($markers));
-
-            // Vérifier que les points du tracé tombent bien dans le canvas
-            if (count($trackPoints) >= 2) {
-                [$px0, $py0] = $this->toPixel($trackPoints[0][0], $trackPoints[0][1]);
-                $mid = $trackPoints[(int)(count($trackPoints)/2)];
-                [$pxm, $pym] = $this->toPixel($mid[0], $mid[1]);
-                $this->log("DEBUG pixels: premier=[$px0,$py0] milieu=[$pxm,$pym] canvas={$this->width}x{$this->height}");
-            }
-
             $this->img = imagecreatetruecolor($this->width, $this->height);
 
             $this->composeTiles();

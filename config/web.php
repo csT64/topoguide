@@ -46,7 +46,7 @@ $config = [
                 // PDF public
                 'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf' => 'topoguide/pdf',
 
-                // Cartes Leaflet (appelées par CutyCapt)
+                // Cartes Leaflet interactives
                 'gmap/simple' => 'gmap/simple',
                 'gmap/gpx'    => 'gmap/gpx',
                 'gmap/kml'    => 'gmap/kml',
