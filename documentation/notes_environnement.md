@@ -46,6 +46,34 @@ php8.4 /srv/topoguide/yii screenshot/run
 | Pull local | `git pull origin claude/deploy-topoguide-taT2S` |
 | Propriété du dossier | `sudo chown -R triton:projetweb /home/srv/topoguide` |
 
+### Tags de version
+
+| Tag | Description |
+|---|---|
+| `v1` | Première version stable — fonctionnalités complètes (PDF FR/EN/ES, cartes JPG, admin, filtres GridView) |
+
+### Récupérer la version V1
+
+```bash
+# Consulter le code à l'état V1 (mode lecture seule)
+git checkout v1
+
+# Revenir sur la branche de développement
+git checkout claude/deploy-topoguide-taT2S
+```
+
+Pour **remettre le serveur en production sur V1** :
+
+```bash
+git fetch origin
+git checkout v1
+php8.4 /usr/local/bin/composer install --no-dev
+sudo chown -R www-data:projetweb /home/srv/topoguide/runtime /home/srv/topoguide/web/assets
+sudo chmod -R 775 /home/srv/topoguide/runtime /home/srv/topoguide/web/assets
+```
+
+> ⚠️ En mode `detached HEAD` après `git checkout v1`, les commits ne sont pas possibles. Revenir sur la branche avant tout développement.
+
 ---
 
 ## Serveur web
@@ -220,11 +248,14 @@ Vue dédiée à la gestion des marqueurs de carte :
 | Application Yii2 | ✅ Opérationnelle |
 | Génération PDF FR/EN/ES | ✅ Opérationnelle |
 | Interface admin (login/CRUD) | ✅ Opérationnelle |
+| Filtres GridView admin | ✅ Opérationnels — via assets Yii2 (yii.gridView.js) |
 | Pages cartes Leaflet (`/gmap/`) | ✅ Opérationnelle |
 | Génération cartes JPG (StaticMapService) | ✅ Opérationnelle — PHP+GD, tracé GPX/KML, marqueurs épingles |
 | Carte dans le PDF | ✅ Opérationnelle |
 | Éditeur de carte admin | ✅ Opérationnel — Leaflet interactif, marqueurs glissables, tracé GPX/KML |
 | Proxy CORS GPX/KML | ✅ Opérationnel |
+| Sections PDF (POI, équipements, attention) | ✅ Opérationnelles — clés JSON lowercase corrigées |
+| Bandeau type itinéraire dans PDF | ✅ Opérationnel |
 | Polices Futura dans le PDF | ⚠️ À copier dans `fonts/` |
 | Compte admin | ✅ Créé (user: admin) |
 
