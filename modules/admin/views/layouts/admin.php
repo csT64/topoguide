@@ -65,13 +65,42 @@ use yii\helpers\Html;
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script>
 jQuery(function($) {
-    // Soumettre le filtre GridView sur Entrée (yii.gridView.js non chargé)
-    $(document).on('keydown', '.grid-view input[type=text]', function(e) {
-        if (e.keyCode === 13) { $(this).closest('form').submit(); return false; }
+    // Réplique applyFilter de yii.gridView.js (plugin non chargé car Bootstrap CDN bypasse les assets Yii2)
+    function applyGridFilter($grid) {
+        $grid.find('form.grid-filter-submit').remove();
+        var $form = $('<form>', {
+            action: window.location.pathname,
+            method: 'get',
+            'class': 'grid-filter-submit',
+            style: 'display:none'
+        }).appendTo($grid);
+
+        var filterNames = [];
+        $grid.find('tr.filters input, tr.filters select').each(function() {
+            if ($(this).attr('name')) filterNames.push($(this).attr('name'));
+        });
+
+        // Conserver sort, per-page, langue — supprimer page (reset pagination)
+        new URLSearchParams(window.location.search).forEach(function(value, key) {
+            if (key !== 'page' && filterNames.indexOf(key) === -1) {
+                $form.append($('<input>').attr({type: 'hidden', name: key, value: value}));
+            }
+        });
+
+        // Ajouter les valeurs des inputs de filtre
+        $grid.find('tr.filters input, tr.filters select').each(function() {
+            var name = $(this).attr('name');
+            if (name) $form.append($('<input>').attr({type: 'hidden', name: name, value: $(this).val()}));
+        });
+
+        $form.submit();
+    }
+
+    $(document).on('keydown', '.grid-view tr.filters input', function(e) {
+        if (e.keyCode === 13) { applyGridFilter($(this).closest('.grid-view')); return false; }
     });
-    // Soumettre aussi sur changement de select
-    $(document).on('change', '.grid-view select', function() {
-        $(this).closest('form').submit();
+    $(document).on('change', '.grid-view tr.filters select', function() {
+        applyGridFilter($(this).closest('.grid-view'));
     });
 });
 </script>
