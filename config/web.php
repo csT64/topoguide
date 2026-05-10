@@ -43,6 +43,12 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName'  => false,
             'rules' => [
+                // Fiche HTML publique
+                'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>' => 'topoguide/view',
+
+                // Carte statique JPG
+                'topoguide/carte/<id:[A-Z0-9]+>' => 'topoguide/carte',
+
                 // PDF public
                 'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf' => 'topoguide/pdf',
 

@@ -11,4 +11,7 @@ return [
 
     // Jeton de sécurité pour le déclenchement batch HTTP (exec.php)
     'execJeton'      => '',
+
+    // Chemin vers wkhtmltopdf (génération PDF)
+    'wkhtmltopdf'    => '/usr/bin/wkhtmltopdf',
 ];
