@@ -156,9 +156,64 @@ Les tuiles téléchargées sont conservées dans `runtime/cache-tiles/z/x/y.png`
 rm -rf /srv/topoguide/runtime/cache-tiles/
 ```
 
+## Fichiers statiques Leaflet (`web/gmap/`)
+
+Ces fichiers ne sont **pas** dans le dépôt git (dossier `web/gmap/` ignoré). Ils doivent être présents sur chaque serveur.
+
+| Fichier | Origine |
+|---|---|
+| `leaflet.js` | Généré par `composer install` (script `publish-leaflet` via unpkg.com) |
+| `leaflet_min.css` | Généré par `composer install` (copié depuis `vendor/bower-asset/leaflet/dist/`) |
+| `images/` | Généré par `composer install` |
+| `leaflet.gpx.js` | À télécharger manuellement |
+| `leaflet.kml.js` | À télécharger manuellement |
+
+```bash
+# Après composer install (leaflet.js/css/images sont déjà copiés)
+curl -sLo /srv/topoguide/web/gmap/leaflet.gpx.js \
+  https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js
+
+curl -sLo /srv/topoguide/web/gmap/leaflet.kml.js \
+  https://raw.githubusercontent.com/windycom/leaflet-kml/master/L.KML.js
+```
+
 ---
 
-## État de l'installation locale
+## Proxy CORS pour GPX/KML (`/gmap/proxy`)
+
+Le CDN TourInSoft (`cdt64.media.tourinsoft.eu`) ne renvoie pas d'en-têtes CORS.
+Les fichiers GPX/KML ne peuvent donc pas être chargés directement par le navigateur
+depuis les pages admin.
+
+`GmapController::actionProxy()` récupère le fichier côté serveur PHP et le sert
+localement avec `Access-Control-Allow-Origin: *`. Seuls les hôtes de la liste blanche
+sont autorisés (`cdt64.media.tourinsoft.eu`, `api.tourisme64.com`, `api.adt64.fr`).
+
+URL d'appel : `GET /gmap/proxy?url=https://cdt64.media.tourinsoft.eu/upload/fichier.gpx`
+
+---
+
+## Interface d'administration
+
+### Liste des itinéraires (`/admin/itineraire`)
+
+- Colonnes filtrables : **ID**, **Titre**, **Commune départ**, **Auteur**, **Locomotion**, **Difficulté**
+- Colonnes triables (flèches ↑↓) : ID, Titre, Commune départ, Auteur
+- Bouton **Carte ✎** → ouvre l'éditeur de carte de l'itinéraire
+
+### Éditeur de carte (`/admin/itineraire/carte?id=XXX`)
+
+Vue dédiée à la gestion des marqueurs de carte :
+
+- **Carte JPG actuelle** avec boutons Supprimer / Régénérer
+- **Carte Leaflet interactive** avec :
+  - Tracé GPX ou KML affiché (chargé via le proxy CORS)
+  - Marqueurs glissables (vert = Départ, rouge = Étapes numérotées)
+  - Mise à jour automatique des champs coordonnées lors du glisser
+- **Formulaire** : coordonnées départ + tableau des étapes (lat/lon éditables)
+- **Sauvegarde** : met à jour le JSON `etapes` en base et régénère la carte JPG
+
+---
 
 | Fonctionnalité | État |
 |---|---|
@@ -168,6 +223,8 @@ rm -rf /srv/topoguide/runtime/cache-tiles/
 | Pages cartes Leaflet (`/gmap/`) | ✅ Opérationnelle |
 | Génération cartes JPG (StaticMapService) | ✅ Opérationnelle — PHP+GD, tracé GPX/KML, marqueurs épingles |
 | Carte dans le PDF | ✅ Opérationnelle |
+| Éditeur de carte admin | ✅ Opérationnel — Leaflet interactif, marqueurs glissables, tracé GPX/KML |
+| Proxy CORS GPX/KML | ✅ Opérationnel |
 | Polices Futura dans le PDF | ⚠️ À copier dans `fonts/` |
 | Compte admin | ✅ Créé (user: admin) |
 
