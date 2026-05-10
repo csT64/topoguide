@@ -201,8 +201,8 @@ $this->title = 'Carte — ' . ($model->getTitle() ?: $model->id);
     var latD   = parseFloat(document.getElementById('lat_depart').value) || 43.3;
     var lonD   = parseFloat(document.getElementById('lon_depart').value) || -0.37;
     var etapes = <?= json_encode(array_values($etapesCoords)) ?>;
-    var gpxUrl = <?= json_encode($model->doc_gpx) ?>;
-    var kmlUrl = <?= json_encode($model->doc_kml) ?>;
+    var gpxUrl = <?= json_encode($model->doc_gpx ? Yii::$app->urlManager->createUrl(['/gmap/proxy', 'url' => $model->doc_gpx]) : null) ?>;
+    var kmlUrl = <?= json_encode($model->doc_kml ? Yii::$app->urlManager->createUrl(['/gmap/proxy', 'url' => $model->doc_kml]) : null) ?>;
 
     var map = L.map('leaflet-map').setView([latD, lonD], 12);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {

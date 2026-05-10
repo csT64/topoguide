@@ -50,6 +50,7 @@ $config = [
                 'gmap/simple' => 'gmap/simple',
                 'gmap/gpx'    => 'gmap/gpx',
                 'gmap/kml'    => 'gmap/kml',
+                'gmap/proxy'  => 'gmap/proxy',
 
                 // Admin
                 'admin/login'                                  => 'admin/default/login',
