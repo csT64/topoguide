@@ -301,7 +301,7 @@ class TopoguideService
         }
 
         // Carte JPG
-        $mapFile = Yii::$app->params['pathCacheGmap'] . '/' . $iti->id . '.jpg';
+        $mapFile = Yii::getAlias(Yii::$app->params['pathCacheGmap']) . '/' . $iti->id . '.jpg';
         if (file_exists($mapFile)) {
             $pdf->Image($mapFile, null, null, 190, 120, null, '', 'N', true, 300, 'R', false, false, false, false);
         }
