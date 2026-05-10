@@ -70,8 +70,7 @@ class Itineraire extends ActiveRecord
 
     public function getDifficulteVal(): string
     {
-        $d = $this->decodeJson('difficulte');
-        return !empty($d[0]) ? (is_array($d[0]) ? ($d[0]['ThesLibelle'] ?? '') : (string)$d[0]) : '';
+        return trim($this->difficulte ?? '');
     }
 
     public function getTypeVal(): string
@@ -81,25 +80,17 @@ class Itineraire extends ActiveRecord
 
     public function getDureeVal(): string
     {
-        $d = $this->decodeJson('duree');
-        return !empty($d[0]) ? (is_array($d[0]) ? ($d[0]['Tempsdeparcours'] ?? '') : (string)$d[0]) : '';
+        return trim($this->duree ?? '');
     }
 
     public function getBoucleVal(): string
     {
-        foreach ($this->decodeJson('typologie') as $t) {
-            $v = is_array($t) ? ($t['ThesLibelle'] ?? '') : (string)$t;
-            if (!empty($v) && stripos($v, 'Boucle') !== false) {
-                return 'Boucle';
-            }
-        }
-        return '';
+        return stripos($this->typologie ?? '', 'Boucle') !== false ? 'Boucle' : '';
     }
 
     public function getLocomotionVal(): string
     {
-        $d = $this->decodeJson('locomotion');
-        return !empty($d[0]) ? (is_array($d[0]) ? ($d[0]['ThesLibelle'] ?? '') : (string)$d[0]) : '';
+        return trim($this->locomotion ?? '');
     }
 
     public function getPhotos(): array    { return $this->decodeJson('photo'); }
