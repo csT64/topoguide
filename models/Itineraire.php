@@ -76,10 +76,6 @@ class Itineraire extends ActiveRecord
 
     public function getTypeVal(): string
     {
-        $d = $this->decodeJson('type');
-        if (!empty($d[0])) {
-            return is_array($d[0]) ? ($d[0]['ThesLibelle'] ?? $d[0]['thes_libelle'] ?? '') : (string)$d[0];
-        }
         return trim($this->type ?? '');
     }
 
