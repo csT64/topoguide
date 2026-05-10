@@ -1,16 +1,20 @@
 <?php
 use yii\helpers\Html;
+use app\assets\AdminAsset;
 
 /** @var yii\web\View $this */
 /** @var string $content */
+
+AdminAsset::register($this);
 ?>
+<?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= Html::encode($this->title) ?> — Topoguide Admin</title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<?= $this->head() ?>
 <style>
   body { padding-top: 60px; }
   .navbar-brand { font-weight: bold; }
@@ -18,6 +22,7 @@ use yii\helpers\Html;
 </style>
 </head>
 <body>
+<?php $this->beginBody() ?>
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container-fluid">
@@ -61,48 +66,7 @@ use yii\helpers\Html;
   <?= $content ?>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script>
-jQuery(function($) {
-    // Réplique applyFilter de yii.gridView.js (plugin non chargé car Bootstrap CDN bypasse les assets Yii2)
-    function applyGridFilter($grid) {
-        $grid.find('form.grid-filter-submit').remove();
-        var $form = $('<form>', {
-            action: window.location.pathname,
-            method: 'get',
-            'class': 'grid-filter-submit',
-            style: 'display:none'
-        }).appendTo($grid);
-
-        var filterNames = [];
-        $grid.find('tr.filters input, tr.filters select').each(function() {
-            if ($(this).attr('name')) filterNames.push($(this).attr('name'));
-        });
-
-        // Conserver sort, per-page, langue — supprimer page (reset pagination)
-        new URLSearchParams(window.location.search).forEach(function(value, key) {
-            if (key !== 'page' && filterNames.indexOf(key) === -1) {
-                $form.append($('<input>').attr({type: 'hidden', name: key, value: value}));
-            }
-        });
-
-        // Ajouter les valeurs des inputs de filtre
-        $grid.find('tr.filters input, tr.filters select').each(function() {
-            var name = $(this).attr('name');
-            if (name) $form.append($('<input>').attr({type: 'hidden', name: name, value: $(this).val()}));
-        });
-
-        $form.submit();
-    }
-
-    $(document).on('keydown', '.grid-view tr.filters input', function(e) {
-        if (e.keyCode === 13) { applyGridFilter($(this).closest('.grid-view')); return false; }
-    });
-    $(document).on('change', '.grid-view tr.filters select', function() {
-        applyGridFilter($(this).closest('.grid-view'));
-    });
-});
-</script>
+<?php $this->endBody() ?>
 </body>
 </html>
+<?php $this->endPage() ?>
