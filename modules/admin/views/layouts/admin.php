@@ -14,6 +14,7 @@ AdminAsset::register($this);
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= Html::encode($this->title) ?> — Topoguide Admin</title>
+<?php $this->registerCsrfMetaTags() ?>
 <?= $this->head() ?>
 <style>
   body { padding-top: 60px; }
