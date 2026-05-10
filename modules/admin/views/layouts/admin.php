@@ -63,5 +63,17 @@ use yii\helpers\Html;
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+jQuery(function($) {
+    // Soumettre le filtre GridView sur Entrée (yii.gridView.js non chargé)
+    $(document).on('keydown', '.grid-view input[type=text]', function(e) {
+        if (e.keyCode === 13) { $(this).closest('form').submit(); return false; }
+    });
+    // Soumettre aussi sur changement de select
+    $(document).on('change', '.grid-view select', function() {
+        $(this).closest('form').submit();
+    });
+});
+</script>
 </body>
 </html>
