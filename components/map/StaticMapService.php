@@ -103,16 +103,17 @@ class StaticMapService
         $xml = $this->fetchXml($url);
         if (!$xml) return [];
 
+        // Le GPX déclare un namespace par défaut — on l'enregistre pour XPath
+        $ns = $xml->getNamespaces(true);
+        $gpxNs = $ns[''] ?? 'http://www.topografix.com/GPX/1/1';
+        $xml->registerXPathNamespace('g', $gpxNs);
+
         $points = [];
-        foreach ($xml->trk ?? [] as $trk) {
-            foreach ($trk->trkseg ?? [] as $seg) {
-                foreach ($seg->trkpt ?? [] as $pt) {
-                    $points[] = [(float)$pt['lat'], (float)$pt['lon']];
-                }
-            }
+        foreach ($xml->xpath('//g:trkpt') as $pt) {
+            $points[] = [(float)$pt['lat'], (float)$pt['lon']];
         }
-        foreach ($xml->rte ?? [] as $rte) {
-            foreach ($rte->rtept ?? [] as $pt) {
+        if (empty($points)) {
+            foreach ($xml->xpath('//g:rtept') as $pt) {
                 $points[] = [(float)$pt['lat'], (float)$pt['lon']];
             }
         }
