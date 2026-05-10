@@ -16,7 +16,7 @@ class CarteController extends Controller
     {
         Yii::$app->language = 'fr';
         $itineraires = Itineraire::find()->orderBy('id')->all();
-        $cachePath   = Yii::$app->params['pathCacheGmap'];
+        $cachePath   = Yii::getAlias(Yii::$app->params['pathCacheGmap']);
 
         $statuts = array_map(function (Itineraire $iti) use ($cachePath) {
             $path = "$cachePath/{$iti->id}.jpg";
@@ -34,7 +34,7 @@ class CarteController extends Controller
 
     public function actionGenererManquantes(): Response
     {
-        $cmd = 'php ' . Yii::getAlias('@app') . '/../yii screenshot/run > /dev/null 2>&1 &';
+        $cmd = 'php8.4 ' . Yii::getAlias('@app') . '/../yii screenshot/run > /dev/null 2>&1 &';
         exec($cmd);
         Yii::$app->session->addFlash('success', 'Batch de génération lancé en arrière-plan.');
         return $this->redirect(['index']);
@@ -42,7 +42,7 @@ class CarteController extends Controller
 
     public function actionSupprimer(string $id): Response
     {
-        $path = Yii::$app->params['pathCacheGmap'] . "/$id.jpg";
+        $path = Yii::getAlias(Yii::$app->params['pathCacheGmap']) . "/$id.jpg";
         if (file_exists($path)) {
             unlink($path);
         }
@@ -51,7 +51,7 @@ class CarteController extends Controller
 
     public function actionApercu(string $id): void
     {
-        $path = Yii::$app->params['pathCacheGmap'] . "/$id.jpg";
+        $path = Yii::getAlias(Yii::$app->params['pathCacheGmap']) . "/$id.jpg";
         if (!file_exists($path)) {
             throw new NotFoundHttpException("Capture $id introuvable.");
         }
