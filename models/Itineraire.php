@@ -97,6 +97,12 @@ class Itineraire extends ActiveRecord
         return '';
     }
 
+    public function getLocomotionVal(): string
+    {
+        $d = $this->decodeJson('locomotion');
+        return !empty($d[0]) ? (is_array($d[0]) ? ($d[0]['ThesLibelle'] ?? '') : (string)$d[0]) : '';
+    }
+
     public function getPhotos(): array    { return $this->decodeJson('photo'); }
     public function getEtapes(): array    { return $this->decodeJson('etapes'); }
     public function getPoi(): array       { return $this->decodeJson('point_d_interet'); }
@@ -105,7 +111,7 @@ class Itineraire extends ActiveRecord
 
     public function hasCarteCache(): bool
     {
-        return file_exists(Yii::$app->params['pathCacheGmap'] . '/' . $this->id . '.jpg');
+        return file_exists(Yii::getAlias(Yii::$app->params['pathCacheGmap']) . '/' . $this->id . '.jpg');
     }
 
     public function getCarteCacheDate(): ?string

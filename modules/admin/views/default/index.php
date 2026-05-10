@@ -61,7 +61,7 @@ $this->title = 'Tableau de bord';
         <?php if (empty($logLines)): ?>
           <em>Aucune erreur.</em>
         <?php else: ?>
-          <pre style="max-height:200px;overflow:auto;font-size:11px;"><?= Html::encode(implode("\n", $logLines)) ?></pre>
+          <pre style="max-height:200px;overflow:auto;font-size:13px;color:#111;background:#f8f8f8;"><?= Html::encode(implode("\n", $logLines)) ?></pre>
         <?php endif; ?>
       </div>
     </div>

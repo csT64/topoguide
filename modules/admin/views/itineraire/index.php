@@ -34,6 +34,21 @@ endforeach;
         ],
         'commune_depart',
         [
+            'label'     => 'Auteur',
+            'attribute' => 'auteur',
+            'value'     => fn($m) => $m->producteur?->raison_sociale ?? $m->auteur,
+        ],
+        [
+            'label'     => 'Locomotion',
+            'attribute' => 'locomotion_val',
+            'value'     => fn($m) => $m->getLocomotionVal(),
+        ],
+        [
+            'label'     => 'Difficulté',
+            'attribute' => 'difficulte_val',
+            'value'     => fn($m) => $m->getDifficulteVal(),
+        ],
+        [
             'label'  => 'Carte',
             'format' => 'raw',
             'value'  => function ($m) {
@@ -49,7 +64,7 @@ endforeach;
             'template' => '{view} {update} {delete} {pdf} {carte}',
             'buttons'  => [
                 'pdf'   => fn ($url, $m) => Html::a('PDF', Url::to(['/topoguide/pdf', 'lang' => 'fr', 'id' => $m->id]), ['target' => '_blank', 'class' => 'btn btn-xs btn-info']),
-                'carte' => fn ($url, $m) => Html::a('Carte', ['/admin/itineraire/generer-carte', 'id' => $m->id], ['class' => 'btn btn-xs btn-warning', 'data-method' => 'post']),
+                'carte' => fn ($url, $m) => Html::a('Carte ✎', ['/admin/itineraire/carte', 'id' => $m->id], ['class' => 'btn btn-xs btn-default']),
             ],
             'urlCreator' => function ($action, $model) {
                 $map = ['view' => 'view', 'update' => 'update', 'delete' => 'delete'];

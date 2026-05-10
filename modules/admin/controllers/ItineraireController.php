@@ -65,19 +65,62 @@ class ItineraireController extends Controller
         $ok  = (new StaticMapService())->generate($iti);
         Yii::$app->session->addFlash(
             $ok ? 'success' : 'error',
-            $ok ? "Carte $id générée." : "Échec de la capture pour $id."
+            $ok ? "Carte $id générée." : "Échec de la génération pour $id."
         );
         return $this->redirect(['index']);
     }
 
     public function actionSupprimerCarte(string $id): Response
     {
-        $path = Yii::$app->params['pathCacheGmap'] . "/$id.jpg";
+        $path = Yii::getAlias(Yii::$app->params['pathCacheGmap']) . "/$id.jpg";
         if (file_exists($path)) {
             unlink($path);
             Yii::$app->session->addFlash('success', "Carte $id supprimée.");
         }
         return $this->redirect(['index']);
+    }
+
+    public function actionCarte(string $id): string
+    {
+        Yii::$app->language = 'fr';
+        $model    = $this->findModel($id, 'fr');
+        $cachePath = Yii::getAlias(Yii::$app->params['pathCacheGmap']);
+        $carteUrl  = $model->hasCarteCache()
+            ? Yii::$app->urlManager->createUrl(['/admin/carte/apercu', 'id' => $id, 'ts' => time()])
+            : null;
+        return $this->render('carte', compact('model', 'carteUrl'));
+    }
+
+    public function actionSauvegarderPositions(string $id): Response
+    {
+        Yii::$app->language = 'fr';
+        $model  = $this->findModel($id, 'fr');
+        $post   = Yii::$app->request->post();
+
+        // Mise à jour coordonnées du départ
+        $model->latitude  = (float)($post['lat_depart'] ?? $model->latitude);
+        $model->longitude = (float)($post['lon_depart'] ?? $model->longitude);
+
+        // Mise à jour coordonnées des étapes dans le JSON
+        $etapes = $model->getEtapes();
+        foreach ($etapes as $i => &$etape) {
+            if (isset($post['etape_lat'][$i]) && $post['etape_lat'][$i] !== '') {
+                $etape['latitudedecimalegooglemap']  = $post['etape_lat'][$i];
+                $etape['longitudedecimalegooglemap'] = $post['etape_lon'][$i] ?? ($etape['longitudedecimalegooglemap'] ?? '');
+            }
+        }
+        unset($etape);
+        $model->etapes = json_encode($etapes, JSON_UNESCAPED_UNICODE);
+
+        if ($model->save(false)) {
+            // Regénérer la carte automatiquement après sauvegarde
+            $ok = (new StaticMapService())->generate($model);
+            Yii::$app->session->addFlash('success', 'Positions sauvegardées' . ($ok ? ' — carte régénérée.' : ' (échec génération carte).'));
+        } else {
+            Yii::$app->session->addFlash('error', 'Erreur lors de la sauvegarde.');
+        }
+
+        return $this->redirect(['carte', 'id' => $id]);
     }
 
     private function findModel(string $id, string $lang = 'fr'): Itineraire
