@@ -29,10 +29,13 @@ endforeach;
             'format'    => 'text',
         ],
         [
-            'label'  => 'Titre',
-            'value'  => fn($m) => $m->getTitle(),
+            'label'     => 'Titre',
+            'attribute' => 'titre_2',
+            'value'     => fn($m) => $m->getTitle(),
         ],
-        'commune_depart',
+        [
+            'attribute' => 'commune_depart',
+        ],
         [
             'label'     => 'Auteur',
             'attribute' => 'auteur',

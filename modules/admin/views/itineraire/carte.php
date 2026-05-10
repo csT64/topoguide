@@ -194,17 +194,46 @@ $this->title = 'Carte — ' . ($model->getTitle() ?: $model->id);
 
 <link rel="stylesheet" href="/gmap/leaflet_min.css">
 <script src="/gmap/leaflet.js"></script>
+<script src="/gmap/leaflet.gpx.js"></script>
+<script src="/gmap/leaflet.kml.js"></script>
 <script>
 (function() {
-    var latD  = parseFloat(document.getElementById('lat_depart').value) || 43.3;
-    var lonD  = parseFloat(document.getElementById('lon_depart').value) || -0.37;
+    var latD   = parseFloat(document.getElementById('lat_depart').value) || 43.3;
+    var lonD   = parseFloat(document.getElementById('lon_depart').value) || -0.37;
     var etapes = <?= json_encode(array_values($etapesCoords)) ?>;
+    var gpxUrl = <?= json_encode($model->doc_gpx) ?>;
+    var kmlUrl = <?= json_encode($model->doc_kml) ?>;
 
     var map = L.map('leaflet-map').setView([latD, lonD], 12);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap',
         maxZoom: 18
     }).addTo(map);
+
+    // Tracé GPX
+    if (gpxUrl) {
+        new L.GPX(gpxUrl, {
+            async: true,
+            polyline_options: { color: '#0f3296', weight: 3, opacity: 0.9 },
+            marker_options: { startIconUrl: null, endIconUrl: null, shadowUrl: null, wptIconUrls: { '': null } }
+        }).on('loaded', function(e) {
+            map.fitBounds(e.target.getBounds(), { padding: [40, 40] });
+        }).on('error', function() {
+            console.warn('GPX non chargé (CORS ou fichier absent)');
+        }).addTo(map);
+    }
+
+    // Tracé KML (si pas de GPX)
+    if (!gpxUrl && kmlUrl) {
+        fetch(kmlUrl)
+            .then(function(r) { return r.text(); })
+            .then(function(kml) {
+                var layer = new L.KML(kml);
+                map.addLayer(layer);
+                map.fitBounds(layer.getBounds(), { padding: [40, 40] });
+            })
+            .catch(function() { console.warn('KML non chargé'); });
+    }
 
     // Icône épingle départ (vert)
     function pinIcon(color, label) {

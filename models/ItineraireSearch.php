@@ -42,7 +42,16 @@ class ItineraireSearch extends Itineraire
         return new ActiveDataProvider([
             'query'      => $query,
             'pagination' => ['pageSize' => 30],
-            'sort'       => ['defaultOrder' => ['updated_at' => SORT_DESC]],
+            'sort'       => [
+                'defaultOrder' => ['updated_at' => SORT_DESC],
+                'attributes'   => [
+                    'id',
+                    'titre_2',
+                    'commune_depart',
+                    'auteur',
+                    'updated_at',
+                ],
+            ],
         ]);
     }
 }
