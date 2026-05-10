@@ -278,14 +278,14 @@ class StaticMapService
 
     private function drawTrack(array $points): void
     {
-        // Ombre portée
-        $shadow = imagecolorallocatealpha($this->img, 0, 0, 0, 90);
+        // Contour blanc pour faire ressortir le trait sur fond clair
+        $white = imagecolorallocate($this->img, 255, 255, 255);
         imagesetthickness($this->img, 6);
-        $this->drawPolyline($points, $shadow, 2, 2);
+        $this->drawPolyline($points, $white);
 
         // Trait bleu foncé principal
         $blue = imagecolorallocate($this->img, 15, 50, 140);
-        imagesetthickness($this->img, 4);
+        imagesetthickness($this->img, 3);
         $this->drawPolyline($points, $blue);
 
         imagesetthickness($this->img, 1);
