@@ -78,7 +78,8 @@ php8.4 /srv/topoguide/yii screenshot/run
 | Élément | Chemin local |
 |---|---|
 | Application | `/srv/topoguide` (symlink → `/home/srv/topoguide`) |
-| Cache cartes JPG | `/cache/capture-gmap` |
+| Cache cartes JPG | `@runtime/cache-gmap` → `/srv/topoguide/runtime/cache-gmap/` |
+| Cache tuiles OSM | `@runtime/cache-tiles` → `/srv/topoguide/runtime/cache-tiles/` |
 | Logs Yii2 | `/srv/topoguide/runtime/logs/` |
 | Polices Futura | `/srv/topoguide/fonts/` |
 | Logos producteurs | `/srv/topoguide/web/producteur/` |
@@ -111,38 +112,48 @@ Groupe `projetweb` : contient `www-data` et l'utilisateur de session `triton`.
 
 ---
 
-## CutyCapt / Xvfb
+## Génération des cartes JPG (`StaticMapService`)
 
-| Paramètre | Valeur |
-|---|---|
-| cutycapt | `/usr/bin/cutycapt` |
-| xvfb-run | `/usr/bin/xvfb-run` |
-| Display dédié | `:10` (service systemd `xvfb-topoguide`) |
-| Service | `/etc/systemd/system/xvfb-topoguide.service` |
+Les cartes sont générées **entièrement en PHP+GD**, sans navigateur. Le service `components/map/StaticMapService.php` :
 
-⚠️ Ne pas utiliser le display `:99` (appartient à Tomcat8).
+1. **Télécharge le tracé** depuis le CDN TourInSoft (GPX ou KML selon le champ renseigné)
+2. **Calcule la bounding box** de l'ensemble tracé + marqueurs, avec marge de 15 %
+3. **Choisit le niveau de zoom** OSM optimal (zoom 4 à 16) pour que le contenu occupe ≤ 80 % du canvas
+4. **Assemble les tuiles OSM** (`https://tile.openstreetmap.org/{z}/{x}/{y}.png`) — 256×256 px chacune, mises en cache dans `@runtime/cache-tiles/`
+5. **Dessine le tracé** par-dessus les tuiles
+6. **Dessine les marqueurs** façon Google Maps (épingle teardrops)
+7. **Enregistre** le JPEG 85 % dans `@runtime/cache-gmap/{id}.jpg`
 
-Service systemd à créer :
-```ini
-[Unit]
-Description=Xvfb display :10 pour Topoguide CutyCapt
-After=network.target
+### Personnalisation du style
 
-[Service]
-ExecStart=/usr/bin/Xvfb :10 -screen 0 1240x877x24 -nolisten tcp
-Restart=on-failure
-User=www-data
+Tout le style visuel est dans `StaticMapService.php`, méthodes `drawTrack()` et `drawPin()` :
 
-[Install]
-WantedBy=multi-user.target
+| Élément | Méthode | Paramètre à modifier |
+|---|---|---|
+| Couleur du tracé | `drawTrack()` | `imagecolorallocate($this->img, 15, 50, 140)` — RGB bleu foncé |
+| Épaisseur du tracé | `drawTrack()` | `imagesetthickness($this->img, 3)` — valeur en pixels |
+| Épaisseur du contour blanc | `drawTrack()` | `imagesetthickness($this->img, 6)` |
+| Couleur marqueur départ (D) | `drawPin()` | `imagecolorallocate($this->img, 45, 136, 45)` — RGB vert |
+| Couleur marqueurs étapes | `drawPin()` | `imagecolorallocate($this->img, 210, 35, 35)` — RGB rouge |
+| Taille de l'épingle | `drawPin()` | `$r = 15` (rayon cercle), `$tail = 18` (hauteur queue) |
+| Taille du texte dans l'épingle | `drawPinLabel()` | `$size = 9.0` (2 chiffres) / `11.0` (1 chiffre) |
+
+### Commandes
+
+```bash
+# Générer toutes les cartes manquantes ou obsolètes
+php8.4 /srv/topoguide/yii screenshot/run
+
+# Régénérer une carte spécifique
+php8.4 /srv/topoguide/yii screenshot/one ITIAQU000V505GSD
 ```
 
-Test manuel :
+### Cache tuiles OSM
+
+Les tuiles téléchargées sont conservées dans `runtime/cache-tiles/z/x/y.png`. Elles n'expirent pas automatiquement — purger manuellement si les fonds de carte paraissent obsolètes :
+
 ```bash
-DISPLAY=:10 cutycapt \
-  --url="http://topoguide.local/gmap/simple?lat=43.29&lon=-0.37&zoom=13" \
-  --out=/tmp/test-carte.jpg \
-  --delay=2000
+rm -rf /srv/topoguide/runtime/cache-tiles/
 ```
 
 ---
@@ -155,7 +166,8 @@ DISPLAY=:10 cutycapt \
 | Génération PDF FR/EN/ES | ✅ Opérationnelle |
 | Interface admin (login/CRUD) | ✅ Opérationnelle |
 | Pages cartes Leaflet (`/gmap/`) | ✅ Opérationnelle |
-| Génération captures carte (CutyCapt) | ⚠️ Xvfb dédié à configurer |
+| Génération cartes JPG (StaticMapService) | ✅ Opérationnelle — PHP+GD, tracé GPX/KML, marqueurs épingles |
+| Carte dans le PDF | ✅ Opérationnelle |
 | Polices Futura dans le PDF | ⚠️ À copier dans `fonts/` |
 | Compte admin | ✅ Créé (user: admin) |
 
@@ -163,11 +175,7 @@ DISPLAY=:10 cutycapt \
 
 ## À faire
 
-- [ ] Créer le service systemd `xvfb-topoguide` (display `:10`)
-- [ ] Mettre à jour `ScreenshotService` pour utiliser `DISPLAY=:10`
 - [ ] Copier les polices Futura dans `/srv/topoguide/fonts/`
-- [ ] Tester la génération de cartes JPG de bout en bout
-- [ ] Tester le batch `php8.4 /srv/topoguide/yii screenshot/run`
-- [ ] Configurer le cron (voir `synthese_technique_topoguide.md` §9)
+- [ ] Configurer le cron pour `screenshot/run` (voir `synthese_technique_topoguide.md` §9)
 - [ ] Confirmer version MariaDB locale
-- [ ] Confirmer environnement recette (PHP, CutyCapt, SSL)
+- [ ] Confirmer environnement recette (PHP, versions, SSL)
