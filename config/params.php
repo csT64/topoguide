@@ -13,5 +13,5 @@ return [
     'execJeton'      => '',
 
     // Chemin vers wkhtmltopdf (génération PDF)
-    'wkhtmltopdf'    => '/usr/bin/wkhtmltopdf',
+    'wkhtmltopdf'    => '/usr/local/bin/wkhtmltopdf',
 ];
