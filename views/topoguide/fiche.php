@@ -178,7 +178,7 @@ a    { color: #1f5468; }
 
 /* ── Conteneur page ───────────────────────────────── */
 .page { padding: 0 9mm; }
-
+header{position:relative;}
 /* ── Logos header ─────────────────────────────────── */
 .logos-row { width: 100%; margin-bottom: 6mm; }
 .logos-row td { vertical-align: middle; }
@@ -186,10 +186,10 @@ a    { color: #1f5468; }
 
 /* ── Titre & badges ───────────────────────────────── */
 .fiche-title { font-size: 24pt; font-weight: bold; color: #000; line-height: 1.1; margin-bottom: 3mm; }
-.fiche-commune { font-size: 11pt; color: #444; margin-bottom: 3mm; }
-.fiche-type { display: inline-block; background: #1f5468; color: #fff; padding: 2px 10px; font-size: 10pt; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4mm; }
+.fiche-commune { font-size: 20pt; color: #000; margin-bottom: 3mm; }
+.fiche-type { display: inline-block; background: #1f5468; color: #fff; padding: 0 10px; font-size: 11pt; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4mm; font-weight:900;}
 .fiche-homologue { display: inline-block; color: #E21D3B; font-weight: bold; font-size: 10pt; margin-bottom: 3mm; }
-.diff-picto { float: right; }
+.diff-picto {position:absolute;top:40px;left:90%;z-index:100;}
 
 /* ── Descriptif + photos ──────────────────────────── */
 .desc-photo-table { width: 100%; margin-bottom: 4mm; }
@@ -200,7 +200,7 @@ a    { color: #1f5468; }
 .photos-two-row { width: 100%; }
 .photos-two-row td { width: 50%; vertical-align: top; }
 .photos-two-row td:first-child { padding-right: 2mm; }
-.desc-full { width: 100%; }
+.desc-full { width: 100%; clear:both;}
 img.photo { max-width: 100%; display: block; }
 figcaption { font-size: 8pt; color: #666; margin-top: 1mm; }
 
@@ -211,19 +211,19 @@ figcaption { font-size: 8pt; color: #666; margin-top: 1mm; }
 .info-row { width: 100%; margin-bottom: 2mm; }
 .info-row td { vertical-align: middle; padding: 2px 4px; }
 .td-picto { width: 10mm; text-align: center; }
-.td-label { font-size: 9pt; color: #1f5468; font-weight: bold; white-space: nowrap; border-right: 1px solid #1f5468; padding-right: 4px; }
-.td-value { font-size: 10pt; padding-left: 4px; border-right: 1px solid #1f5468; }
+.td-label { font-size: 11pt; color: #1f5468; font-weight: bold; white-space: nowrap; padding-right: 4px; }
+.td-value { font-size: 10pt; padding-left: 4px; padding-right: 4px;  border-right: 1px solid #1f5468;}
 .td-value-last { font-size: 10pt; padding-left: 4px; }
 
 /* ── Alerte pastorale ─────────────────────────────── */
 .alerte-row { width: 100%; margin: 3mm 0; }
-.alerte-row td { vertical-align: middle; font-size: 9pt; }
+.alerte-row td { vertical-align: middle; font-size: 10pt; }
 .alerte-icon { width: 10mm; text-align: center; }
 .alerte-text { padding-left: 4px; }
 
 /* ── Sections ─────────────────────────────────────── */
 section { margin-top: 5mm; }
-h2 { font-size: 14pt; color: #1f5468; font-weight: bold; padding-bottom: 2mm; margin-bottom: 3mm; border-bottom: 1px solid #1f5468; }
+h2 { font-size: 14pt; color: #1f5468; font-weight: bold; padding-bottom: 2mm; margin-bottom: 3mm; }
 
 /* ── POI ──────────────────────────────────────────── */
 .poi-list { list-style: none; padding: 0; margin: 0; }
@@ -251,8 +251,8 @@ footer {
     background-color: transparent;
     min-height: 18mm;
     padding: 4mm 6mm;
-    display: flex;
-    align-items: center;
+display:block;
+text-align: center;
 }
 footer address { font-style: normal; }
 footer a { color: #fff; }
@@ -268,8 +268,8 @@ footer a { color: #fff; }
 }
 
 /* ── Type itinéraire picto ────────────────────────── */
-.fiche-type-wrap { display: inline-block; vertical-align: middle; margin-bottom: 4mm; }
-.fiche-type-wrap img { vertical-align: middle; margin-right: 4px; }
+.fiche-type-wrap { display: inline-block; line-height:32px;padding:0;margin:0; float:left;}
+.fiche-type-wrap img {display: inline-block; line-height:32px;padding:0;margin:0;float:left;}
 
 /* ── Commune (picto-where) ────────────────────────── */
 .picto-where { vertical-align: middle; margin-right: 4px; }
@@ -322,22 +322,22 @@ footer a { color: #fff; }
 
     <!-- Commune de départ -->
     <?php if ($commune): ?>
-    <p class="fiche-commune">
+    <h2 class="fiche-commune">
       <?php if ($pi['where']): ?>
-      <img src="<?= $pi['where'] ?>" alt="" class="picto-where" aria-hidden="true" height="16">
+      <img src="<?= $pi['where'] ?>" alt="Commune de départ" class="picto-where" height="64">
       <?php endif; ?>
       <?= Html::encode($commune) ?>
-    </p>
+    </h2>
     <?php endif; ?>
 
     <!-- Badge type itinéraire -->
     <?php if ($type): ?>
-    <span class="fiche-type-wrap">
+    <h3 class="fiche-type-wrap">
       <?php if ($pi['typeiti']): ?>
       <img src="<?= $pi['typeiti'] ?>" alt="" aria-hidden="true" width="16" height="32">
       <?php endif; ?>
       <span class="fiche-type" aria-label="Type d'itinéraire : <?= Html::encode($type) ?>"><?= Html::encode(mb_strtoupper($type)) ?></span>
-    </span>
+    </h3>
     <?php endif; ?>
 
 
@@ -402,19 +402,19 @@ footer a { color: #fff; }
       <table class="info-row" role="presentation">
         <tr>
           <?php if ($pi['where']): ?>
-          <td class="td-picto"><img src="<?= $pi['where'] ?>" alt="" height="28"></td>
+          <td class="td-picto"><img src="<?= $pi['where'] ?>" alt="" height="42"></td>
           <?php endif; ?>
           <th class="td-label" scope="row"><?= $lDepart ?></th>
           <td class="td-value"><?= Html::encode($commune) ?></td>
 
           <?php if ($pi['distance']): ?>
-          <td class="td-picto"><img src="<?= $pi['distance'] ?>" alt="" height="28"></td>
+          <td class="td-picto"><img src="<?= $pi['distance'] ?>" alt="" height="42"></td>
           <?php endif; ?>
           <th class="td-label" scope="row"><?= $lDistance ?></th>
           <?php if ($denivele !== null && $denivele !== ''): ?>
             <td class="td-value"><?= Html::encode((string)$distance) ?> km</td>
             <?php if ($pi['denivele']): ?>
-            <td class="td-picto"><img src="<?= $pi['denivele'] ?>" alt="" height="28"></td>
+            <td class="td-picto"><img src="<?= $pi['denivele'] ?>" alt="" height="42"></td>
             <?php endif; ?>
             <th class="td-label" scope="row"><?= $lDenivele ?></th>
             <td class="td-value"><?= Html::encode((string)$denivele) ?> m</td>
@@ -424,7 +424,7 @@ footer a { color: #fff; }
 
           <?php if ($duree !== ''): ?>
           <?php if ($pi['duree']): ?>
-          <td class="td-picto"><img src="<?= $pi['duree'] ?>" alt="" height="28"></td>
+          <td class="td-picto"><img src="<?= $pi['duree'] ?>" alt="" height="42"></td>
           <?php endif; ?>
           <th class="td-label" scope="row"><?= $lDuree ?></th>
           <td class="td-value-last"><?= Html::encode($duree) ?></td>
@@ -445,7 +445,7 @@ footer a { color: #fff; }
         <tr>
           <?php if ($boucle): ?>
           <?php if ($pi['loop']): ?>
-          <td class="td-picto"><img src="<?= $pi['loop'] ?>" alt="" height="28"></td>
+          <td class="td-picto"><img src="<?= $pi['loop'] ?>" alt="" height="32"></td>
           <?php endif; ?>
           <th class="td-label" scope="row"><?= $lItineraire ?></th>
           <td class="td-value"><strong><?= Html::encode($lBoucle) ?></strong></td>
@@ -453,20 +453,20 @@ footer a { color: #fff; }
 
           <?php if ($parking): ?>
           <?php if ($pi['parking']): ?>
-          <td class="td-picto"><img src="<?= $pi['parking'] ?>" alt="" height="24"></td>
+          <td class="td-picto"><img src="<?= $pi['parking'] ?>" alt="" height="42"></td>
           <?php endif; ?>
           <td class="td-value"><?= Html::encode($parking) ?></td>
           <?php endif; ?>
 
           <?php if ($pi['112']): ?>
-          <td class="td-picto"><img src="<?= $pi['112'] ?>" alt="" height="28"></td>
+          <td class="td-picto"><img src="<?= $pi['112'] ?>" alt="" height="42"></td>
           <?php endif; ?>
           <th class="td-label" scope="row"><?= $lAppel ?></th>
           <td class="td-value"><strong>112</strong></td>
 
           <?php if ($balisageSrc): ?>
           <td class="td-label"><?= Html::encode($lBalisage) ?></td>
-          <td class="td-value-last"><img src="<?= Html::encode($balisageSrc) ?>" alt="Balisage" height="28" class="balisage-img"></td>
+          <td class="td-value-last"><img src="<?= Html::encode($balisageSrc) ?>" alt="Balisage" height="42" class="balisage-img"></td>
           <?php endif; ?>
         </tr>
       </table>
@@ -476,7 +476,7 @@ footer a { color: #fff; }
       <table class="alerte-row" role="presentation">
         <tr>
           <?php if ($pi['alerte']): ?>
-          <td class="alerte-icon"><img src="<?= $pi['alerte'] ?>" alt="" height="28"></td>
+          <td class="alerte-icon"><img src="<?= $pi['alerte'] ?>" alt="" height="42"></td>
           <?php endif; ?>
           <td class="alerte-text"><?= Html::encode($alerteTexte) ?></td>
         </tr>
