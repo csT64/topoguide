@@ -15,7 +15,7 @@ $config = [
     ],
     'components' => [
         'request' => [
-            'cookieValidationKey' => '',  // généré automatiquement à l'installation
+            'cookieValidationKey' => '2JvOe2Pk6mM1D23qAEzciyyR0fZjIsHr',  // généré automatiquement à l'installation
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',

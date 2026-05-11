@@ -101,7 +101,7 @@ class TopoguideService
         $adresse = implode(' &mdash; ', $parts);
 
         $bgImg = file_exists($imgPath)
-            ? 'background-image:url("file://' . $imgPath . '");background-repeat:repeat-x;background-size:auto 100%;'
+            ? 'background-image:url("file://' . $imgPath . '");background-repeat:repeat-x;background-size:100% 100%;'
             : '';
 
         return '<!DOCTYPE html>'
@@ -109,7 +109,7 @@ class TopoguideService
             . 'html,body{margin:0;padding:0;width:100%;height:' . $height . ';background:transparent;}'
             . 'body{' . $bgImg . '}'
             . 'table{width:100%;height:' . $height . ';border-collapse:collapse;}'
-            . 'td{color:#fff;font-family:Arial,sans-serif;font-size:7.5pt;'
+            . 'td{color:#fff;font-family:Arial,sans-serif;font-size:9pt;text-align:center;'
             . 'vertical-align:middle;padding:0 9mm;}'
             . '</style></head>'
             . '<body>'
@@ -138,7 +138,7 @@ class TopoguideService
             : '';
 
         $diffImg = $diffUri
-            ? '<img src="' . $diffUri . '" style="position:absolute;top:40px;left:90%;height:40px;" alt="">'
+            ? '<img src="' . $diffUri . '" style="position:absolute;top:40px;left:90%;height:80px;" alt="">'
             : '';
 
         return '<!DOCTYPE html>'

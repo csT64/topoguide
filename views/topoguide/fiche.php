@@ -217,7 +217,7 @@ figcaption { font-size: 8pt; color: #666; margin-top: 1mm; }
 
 /* ── Alerte pastorale ─────────────────────────────── */
 .alerte-row { width: 100%; margin: 3mm 0; }
-.alerte-row td { vertical-align: middle; font-size: 10pt; }
+.alerte-row td { vertical-align: middle; font-size: 11pt;font-weight:900; }
 .alerte-icon { width: 10mm; text-align: center; }
 .alerte-text { padding-left: 4px; }
 
@@ -281,6 +281,7 @@ footer a { color: #fff; }
     @page { size: A4; margin: 27mm 9mm 22mm 9mm; }
     section { page-break-inside: avoid; }
     h2 { page-break-after: avoid; }
+    .diff-picto { display: none !important; }
 }
 </style>
 </head>
@@ -476,9 +477,9 @@ footer a { color: #fff; }
       <table class="alerte-row" role="presentation">
         <tr>
           <?php if ($pi['alerte']): ?>
-          <td class="alerte-icon"><img src="<?= $pi['alerte'] ?>" alt="" height="42"></td>
+          <td class="alerte-icon"><img src="<?= $pi['alerte'] ?>" alt="" height="32"></td>
           <?php endif; ?>
-          <td class="alerte-text"><?= Html::encode($alerteTexte) ?></td>
+          <td class="alerte-text"><strong><?= Html::encode($alerteTexte) ?></strong></td>
         </tr>
       </table>
     </section>
