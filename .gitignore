@@ -25,6 +25,13 @@ composer.phar
 # Cache captures cartes (généré par CutyCapt)
 /cache/
 
+# Fichiers de debug temporaires
+/web/debug_*.html
+
+# Paquets binaires (wkhtmltopdf, etc.)
+*.deb
+*.rpm
+
 # Tests
 phpunit.phar
 /phpunit.xml
