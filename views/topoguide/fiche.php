@@ -248,6 +248,7 @@ footer {
     color: #fff;
     background-repeat: repeat-x;
     background-size: auto 100%;
+    background-color: transparent;
     min-height: 18mm;
     padding: 4mm 6mm;
     display: flex;
