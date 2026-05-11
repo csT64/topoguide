@@ -49,7 +49,9 @@ class TopoguideService
         file_put_contents($tmpFooter, $this->buildDecorHtml($pix . '/pied_page_noir.png', '20mm'));
 
         $cmd = sprintf(
-            '%s --quiet --encoding utf-8 --print-media-type --allow %s --allow %s'
+            '%s --quiet --encoding utf-8 --print-media-type'
+            . ' --enable-local-file-access'
+            . ' --allow %s --allow %s'
             . ' --margin-top 27mm --margin-bottom 22mm --margin-left 9mm --margin-right 9mm'
             . ' --header-html %s --header-spacing 0'
             . ' --footer-html %s --footer-spacing 0'
@@ -81,29 +83,35 @@ class TopoguideService
         return $pdf;
     }
 
-    // Génère un HTML header ou footer autonome avec l'image en base64.
-    // <!DOCTYPE HTML> doit être en première position, sans espace ni BOM.
+    // Génère un HTML header ou footer autonome.
+    // <!DOCTYPE html> doit être en première position absolue, sans espace ni BOM.
     private function buildDecorHtml(string $imgPath, string $height): string
     {
-        if (!file_exists($imgPath)) {
-            return '<!DOCTYPE HTML><html><head></head><body></body></html>';
-        }
+        // TEST : background-color uniquement pour valider le mécanisme --header-html/--footer-html.
+        // Une fois confirmé, remplacer par l'image (voir bloc commenté ci-dessous).
+        $color = ($imgPath === '') ? '#cccccc' : (str_contains($imgPath, 'haut') ? '#1f5468' : '#111111');
 
-        $ext  = strtolower(pathinfo($imgPath, PATHINFO_EXTENSION));
-        $mime = $ext === 'png' ? 'image/png' : 'image/jpeg';
-        $b64  = base64_encode(file_get_contents($imgPath));
-        $uri  = 'data:' . $mime . ';base64,' . $b64;
-
-        // Concaténation : pas de heredoc pour éviter tout espace parasite avant DOCTYPE
-        return '<!DOCTYPE HTML>'
+        return '<!DOCTYPE html>'
             . '<html><head><meta charset="UTF-8"><style>'
-            . 'html,body{margin:0;padding:0;width:100%;height:' . $height . ';}'
-            . 'div{width:100%;height:100%;'
-            . 'background-image:url(\'' . $uri . '\');'
-            . 'background-repeat:repeat-x;'
-            . 'background-size:auto 100%;}'
+            . 'html,body{margin:0;padding:0;width:100%;height:' . $height . ';overflow:hidden;}'
+            . 'div{width:100%;height:100%;background-color:' . $color . ';}'
             . '</style></head>'
             . '<body><div></div></body></html>';
+
+        // ── À activer une fois le mécanisme validé ─────────────────────────────
+        // if (!file_exists($imgPath)) {
+        //     return '<!DOCTYPE html><html><head></head><body></body></html>';
+        // }
+        // $uri = 'file://' . $imgPath;
+        // return '<!DOCTYPE html>'
+        //     . '<html><head><meta charset="UTF-8"><style>'
+        //     . 'html,body{margin:0;padding:0;width:100%;height:' . $height . ';overflow:hidden;}'
+        //     . 'div{width:100%;height:100%;'
+        //     . 'background-image:url("' . $uri . '");'
+        //     . 'background-repeat:repeat-x;'
+        //     . 'background-size:cover;}'
+        //     . '</style></head>'
+        //     . '<body><div></div></body></html>';
     }
 
     // ── Envoi HTTP ─────────────────────────────────────────────────────────────
