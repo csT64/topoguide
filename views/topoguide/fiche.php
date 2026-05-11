@@ -275,9 +275,8 @@ footer address { font-style: normal; }
     @page { size: A4; margin: 10mm 9mm 10mm 9mm; }
     section { page-break-inside: avoid; }
     h2 { page-break-after: avoid; }
-    .page-header-img { position: fixed; top: 0; left: 0; right: 0; width: 100%; margin: 0; }
-    .page-footer-img { position: fixed; bottom: 0; left: 0; right: 0; width: 100%; margin: 0; }
-    @page { size: A4; margin: 28mm 9mm 22mm 9mm; }
+    .page-footer-img { display: none; }
+    @page { size: A4; margin: 25mm 9mm 18mm 9mm; }
 }
 </style>
 </head>
@@ -301,11 +300,8 @@ footer address { font-style: normal; }
        EN-TÊTE : logos + titre + commune + type
   ═══════════════════════════════════════════════════ -->
   
-  <header role="banner"
-        style="background-size: contain;
-        height:70px;
-  background-repeat: repeat-x;
-  background-image:url('<?= $pi['haut'] ?>');">
+  <header role="banner"<?php if (!$forPdf && $pi['haut']): ?>
+    style="height:70px; background-image:url('<?= $pi['haut'] ?>'); background-repeat:repeat-x; background-size:auto 100%;"<?php endif; ?>>
 
 
     <!-- Picto difficulté (décoratif, info dans la table infos) -->
