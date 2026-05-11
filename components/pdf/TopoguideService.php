@@ -83,35 +83,23 @@ class TopoguideService
         return $pdf;
     }
 
-    // Génère un HTML header ou footer autonome.
-    // <!DOCTYPE html> doit être en première position absolue, sans espace ni BOM.
     private function buildDecorHtml(string $imgPath, string $height): string
     {
-        // TEST : background-color uniquement pour valider le mécanisme --header-html/--footer-html.
-        // Une fois confirmé, remplacer par l'image (voir bloc commenté ci-dessous).
-        $color = ($imgPath === '') ? '#cccccc' : (str_contains($imgPath, 'haut') ? '#1f5468' : '#111111');
+        if (!file_exists($imgPath)) {
+            return '<!DOCTYPE html><html><head></head><body></body></html>';
+        }
+
+        $uri = 'file://' . $imgPath;
 
         return '<!DOCTYPE html>'
             . '<html><head><meta charset="UTF-8"><style>'
             . 'html,body{margin:0;padding:0;width:100%;height:' . $height . ';overflow:hidden;}'
-            . 'div{width:100%;height:100%;background-color:' . $color . ';}'
+            . 'div{width:100%;height:100%;'
+            . 'background-image:url("' . $uri . '");'
+            . 'background-repeat:repeat-x;'
+            . 'background-size:auto 100%;}'
             . '</style></head>'
             . '<body><div></div></body></html>';
-
-        // ── À activer une fois le mécanisme validé ─────────────────────────────
-        // if (!file_exists($imgPath)) {
-        //     return '<!DOCTYPE html><html><head></head><body></body></html>';
-        // }
-        // $uri = 'file://' . $imgPath;
-        // return '<!DOCTYPE html>'
-        //     . '<html><head><meta charset="UTF-8"><style>'
-        //     . 'html,body{margin:0;padding:0;width:100%;height:' . $height . ';overflow:hidden;}'
-        //     . 'div{width:100%;height:100%;'
-        //     . 'background-image:url("' . $uri . '");'
-        //     . 'background-repeat:repeat-x;'
-        //     . 'background-size:cover;}'
-        //     . '</style></head>'
-        //     . '<body><div></div></body></html>';
     }
 
     // ── Envoi HTTP ─────────────────────────────────────────────────────────────
