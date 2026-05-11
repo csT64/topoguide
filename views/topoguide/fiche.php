@@ -273,54 +273,17 @@ footer a { color: #fff; }
 /* ── Commune (picto-where) ────────────────────────── */
 .picto-where { vertical-align: middle; margin-right: 4px; }
 
-/* ── Header / footer décoratifs (écran) ──────────── */
-.page-header-img,
-.page-footer-img { width: 100%; display: block; }
-.page-header-img { margin-bottom: 4mm; }
-.page-footer-img { margin-top: 6mm; }
-
-/* ── PDF : header/footer fixes répétés chaque page ── */
-.pdf-page-header,
-.pdf-page-footer { display: none; }
-
 /* ── Impression / PDF ─────────────────────────────── */
 @media print {
     .no-print { display: none !important; }
     .page { padding: 0; }
-    @page { size: A4; margin: 27mm 9mm 20mm 9mm; }
+    @page { size: A4; margin: 27mm 9mm 22mm 9mm; }
     section { page-break-inside: avoid; }
     h2 { page-break-after: avoid; }
-    footer { color: #333; background: none !important; min-height: auto; }
-    footer a { color: #333; }
-    .pdf-page-header {
-        display: block;
-        position: fixed; top: 0; left: 0; right: 0;
-        height: 27mm;
-        background-repeat: repeat-x;
-        background-size: auto 100%;
-        z-index: 1000;
-    }
-    .pdf-page-footer {
-        display: block;
-        position: fixed; bottom: 0; left: 0; right: 0;
-        height: 20mm;
-        background-repeat: repeat-x;
-        background-size: auto 100%;
-        z-index: 1000;
-    }
 }
 </style>
 </head>
 <body>
-
-<?php if ($forPdf): ?>
-<?php if ($pi['haut']): ?>
-<div class="pdf-page-header" aria-hidden="true" style="background-image:url('<?= $pi['haut'] ?>')"></div>
-<?php endif; ?>
-<?php if ($pi['pied']): ?>
-<div class="pdf-page-footer" aria-hidden="true" style="background-image:url('<?= $pi['pied'] ?>')"></div>
-<?php endif; ?>
-<?php endif; ?>
 
 <a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
 
