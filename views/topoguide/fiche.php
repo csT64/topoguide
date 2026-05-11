@@ -285,7 +285,7 @@ footer a { color: #fff; }
 @media print {
     .no-print { display: none !important; }
     .page { padding: 0 9mm; }
-    @page { size: A4; margin: 27mm 0 22mm 0; }
+    @page { size: A4 portrait; margin: 0; }
     section { page-break-inside: avoid; }
     h2 { page-break-after: avoid; }
     .diff-picto { display: none !important; }

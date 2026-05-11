@@ -52,7 +52,7 @@ class TopoguideService
             '%s --quiet --encoding utf-8 --print-media-type'
             . ' --enable-local-file-access'
             . ' --allow %s --allow %s'
-            . ' --margin-top 27mm --margin-bottom 22mm --margin-left 0 --margin-right 0'
+            . ' --margin-top 25mm --margin-bottom 20mm --margin-left 0 --margin-right 0'
             . ' --header-html %s --header-spacing 0'
             . ' --footer-html %s --footer-spacing 0'
             . ' %s %s 2>&1',
