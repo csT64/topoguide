@@ -34,32 +34,20 @@ class TopoguideService
 
     private function convertToPdf(string $html): string
     {
-        $bin     = Yii::$app->params['wkhtmltopdf'] ?? '/usr/bin/wkhtmltopdf';
+        $bin    = Yii::$app->params['wkhtmltopdf'] ?? '/usr/bin/wkhtmltopdf';
         $webroot = Yii::getAlias('@webroot');
         $mapDir  = Yii::getAlias(Yii::$app->params['pathCacheGmap']);
-        $pix     = $webroot . '/pix/pdf';
 
-        $tmpIn     = tempnam(sys_get_temp_dir(), 'topo_') . '.html';
-        $tmpOut    = tempnam(sys_get_temp_dir(), 'topo_') . '.pdf';
-        $tmpHeader = tempnam(sys_get_temp_dir(), 'topo_hdr_') . '.html';
-        $tmpFooter = tempnam(sys_get_temp_dir(), 'topo_ftr_') . '.html';
+        $tmpIn  = tempnam(sys_get_temp_dir(), 'topo_') . '.html';
+        $tmpOut = tempnam(sys_get_temp_dir(), 'topo_') . '.pdf';
 
         file_put_contents($tmpIn, $html);
-        file_put_contents($tmpHeader, $this->buildHeaderHtml($pix));
-        file_put_contents($tmpFooter, $this->buildFooterHtml($pix));
 
         $cmd = sprintf(
-            '%s --quiet --encoding utf-8 --print-media-type'
-            . ' --allow %s --allow %s'
-            . ' --margin-top 25mm --margin-bottom 18mm --margin-left 9mm --margin-right 9mm'
-            . ' --header-html %s --header-spacing 0'
-            . ' --footer-html %s --footer-spacing 0'
-            . ' %s %s 2>&1',
+            '%s --quiet --encoding utf-8 --print-media-type --allow %s --allow %s %s %s 2>&1',
             escapeshellarg($bin),
             escapeshellarg($webroot),
             escapeshellarg($mapDir),
-            escapeshellarg($tmpHeader),
-            escapeshellarg($tmpFooter),
             escapeshellarg($tmpIn),
             escapeshellarg($tmpOut)
         );
@@ -67,8 +55,6 @@ class TopoguideService
         exec($cmd, $output, $code);
 
         @unlink($tmpIn);
-        @unlink($tmpHeader);
-        @unlink($tmpFooter);
 
         if ($code !== 0 || !file_exists($tmpOut)) {
             throw new \RuntimeException(
@@ -80,47 +66,6 @@ class TopoguideService
         @unlink($tmpOut);
 
         return $pdf;
-    }
-
-    private function imgToDataUri(string $path): string
-    {
-        $ext  = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-        $mime = $ext === 'png' ? 'image/png' : 'image/jpeg';
-        return 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($path));
-    }
-
-    private function buildHeaderHtml(string $pix): string
-    {
-        $img = $pix . '/haut_page.png';
-        if (!file_exists($img)) return '<html><body></body></html>';
-
-        $uri = $this->imgToDataUri($img);
-        return <<<HTML
-        <!DOCTYPE html>
-        <html><head><meta charset="UTF-8"><style>
-        * { margin: 0; padding: 0; }
-        body { margin: 0; }
-        .hdr { width: 100%; height: 25mm; background-image: url('{$uri}'); background-repeat: repeat-x; background-size: auto 100%; }
-        </style></head>
-        <body><div class="hdr"></div></body></html>
-        HTML;
-    }
-
-    private function buildFooterHtml(string $pix): string
-    {
-        $img = $pix . '/pied_page_noir.png';
-        if (!file_exists($img)) return '<html><body></body></html>';
-
-        $uri = $this->imgToDataUri($img);
-        return <<<HTML
-        <!DOCTYPE html>
-        <html><head><meta charset="UTF-8"><style>
-        * { margin: 0; padding: 0; }
-        body { margin: 0; }
-        .ftr { width: 100%; height: 18mm; background-image: url('{$uri}'); background-repeat: repeat-x; background-size: auto 100%; }
-        </style></head>
-        <body><div class="ftr"></div></body></html>
-        HTML;
     }
 
     // ── Envoi HTTP ─────────────────────────────────────────────────────────────
