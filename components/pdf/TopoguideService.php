@@ -106,9 +106,9 @@ class TopoguideService
 
         return '<!DOCTYPE html>'
             . '<html><head><meta charset="UTF-8"><style>'
-            . 'html,body{margin:0;padding:0;width:100%;height:' . $height . ';background:transparent;}'
+            . 'html,body{margin:0;padding:0;width:100%;height:100vh;}'
             . 'body{' . $bgImg . '}'
-            . 'table{width:100%;height:' . $height . ';border-collapse:collapse;}'
+            . 'table{width:100%;height:100vh;border-collapse:collapse;}'
             . 'td{color:#fff;font-family:Arial,sans-serif;font-size:9pt;text-align:center;'
             . 'vertical-align:middle;padding:0 9mm;}'
             . '</style></head>'
@@ -141,10 +141,11 @@ class TopoguideService
             ? '<img src="' . $diffUri . '" style="position:absolute;top:40px;left:90%;height:80px;" alt="">'
             : '';
 
+        // 100vh = hauteur exacte de la zone header allouée par wkhtmltopdf (évite les écarts de conversion mm↔px)
         return '<!DOCTYPE html>'
             . '<html><head><meta charset="UTF-8"><style>'
-            . 'html,body{margin:0;padding:0;width:100%;height:' . $height . ';background:transparent;}'
-            . 'div{position:relative;width:100%;height:' . $height . ';' . $bgCss . '}'
+            . 'html,body{margin:0;padding:0;width:100%;height:100vh;}'
+            . 'div{position:relative;width:100%;height:100vh;' . $bgCss . '}'
             . '</style></head>'
             . '<body><div>' . $diffImg . '</div></body></html>';
     }
