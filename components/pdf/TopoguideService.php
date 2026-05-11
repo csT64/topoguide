@@ -104,13 +104,11 @@ class TopoguideService
             ? 'background-image:url("file://' . $imgPath . '");background-repeat:repeat-x;background-size:auto 100%;'
             : '';
 
-        // html et body en 100% pour remplir exactement la zone allouée par wkhtmltopdf.
-        // background-color:transparent évite que les zones non couvertes s'affichent en noir dans le PDF.
         return '<!DOCTYPE html>'
             . '<html><head><meta charset="UTF-8"><style>'
-            . 'html{margin:0;padding:0;width:100%;height:100%;background:transparent;}'
-            . 'body{margin:0;padding:0;width:100%;height:100%;background-color:transparent;' . $bgImg . '}'
-            . 'table{width:100%;height:100%;border-collapse:collapse;}'
+            . 'html,body{margin:0;padding:0;width:100%;height:' . $height . ';background:transparent;}'
+            . 'body{' . $bgImg . '}'
+            . 'table{width:100%;height:' . $height . ';border-collapse:collapse;}'
             . 'td{color:#fff;font-family:Arial,sans-serif;font-size:7.5pt;'
             . 'vertical-align:middle;padding:0 9mm;}'
             . '</style></head>'
@@ -129,9 +127,8 @@ class TopoguideService
 
         return '<!DOCTYPE html>'
             . '<html><head><meta charset="UTF-8"><style>'
-            . 'html{margin:0;padding:0;width:100%;height:100%;background:transparent;}'
-            . 'body{margin:0;padding:0;width:100%;height:100%;background-color:transparent;}'
-            . 'div{width:100%;height:100%;'
+            . 'html,body{margin:0;padding:0;width:100%;height:' . $height . ';background:transparent;}'
+            . 'div{width:100%;height:' . $height . ';'
             . 'background-image:url("' . $uri . '");'
             . 'background-repeat:repeat-x;'
             . 'background-size:auto 100%;}'
