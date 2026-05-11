@@ -100,14 +100,16 @@ class TopoguideService
         }
         $adresse = implode(' &mdash; ', $parts);
 
-        $bg = file_exists($imgPath)
+        $bgImg = file_exists($imgPath)
             ? 'background-image:url("file://' . $imgPath . '");background-repeat:repeat-x;background-size:auto 100%;'
-            : 'background-color:#111;';
+            : '';
 
+        // Background sur body (plus fiable que sur table dans le vieux WebKit wkhtmltopdf)
         return '<!DOCTYPE html>'
             . '<html><head><meta charset="UTF-8"><style>'
-            . 'html,body{margin:0;padding:0;width:100%;height:' . $height . ';overflow:hidden;}'
-            . 'table{width:100%;height:100%;border-collapse:collapse;' . $bg . '}'
+            . 'html{margin:0;padding:0;height:' . $height . ';}'
+            . 'body{margin:0;padding:0;width:100%;height:' . $height . ';overflow:hidden;' . $bgImg . '}'
+            . 'table{width:100%;height:100%;border-collapse:collapse;}'
             . 'td{color:#fff;font-family:Arial,sans-serif;font-size:7.5pt;'
             . 'vertical-align:middle;padding:0 9mm;}'
             . '</style></head>'
