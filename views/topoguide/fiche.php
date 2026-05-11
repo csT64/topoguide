@@ -98,16 +98,23 @@ if (!empty($balisage)) {
     }
 }
 
-// Pictos SVG/PNG (chemin → src)
+// Pictos SVG/PNG — pour PDF : préférer PNG (wkhtmltopdf ne rend pas les SVG) ; pour HTML : préférer SVG
+$piSrc = function(string $name) use ($src, $pix, $forPdf): string {
+    if ($forPdf) {
+        return $src($pix . '/' . $name . '.png') ?: $src($pix . '/' . $name . '.svg');
+    }
+    return $src($pix . '/' . $name . '.svg') ?: $src($pix . '/' . $name . '.png');
+};
+
 $pi = [
-    'where'    => $src($pix . '/picto-where.svg'),
-    'distance' => $src($pix . '/picto-distance.svg'),
-    'denivele' => $src($pix . '/picto-denivele.svg'),
-    'duree'    => $src($pix . '/picto-duree.svg'),
-    'parking'  => $src($pix . '/picto-parking.svg'),
+    'where'    => $piSrc('picto-where'),
+    'distance' => $piSrc('picto-distance'),
+    'denivele' => $piSrc('picto-denivele'),
+    'duree'    => $piSrc('picto-duree'),
+    'parking'  => $piSrc('picto-parking'),
     'loop'     => $src($pix . '/picto-loop.png'),
-    '112'      => $src($pix . '/picto-112.svg'),
-    'alerte'   => $src($pix . '/picto-attention.svg'),
+    '112'      => $piSrc('picto-112'),
+    'alerte'   => $piSrc('picto-attention'),
     'haut'     => $src($pix . '/haut_page.png'),
     'pied'     => $src($pix . '/pied_page_noir.png'),
     'typeiti'  => $src($pix . '/typeIti.png'),
