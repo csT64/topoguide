@@ -110,6 +110,7 @@ $pi = [
     'alerte'   => $src($pix . '/picto-attention.svg'),
     'haut'     => $src($pix . '/haut_page.png'),
     'pied'     => $src($pix . '/pied_page_noir.png'),
+    'typeiti'  => $src($pix . '/typeIti.png'),
 ];
 
 // ── Labels multilingues ──────────────────────────────────────────────────────
@@ -254,6 +255,19 @@ footer address { font-style: normal; }
     .page { max-width: 210mm; margin: 0 auto; background: #fff; padding: 20px 9mm; box-shadow: 0 0 10px rgba(0,0,0,.15); }
 }
 
+/* ── Type itinéraire picto ────────────────────────── */
+.fiche-type-wrap { display: inline-block; vertical-align: middle; margin-bottom: 4mm; }
+.fiche-type-wrap img { vertical-align: middle; margin-right: 4px; }
+
+/* ── Commune (picto-where) ────────────────────────── */
+.picto-where { vertical-align: middle; margin-right: 4px; }
+
+/* ── Header / footer décoratifs ───────────────────── */
+.page-header-img,
+.page-footer-img { width: 100%; display: block; }
+.page-header-img { margin-bottom: 4mm; }
+.page-footer-img { margin-top: 6mm; }
+
 /* ── Impression / PDF ─────────────────────────────── */
 @media print {
     .no-print { display: none !important; }
@@ -261,6 +275,9 @@ footer address { font-style: normal; }
     @page { size: A4; margin: 10mm 9mm 10mm 9mm; }
     section { page-break-inside: avoid; }
     h2 { page-break-after: avoid; }
+    .page-header-img { position: fixed; top: 0; left: 0; right: 0; width: 100%; margin: 0; }
+    .page-footer-img { position: fixed; bottom: 0; left: 0; right: 0; width: 100%; margin: 0; }
+    @page { size: A4; margin: 28mm 9mm 22mm 9mm; }
 }
 </style>
 </head>
@@ -276,6 +293,11 @@ footer address { font-style: normal; }
 </nav>
 
 <div class="page">
+
+  <!-- Image décorative haut de page -->
+  <?php if ($pi['haut']): ?>
+  <img src="<?= $pi['haut'] ?>" alt="" class="page-header-img" aria-hidden="true">
+  <?php endif; ?>
 
   <!-- ══════════════════════════════════════════════════
        EN-TÊTE : logos + titre + commune + type
@@ -307,13 +329,21 @@ footer address { font-style: normal; }
     <!-- Commune de départ -->
     <?php if ($commune): ?>
     <p class="fiche-commune">
-      <span aria-hidden="true">📍 </span><?= Html::encode($commune) ?>
+      <?php if ($pi['where']): ?>
+      <img src="<?= $pi['where'] ?>" alt="" class="picto-where" aria-hidden="true" height="16">
+      <?php endif; ?>
+      <?= Html::encode($commune) ?>
     </p>
     <?php endif; ?>
 
     <!-- Badge type itinéraire -->
     <?php if ($type): ?>
-    <span class="fiche-type" aria-label="Type d'itinéraire : <?= Html::encode($type) ?>"><?= Html::encode(mb_strtoupper($type)) ?></span>
+    <span class="fiche-type-wrap">
+      <?php if ($pi['typeiti']): ?>
+      <img src="<?= $pi['typeiti'] ?>" alt="" aria-hidden="true" width="16" height="32">
+      <?php endif; ?>
+      <span class="fiche-type" aria-label="Type d'itinéraire : <?= Html::encode($type) ?>"><?= Html::encode(mb_strtoupper($type)) ?></span>
+    </span>
     <?php endif; ?>
 
   </header>
@@ -562,6 +592,11 @@ footer address { font-style: normal; }
   <!-- ══════════════════════════════════════════════════
        PIED DE PAGE : producteur
   ═══════════════════════════════════════════════════ -->
+  <!-- Image décorative bas de page -->
+  <?php if ($pi['pied']): ?>
+  <img src="<?= $pi['pied'] ?>" alt="" class="page-footer-img" aria-hidden="true">
+  <?php endif; ?>
+
   <?php if ($producteur): ?>
   <footer role="contentinfo">
     <address>
