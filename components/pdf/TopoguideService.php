@@ -45,8 +45,8 @@ class TopoguideService
         $tmpFooter = tempnam(sys_get_temp_dir(), 'topo_ftr_') . '.html';
 
         file_put_contents($tmpIn,     $html);
-        file_put_contents($tmpHeader, $this->buildDecorHtml($pix . '/haut_page.png',    '25mm'));
-        file_put_contents($tmpFooter, $this->buildDecorHtml($pix . '/pied_page_noir.png', '20mm'));
+        file_put_contents($tmpHeader, $this->buildDecorHtml($pix . '/haut_page.png', '25mm'));
+        file_put_contents($tmpFooter, $this->buildFooterHtml($pix . '/pied_page_noir.png', '20mm'));
 
         $cmd = sprintf(
             '%s --quiet --encoding utf-8 --print-media-type'
@@ -81,6 +81,39 @@ class TopoguideService
         @unlink($tmpOut);
 
         return $pdf;
+    }
+
+    private function buildFooterHtml(string $imgPath, string $height): string
+    {
+        $producteur = \app\models\Producteur::findOne($this->iti->getProducteurId());
+
+        $parts = [];
+        if ($producteur) {
+            if ($producteur->raison_sociale) $parts[] = '<strong>' . htmlspecialchars($producteur->raison_sociale) . '</strong>';
+            foreach (['adresse_1', 'adresse_2', 'adresse_3'] as $f) {
+                if (!empty($producteur->$f)) $parts[] = htmlspecialchars($producteur->$f);
+            }
+            $cp = trim(($producteur->code_postal ?? '') . ' ' . ($producteur->commune ?? ''));
+            if ($cp) $parts[] = htmlspecialchars($cp);
+            if ($producteur->telephone) $parts[] = htmlspecialchars($producteur->telephone);
+            if ($producteur->url)       $parts[] = htmlspecialchars($producteur->url);
+        }
+        $adresse = implode(' &mdash; ', $parts);
+
+        $bg = file_exists($imgPath)
+            ? 'background-image:url("file://' . $imgPath . '");background-repeat:repeat-x;background-size:auto 100%;'
+            : 'background-color:#111;';
+
+        return '<!DOCTYPE html>'
+            . '<html><head><meta charset="UTF-8"><style>'
+            . 'html,body{margin:0;padding:0;width:100%;height:' . $height . ';overflow:hidden;}'
+            . 'table{width:100%;height:100%;border-collapse:collapse;' . $bg . '}'
+            . 'td{color:#fff;font-family:Arial,sans-serif;font-size:7.5pt;'
+            . 'vertical-align:middle;padding:0 9mm;}'
+            . '</style></head>'
+            . '<body>'
+            . '<table><tr><td>' . $adresse . '</td></tr></table>'
+            . '</body></html>';
     }
 
     private function buildDecorHtml(string $imgPath, string $height): string

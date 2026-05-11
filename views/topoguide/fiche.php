@@ -586,8 +586,8 @@ footer a { color: #fff; }
        PIED DE PAGE : producteur
   ═══════════════════════════════════════════════════ -->
   <!-- Image décorative bas de page -->
-  <?php if ($producteur): ?>
-  <footer role="contentinfo"<?php if (!$forPdf && $pi['pied']): ?> style="background-image:url('<?= $pi['pied'] ?>')"<?php endif; ?>>
+  <?php if ($producteur && !$forPdf): ?>
+  <footer role="contentinfo"<?php if ($pi['pied']): ?> style="background-image:url('<?= $pi['pied'] ?>')"<?php endif; ?>>
     <address>
       <strong><?= Html::encode($producteur->raison_sociale ?? '') ?></strong><br>
       <?php foreach (['adresse_1', 'adresse_2', 'adresse_3'] as $field): ?>
