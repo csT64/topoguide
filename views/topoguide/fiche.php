@@ -295,30 +295,24 @@ footer address { font-style: normal; }
 <div class="page">
 
   <!-- Image décorative haut de page -->
-  <?php if ($pi['haut']): ?>
-  <img src="<?= $pi['haut'] ?>" alt="" class="page-header-img" aria-hidden="true">
-  <?php endif; ?>
+
 
   <!-- ══════════════════════════════════════════════════
        EN-TÊTE : logos + titre + commune + type
   ═══════════════════════════════════════════════════ -->
-  <header role="banner">
+  
+  <header role="banner"
+        style="background-size: contain;
+        height:70px;
+  background-repeat: repeat-x;
+  background-image:url('<?= $pi['haut'] ?>');">
 
-    <!-- Logos -->
-    <?php if ($logoSrc || $deptLogoSrc): ?>
-    <table class="logos-row" aria-hidden="true">
-      <tr>
-        <td><?php if ($logoSrc): ?><img src="<?= $logoSrc ?>" alt="" height="55"><?php endif; ?></td>
-        <td class="td-right"><?php if ($deptLogoSrc): ?><img src="<?= $deptLogoSrc ?>" alt="Pyrénées-Atlantiques" height="55"><?php endif; ?></td>
-      </tr>
-    </table>
-    <?php endif; ?>
 
     <!-- Picto difficulté (décoratif, info dans la table infos) -->
     <?php if ($diffPicto): ?>
     <img src="<?= $diffPicto ?>" alt="" class="diff-picto" aria-hidden="true" height="55">
     <?php endif; ?>
-
+  </header>
     <!-- Titre -->
     <h1 class="fiche-title"><?= Html::encode($titre) ?></h1>
 
@@ -346,7 +340,7 @@ footer address { font-style: normal; }
     </span>
     <?php endif; ?>
 
-  </header>
+
 
   <!-- ══════════════════════════════════════════════════
        CONTENU PRINCIPAL
