@@ -45,7 +45,7 @@ class TopoguideService
         $tmpFooter = tempnam(sys_get_temp_dir(), 'topo_ftr_') . '.html';
 
         file_put_contents($tmpIn,     $html);
-        file_put_contents($tmpHeader, $this->buildDecorHtml($pix . '/haut_page.png', '25mm'));
+        file_put_contents($tmpHeader, $this->buildHeaderHtml($pix));
         file_put_contents($tmpFooter, $this->buildFooterHtml($pix . '/pied_page_noir.png', '20mm'));
 
         $cmd = sprintf(
@@ -117,23 +117,36 @@ class TopoguideService
             . '</body></html>';
     }
 
-    private function buildDecorHtml(string $imgPath, string $height): string
+    private function buildHeaderHtml(string $pix): string
     {
-        if (!file_exists($imgPath)) {
-            return '<!DOCTYPE html><html><head></head><body></body></html>';
-        }
+        $height  = '25mm';
+        $imgPath = $pix . '/haut_page.png';
 
-        $uri = 'file://' . $imgPath;
+        // Picto difficulté — même logique que fiche.php
+        $difficulte = $this->iti->getDifficulteVal();
+        $diffMap    = ['Très facile' => 1, 'Very easy' => 1, 'Muy fácil' => 1,
+                       'Facile' => 2, 'Easy' => 2, 'Fácil' => 2,
+                       'Moyenne' => 3, 'Average' => 3, 'Medio' => 3];
+        $diffNiv    = $diffMap[$difficulte] ?? 4;
+        $diffPath   = $pix . '/picto-niv-' . $diffNiv . '.png';
+
+        $bgUri   = file_exists($imgPath) ? 'file://' . $imgPath : null;
+        $diffUri = file_exists($diffPath) ? 'file://' . $diffPath : null;
+
+        $bgCss = $bgUri
+            ? 'background-image:url("' . $bgUri . '");background-repeat:repeat-x;background-size:auto 100%;'
+            : '';
+
+        $diffImg = $diffUri
+            ? '<img src="' . $diffUri . '" style="position:absolute;top:40px;left:90%;height:40px;" alt="">'
+            : '';
 
         return '<!DOCTYPE html>'
             . '<html><head><meta charset="UTF-8"><style>'
             . 'html,body{margin:0;padding:0;width:100%;height:' . $height . ';background:transparent;}'
-            . 'div{width:100%;height:' . $height . ';'
-            . 'background-image:url("' . $uri . '");'
-            . 'background-repeat:repeat-x;'
-            . 'background-size:auto 100%;}'
+            . 'div{position:relative;width:100%;height:' . $height . ';' . $bgCss . '}'
             . '</style></head>'
-            . '<body><div></div></body></html>';
+            . '<body><div>' . $diffImg . '</div></body></html>';
     }
 
     // ── Envoi HTTP ─────────────────────────────────────────────────────────────
