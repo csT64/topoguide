@@ -242,8 +242,19 @@ h2 { font-size: 14pt; color: #1f5468; font-weight: bold; padding-bottom: 2mm; ma
 .rando-link { font-size: 9pt; margin-top: 4mm; }
 
 /* ── Footer ───────────────────────────────────────── */
-footer { border-top: 1px solid #1f5468; margin-top: 8mm; padding-top: 4mm; font-size: 9pt; color: #444; }
+footer {
+    margin-top: 8mm;
+    font-size: 9pt;
+    color: #fff;
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+    min-height: 18mm;
+    padding: 4mm 6mm;
+    display: flex;
+    align-items: center;
+}
 footer address { font-style: normal; }
+footer a { color: #fff; }
 
 /* ── Utilitaires ──────────────────────────────────── */
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
@@ -583,12 +594,8 @@ footer address { font-style: normal; }
        PIED DE PAGE : producteur
   ═══════════════════════════════════════════════════ -->
   <!-- Image décorative bas de page -->
-  <?php if ($pi['pied']): ?>
-  <img src="<?= $pi['pied'] ?>" alt="" class="page-footer-img" aria-hidden="true">
-  <?php endif; ?>
-
   <?php if ($producteur): ?>
-  <footer role="contentinfo">
+  <footer role="contentinfo"<?php if ($pi['pied']): ?> style="background-image:url('<?= $pi['pied'] ?>')"<?php endif; ?>>
     <address>
       <strong><?= Html::encode($producteur->raison_sociale ?? '') ?></strong><br>
       <?php foreach (['adresse_1', 'adresse_2', 'adresse_3'] as $field): ?>

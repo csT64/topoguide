@@ -82,18 +82,25 @@ class TopoguideService
         return $pdf;
     }
 
+    private function imgToDataUri(string $path): string
+    {
+        $ext  = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        $mime = $ext === 'png' ? 'image/png' : 'image/jpeg';
+        return 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($path));
+    }
+
     private function buildHeaderHtml(string $pix): string
     {
         $img = $pix . '/haut_page.png';
         if (!file_exists($img)) return '<html><body></body></html>';
 
-        $url = 'file://' . $img;
+        $uri = $this->imgToDataUri($img);
         return <<<HTML
         <!DOCTYPE html>
         <html><head><meta charset="UTF-8"><style>
         * { margin: 0; padding: 0; }
         body { margin: 0; }
-        .hdr { width: 100%; height: 25mm; background-image: url('{$url}'); background-repeat: repeat-x; background-size: auto 100%; }
+        .hdr { width: 100%; height: 25mm; background-image: url('{$uri}'); background-repeat: repeat-x; background-size: auto 100%; }
         </style></head>
         <body><div class="hdr"></div></body></html>
         HTML;
@@ -104,13 +111,13 @@ class TopoguideService
         $img = $pix . '/pied_page_noir.png';
         if (!file_exists($img)) return '<html><body></body></html>';
 
-        $url = 'file://' . $img;
+        $uri = $this->imgToDataUri($img);
         return <<<HTML
         <!DOCTYPE html>
         <html><head><meta charset="UTF-8"><style>
         * { margin: 0; padding: 0; }
         body { margin: 0; }
-        .ftr { width: 100%; height: 18mm; background-image: url('{$url}'); background-repeat: repeat-x; background-size: auto 100%; }
+        .ftr { width: 100%; height: 18mm; background-image: url('{$uri}'); background-repeat: repeat-x; background-size: auto 100%; }
         </style></head>
         <body><div class="ftr"></div></body></html>
         HTML;
