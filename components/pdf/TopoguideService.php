@@ -19,6 +19,21 @@ class TopoguideService
         $this->sendPdf($pdf);
     }
 
+    // ── Debug : accès direct aux HTML intermédiaires ───────────────────────────
+
+    public function debugHeaderHtml(): string
+    {
+        return $this->buildHeaderHtml(Yii::getAlias('@webroot') . '/pix/pdf');
+    }
+
+    public function debugFooterHtml(): string
+    {
+        return $this->buildFooterHtml(
+            Yii::getAlias('@webroot') . '/pix/pdf/pied_page_noir.png',
+            '20mm'
+        );
+    }
+
     // ── HTML rendering ─────────────────────────────────────────────────────────
 
     public function renderHtml(bool $forPdf = true): string

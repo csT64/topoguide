@@ -61,4 +61,24 @@ class TopoguideController extends Controller
 
         (new TopoguideService($iti, $lang))->generate();
     }
+
+    // ── Debug PDF (visualisation des HTML intermédiaires) ─────────────────────
+    // URLs : /topoguide/fr/ID.pdf-header | .pdf-footer | .pdf-content
+
+    public function actionPdfDebug(string $lang, string $id, string $part = 'content'): string
+    {
+        $this->validateLang($lang);
+        Yii::$app->language = $lang;
+        $iti  = $this->loadItineraire($id);
+        $svc  = new TopoguideService($iti, $lang);
+
+        Yii::$app->response->format = Response::FORMAT_RAW;
+        Yii::$app->response->headers->set('Content-Type', 'text/html; charset=utf-8');
+
+        return match ($part) {
+            'header'  => $svc->debugHeaderHtml(),
+            'footer'  => $svc->debugFooterHtml(),
+            default   => $svc->renderHtml(true),
+        };
+    }
 }

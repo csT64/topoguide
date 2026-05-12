@@ -52,6 +52,9 @@ $config = [
                 // PDF public
                 'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf' => 'topoguide/pdf',
 
+                // Debug PDF — visualise les HTML intermédiaires dans le navigateur
+                'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf-<part:(header|footer|content)>' => 'topoguide/pdf-debug',
+
                 // Cartes Leaflet interactives
                 'gmap/simple' => 'gmap/simple',
                 'gmap/gpx'    => 'gmap/gpx',
