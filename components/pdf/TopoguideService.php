@@ -123,7 +123,7 @@ class TopoguideService
         return '<!DOCTYPE html>'
             . '<html><head><meta charset="UTF-8"><style>'
             . '*{margin:0;padding:0;}'
-            . 'html,body{width:100%;height:' . $height . ';overflow:hidden;position:relative;}'
+            . 'html,body{width:100%;height:' . $height . ';position:relative;}'
             . 'table{position:absolute;top:0;left:0;width:100%;height:' . $height . ';border-collapse:collapse;}'
             . 'td{color:#fff;font-family:Arial,sans-serif;font-size:9pt;text-align:center;'
             . 'vertical-align:middle;padding:0 9mm;}'
@@ -159,7 +159,7 @@ class TopoguideService
         return '<!DOCTYPE html>'
             . '<html><head><meta charset="UTF-8"><style>'
             . '*{margin:0;padding:0;}'
-            . 'html,body{width:100%;height:' . $height . ';overflow:hidden;position:relative;}'
+            . 'html,body{width:100%;height:' . $height . ';position:relative;}'
             . '</style></head>'
             . '<body>' . $bgImg . $diffImg . '</body></html>';
     }
