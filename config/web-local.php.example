@@ -1,0 +1,15 @@
+<?php
+/**
+ * Surcharge locale de config/web.php — NE PAS COMMITTER.
+ * Copier ce fichier en web-local.php et renseigner les valeurs.
+ *
+ * Générer une clé :
+ *   php8.4 -r "echo bin2hex(random_bytes(32));"
+ */
+return [
+    'components' => [
+        'request' => [
+            'cookieValidationKey' => 'REMPLACER_PAR_UNE_CLE_ALEATOIRE',
+        ],
+    ],
+];

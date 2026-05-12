@@ -15,7 +15,7 @@ $config = [
     ],
     'components' => [
         'request' => [
-            'cookieValidationKey' => '',  // définie dans config/web-local.php — ne pas committer
+            'cookieValidationKey' => '',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -77,6 +77,11 @@ $config = [
     ],
     'params' => $params,
 ];
+
+// Surcharge locale (cookieValidationKey, options propres au serveur) — non versionné
+if (file_exists(__DIR__ . '/web-local.php')) {
+    $config = \yii\helpers\ArrayHelper::merge($config, require __DIR__ . '/web-local.php');
+}
 
 if (YII_ENV_DEV) {
     $config['bootstrap'][] = 'debug';
