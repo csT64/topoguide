@@ -116,7 +116,7 @@ class TopoguideService
         $adresse = implode(' &mdash; ', $parts);
 
         $bgImg = file_exists($imgPath)
-            ? '<img src="file://' . $imgPath . '" style="position:absolute;top:0;left:0;width:100%;height:' . $height . ';" alt="">'
+            ? '<img src="file://' . $imgPath . '" style="position:absolute;top:-5px;left:0;width:100%;height:calc(' . $height . ' + 5px);" alt="">'
             : '';
 
         // table en position:absolute APRÈS l'img → devant, sans z-index
@@ -148,7 +148,7 @@ class TopoguideService
         $diffPath   = $pix . '/picto-niv-' . $diffNiv . '.png';
 
         $bgImg = file_exists($imgPath)
-            ? '<img src="file://' . $imgPath . '" style="position:absolute;top:0;left:0;width:100%;height:' . $height . ';" alt="">'
+            ? '<img src="file://' . $imgPath . '" style="position:absolute;top:-5px;left:0;width:100%;height:calc(' . $height . ' + 5px);" alt="">'
             : '';
 
         // picto APRÈS le fond dans le DOM → devant, sans z-index
