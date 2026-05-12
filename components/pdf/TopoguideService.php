@@ -116,15 +116,15 @@ class TopoguideService
         $adresse = implode(' &mdash; ', $parts);
 
         $bgImg = file_exists($imgPath)
-            ? '<img src="file://' . $imgPath . '" style="display:block;position:absolute;top:0;left:0;width:100%;height:' . $height . ';" alt="">'
+            ? '<img src="file://' . $imgPath . '" style="position:absolute;top:0;left:0;width:100%;height:' . $height . ';" alt="">'
             : '';
 
+        // table en position:absolute APRÈS l'img → devant, sans z-index
         return '<!DOCTYPE html>'
             . '<html><head><meta charset="UTF-8"><style>'
             . '*{margin:0;padding:0;}'
-            . 'html,body{width:100%;height:' . $height . ';overflow:hidden;}'
-            . 'body{position:relative;}'
-            . 'table{position:relative;z-index:1;width:100%;height:' . $height . ';border-collapse:collapse;}'
+            . 'html,body{width:100%;height:' . $height . ';overflow:hidden;position:relative;}'
+            . 'table{position:absolute;top:0;left:0;width:100%;height:' . $height . ';border-collapse:collapse;}'
             . 'td{color:#fff;font-family:Arial,sans-serif;font-size:9pt;text-align:center;'
             . 'vertical-align:middle;padding:0 9mm;}'
             . '</style></head>'
@@ -148,9 +148,10 @@ class TopoguideService
         $diffPath   = $pix . '/picto-niv-' . $diffNiv . '.png';
 
         $bgImg = file_exists($imgPath)
-            ? '<img src="file://' . $imgPath . '" style="display:block;position:absolute;top:0;left:0;width:100%;height:' . $height . ';" alt="">'
+            ? '<img src="file://' . $imgPath . '" style="position:absolute;top:0;left:0;width:100%;height:' . $height . ';" alt="">'
             : '';
 
+        // picto APRÈS le fond dans le DOM → devant, sans z-index
         $diffImg = file_exists($diffPath)
             ? '<img src="file://' . $diffPath . '" style="position:absolute;top:5mm;right:5mm;height:15mm;" alt="">'
             : '';
@@ -158,8 +159,7 @@ class TopoguideService
         return '<!DOCTYPE html>'
             . '<html><head><meta charset="UTF-8"><style>'
             . '*{margin:0;padding:0;}'
-            . 'html,body{width:100%;height:' . $height . ';overflow:hidden;}'
-            . 'body{position:relative;}'
+            . 'html,body{width:100%;height:' . $height . ';overflow:hidden;position:relative;}'
             . '</style></head>'
             . '<body>' . $bgImg . $diffImg . '</body></html>';
     }
