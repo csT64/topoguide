@@ -115,18 +115,19 @@ class TopoguideService
         }
         $adresse = implode(' &mdash; ', $parts);
 
-        $bgImg = file_exists($imgPath)
-            ? '<img src="file://' . $imgPath . '" style="position:absolute;top:-5px;left:0;width:100%;height:30cm;" alt="">'
+        $bgCss = file_exists($imgPath)
+            ? 'background-image:url("file://' . $imgPath . '");background-repeat:repeat-x;background-size:auto 100%;'
             : '';
+
         return '<html height="30cm" style="margin:0;padding:0;"><head><meta charset="UTF-8"><style>'
             . '*{margin:0;padding:0;}'
-            . 'html,body{width:100%;height:30cm;position:relative;}'
-            . 'table{position:absolute;top:0;left:0;width:100%;height:30cm;border-collapse:collapse;}'
+            . 'html,body{width:100%;height:30cm;}'
+            . 'body{' . $bgCss . '}'
+            . 'table{width:100%;height:30cm;border-collapse:collapse;}'
             . 'td{color:#fff;font-family:Arial,sans-serif;font-size:9pt;text-align:center;'
             . 'vertical-align:middle;padding:0 9mm;}'
             . '</style></head>'
             . '<body height="30cm" style="height:30cm;margin:0;padding:0;">'
-            . $bgImg
             . '<table><tr><td>' . $adresse . '</td></tr></table>'
             . '</body></html>';
     }
@@ -145,7 +146,7 @@ class TopoguideService
         $diffPath   = $pix . '/picto-niv-' . $diffNiv . '.png';
 
         $bgCss = file_exists($imgPath)
-            ? 'background-image:url("file://' . $imgPath . '");background-repeat:repeat-x;background-size:100% 30cm;'
+            ? 'background-image:url("file://' . $imgPath . '");background-repeat:repeat-x;background-size:auto 100%;'
             : '';
 
         $diffImg = file_exists($diffPath)
