@@ -116,10 +116,8 @@ class TopoguideService
         $adresse = implode(' &mdash; ', $parts);
 
         $bgImg = file_exists($imgPath)
-            ? '<img src="file://' . $imgPath . '" style="position:absolute;top:-5px;left:0;width:100%;height:calc(' . $height . ' + 5px);" alt="">'
+            ? '<img src="file://' . $imgPath . '" style="position:absolute;top:-5px;left:0;width:100%;height:30cm;" alt="">'
             : '';
-
-        // table en position:absolute APRÈS l'img → devant, sans z-index
         return '<html height="30cm" style="margin:0;padding:0;"><head><meta charset="UTF-8"><style>'
             . '*{margin:0;padding:0;}'
             . 'html,body{width:100%;height:30cm;position:relative;}'
@@ -146,11 +144,10 @@ class TopoguideService
         $diffNiv    = $diffMap[$difficulte] ?? 4;
         $diffPath   = $pix . '/picto-niv-' . $diffNiv . '.png';
 
-        $bgImg = file_exists($imgPath)
-            ? '<img src="file://' . $imgPath . '" style="position:absolute;top:-5px;left:0;width:100%;height:calc(' . $height . ' + 5px);" alt="">'
+        $bgCss = file_exists($imgPath)
+            ? 'background-image:url("file://' . $imgPath . '");background-repeat:repeat-x;background-size:100% 30cm;'
             : '';
 
-        // picto APRÈS le fond dans le DOM → devant, sans z-index
         $diffImg = file_exists($diffPath)
             ? '<img src="file://' . $diffPath . '" style="position:absolute;top:5mm;right:5mm;height:15mm;" alt="">'
             : '';
@@ -158,9 +155,10 @@ class TopoguideService
         return '<html height="30cm" style="margin:0;padding:0;"><head><meta charset="UTF-8"><style>'
             . '*{margin:0;padding:0;}'
             . 'html,body{width:100%;height:30cm;position:relative;}'
+            . 'body{' . $bgCss . '}'
             . '</style></head>'
             . '<body height="30cm" style="height:30cm;margin:0;padding:0;">'
-            . $bgImg . $diffImg
+            . $diffImg
             . '</body></html>';
     }
 
