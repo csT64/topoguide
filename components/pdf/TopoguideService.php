@@ -116,18 +116,20 @@ class TopoguideService
         $adresse = implode(' &mdash; ', $parts);
 
         $bgImg = file_exists($imgPath)
-            ? 'background-image:url("file://' . $imgPath . '");background-repeat:repeat-x;background-size:100% 100%;'
+            ? '<img src="file://' . $imgPath . '" style="display:block;position:absolute;top:0;left:0;width:100%;height:' . $height . ';" alt="">'
             : '';
 
         return '<!DOCTYPE html>'
             . '<html><head><meta charset="UTF-8"><style>'
-            . 'html{margin:0;padding:0;width:100%;height:' . $height . ';' . $bgImg . '}'
-            . 'body{margin:0;padding:0;width:100%;height:100%;}'
-            . 'table{width:100%;height:100%;border-collapse:collapse;}'
+            . '*{margin:0;padding:0;}'
+            . 'html,body{width:100%;height:' . $height . ';overflow:hidden;}'
+            . 'body{position:relative;}'
+            . 'table{position:relative;z-index:1;width:100%;height:' . $height . ';border-collapse:collapse;}'
             . 'td{color:#fff;font-family:Arial,sans-serif;font-size:9pt;text-align:center;'
             . 'vertical-align:middle;padding:0 9mm;}'
             . '</style></head>'
             . '<body>'
+            . $bgImg
             . '<table><tr><td>' . $adresse . '</td></tr></table>'
             . '</body></html>';
     }
@@ -145,23 +147,21 @@ class TopoguideService
         $diffNiv    = $diffMap[$difficulte] ?? 4;
         $diffPath   = $pix . '/picto-niv-' . $diffNiv . '.png';
 
-        $bgUri   = file_exists($imgPath) ? 'file://' . $imgPath : null;
-        $diffUri = file_exists($diffPath) ? 'file://' . $diffPath : null;
-
-        $bgCss = $bgUri
-            ? 'background-image:url("' . $bgUri . '");background-repeat:repeat-x;background-size:auto 100%;'
+        $bgImg = file_exists($imgPath)
+            ? '<img src="file://' . $imgPath . '" style="display:block;position:absolute;top:0;left:0;width:100%;height:' . $height . ';" alt="">'
             : '';
 
-        $diffImg = $diffUri
-            ? '<img src="' . $diffUri . '" style="position:absolute;top:40px;left:90%;height:80px;" alt="">'
+        $diffImg = file_exists($diffPath)
+            ? '<img src="file://' . $diffPath . '" style="position:absolute;top:5mm;right:5mm;height:15mm;" alt="">'
             : '';
 
         return '<!DOCTYPE html>'
             . '<html><head><meta charset="UTF-8"><style>'
-            . 'html{margin:0;padding:0;width:100%;height:' . $height . ';' . $bgCss . '}'
-            . 'body{margin:0;padding:0;width:100%;height:100%;position:relative;}'
+            . '*{margin:0;padding:0;}'
+            . 'html,body{width:100%;height:' . $height . ';overflow:hidden;}'
+            . 'body{position:relative;}'
             . '</style></head>'
-            . '<body>' . $diffImg . '</body></html>';
+            . '<body>' . $bgImg . $diffImg . '</body></html>';
     }
 
     // ── Envoi HTTP ─────────────────────────────────────────────────────────────
