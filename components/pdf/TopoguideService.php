@@ -120,15 +120,14 @@ class TopoguideService
             : '';
 
         // table en position:absolute APRÈS l'img → devant, sans z-index
-        return '<!DOCTYPE html>'
-            . '<html><head><meta charset="UTF-8"><style>'
+        return '<html height="30cm" style="margin:0;padding:0;"><head><meta charset="UTF-8"><style>'
             . '*{margin:0;padding:0;}'
-            . 'html,body{width:100%;height:' . $height . ';position:relative;}'
-            . 'table{position:absolute;top:0;left:0;width:100%;height:' . $height . ';border-collapse:collapse;}'
+            . 'html,body{width:100%;height:30cm;position:relative;}'
+            . 'table{position:absolute;top:0;left:0;width:100%;height:30cm;border-collapse:collapse;}'
             . 'td{color:#fff;font-family:Arial,sans-serif;font-size:9pt;text-align:center;'
             . 'vertical-align:middle;padding:0 9mm;}'
             . '</style></head>'
-            . '<body>'
+            . '<body height="30cm" style="height:30cm;margin:0;padding:0;">'
             . $bgImg
             . '<table><tr><td>' . $adresse . '</td></tr></table>'
             . '</body></html>';
@@ -156,12 +155,13 @@ class TopoguideService
             ? '<img src="file://' . $diffPath . '" style="position:absolute;top:5mm;right:5mm;height:15mm;" alt="">'
             : '';
 
-        return '<!DOCTYPE html>'
-            . '<html><head><meta charset="UTF-8"><style>'
+        return '<html height="30cm" style="margin:0;padding:0;"><head><meta charset="UTF-8"><style>'
             . '*{margin:0;padding:0;}'
-            . 'html,body{width:100%;height:' . $height . ';position:relative;}'
+            . 'html,body{width:100%;height:30cm;position:relative;}'
             . '</style></head>'
-            . '<body>' . $bgImg . $diffImg . '</body></html>';
+            . '<body height="30cm" style="height:30cm;margin:0;padding:0;">'
+            . $bgImg . $diffImg
+            . '</body></html>';
     }
 
     // ── Envoi HTTP ─────────────────────────────────────────────────────────────
