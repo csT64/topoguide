@@ -322,40 +322,39 @@ footer a { color: #fff; }
 @media print {
     .no-print { display: none !important; }
     .page { padding: 0 9mm; }
+<?php if ($pdfEngine !== 'weasyprint'): ?>
     @page { size: A4 portrait; margin: 0; }
+    .diff-picto { display: none !important; }
+<?php endif; ?>
     section { page-break-inside: avoid; }
     h2 { page-break-after: avoid; }
-    .diff-picto { display: none !important; }
     .picto-where { height: 32px !important; margin-left: 0; }
 }
 </style>
 <?php if ($pdfEngine === 'weasyprint'): ?>
 <style>
-/* ── WeasyPrint : position:fixed répété sur chaque page ── */
+/* ── WeasyPrint : en-têtes/pieds répétés via CSS Paged Media ── */
 @page {
     size: A4 portrait;
     margin: 25mm 0 20mm 0;
+    @top-center    { content: element(page-header); }
+    @bottom-center { content: element(page-footer); }
 }
 header[role="banner"] {
-    position: fixed;
-    top: 0; left: 0; right: 0;
+    position: running(page-header);
+    width: 100%;
     height: 25mm;
     margin: 0;
-    min-height: 0;
     overflow: hidden;
-    /* DEBUG bordure rouge — à retirer une fois le positionnement validé */
-    border: 2px solid red;
+    border: 3px solid red; /* DEBUG — à supprimer */
 }
 footer[role="contentinfo"] {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
+    position: running(page-footer);
+    width: 100%;
     height: 20mm;
     margin: 0;
-    min-height: 0;
-    /* DEBUG bordure rouge — à retirer une fois le positionnement validé */
-    border-top: 2px solid red;
+    border-top: 3px solid red; /* DEBUG — à supprimer */
 }
-/* Restaure la visibilité du picto masqué par @media print générique */
 .diff-picto {
     display: block !important;
     position: absolute;
@@ -366,6 +365,7 @@ footer[role="contentinfo"] {
 <?php endif; ?>
 </head>
 <body>
+<!-- DEBUG pdfEngine=<?= htmlspecialchars($pdfEngine) ?> forPdf=<?= $forPdf ? 'true' : 'false' ?> -->
 
 <a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
 
