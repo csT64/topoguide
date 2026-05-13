@@ -216,17 +216,12 @@ header {
     background-size: auto 100%;
 }
 footer {
-    display: block;
-    width: 100%;
-    margin: 0 -9mm;
-    min-height: 18mm;
-    padding: 4mm 6mm;
     font-size: 9pt;
     color: #fff;
     text-align: center;
-    background-repeat: repeat-x;
-    background-size: auto 100%;
 }
+footer address { font-style: normal; }
+footer a { color: #fff; }
 
 /* ── Titre + logo producteur ──────────────────────── */
 .titre-logo-row { overflow: hidden; width: 100%; margin-top: 4mm; }
@@ -297,10 +292,6 @@ h2 { font-size: 14pt; color: #1f5468; font-weight: bold; padding-bottom: 2mm; ma
 /* ── Réussirmarando ───────────────────────────────── */
 .rando-link { font-size: 9pt; margin-top: 4mm; }
 
-/* ── Footer ───────────────────────────────────────── */
-footer address { font-style: normal; }
-footer a { color: #fff; }
-
 /* ── Utilitaires ──────────────────────────────────── */
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
 .no-print { }
@@ -310,6 +301,15 @@ footer a { color: #fff; }
     body  { background: #f0f0f0; }
     .page { max-width: 210mm; margin: 0 auto; background: #fff; padding: 20px 9mm; box-shadow: 0 0 10px rgba(0,0,0,.15); }
     header { margin-top: -20px; }  /* annule le padding-top de .page à l'écran */
+    footer {
+        display: block;
+        width: 100%;
+        margin: 0 -9mm;
+        min-height: 18mm;
+        padding: 4mm 6mm;
+        background-repeat: repeat-x;
+        background-size: auto 100%;
+    }
 }
 
 /* ── Type itinéraire picto ────────────────────────── */
@@ -342,8 +342,9 @@ footer a { color: #fff; }
     @top-center    { content: element(page-header); }
     @bottom-center { content: element(page-footer); }
 }
-/* Supprime le padding du div : les marges @page gèrent l'espacement */
-.page { padding: 0; }
+/* Les marges @page gèrent l'espacement horizontal ; 50px en haut pour
+   aérer le contenu par rapport à la ligne de fin du header */
+.page { padding: 50px 0 0 0; }
 header[role="banner"] {
     position: running(page-header);
     width: 210mm;
@@ -357,16 +358,20 @@ footer[role="contentinfo"] {
     width: 210mm;
     height: 20mm;
     margin: 0;
-    background-size: 100% 100%;
+    padding: 3mm 9mm;
+    /* Dimensions explicites : évite que % soit calculé depuis le bloc contenant */
+    background-size: 210mm 20mm;
     background-repeat: no-repeat;
     border-top: 3px solid red; /* DEBUG — à supprimer */
 }
 .diff-picto {
     display: block !important;
     position: absolute;
-    top: 0; right: 0; left: auto;
-    height: 100%; width: auto;
+    top: 50px; right: 0; left: auto;
+    height: calc(100% - 50px); width: auto;
 }
+/* Image + span fiche-type côte à côte dans WeasyPrint */
+.fiche-type-wrap { display: flex; align-items: center; gap: 4px; }
 </style>
 <?php endif; ?>
 </head>
