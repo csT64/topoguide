@@ -8,7 +8,8 @@ use app\models\Producteur;
 /** @var string $lang */
 /** @var bool $forPdf */
 
-$forPdf = $forPdf ?? false;
+$forPdf    = $forPdf    ?? false;
+$pdfEngine = $pdfEngine ?? '';
 
 // ── Données ──────────────────────────────────────────────────────────────────
 $titre       = $model->getTitle();
@@ -323,6 +324,36 @@ footer a { color: #fff; }
     .picto-where { height: 32px !important; margin-left: 0; }
 }
 </style>
+<?php if ($pdfEngine === 'weasyprint'): ?>
+<style>
+/* ── WeasyPrint : CSS Paged Media ─────────────────── */
+@page {
+    size: A4 portrait;
+    margin: 25mm 0mm 20mm 0mm;
+    @top-center    { content: element(page-header); }
+    @bottom-center { content: element(page-footer); }
+}
+header[role="banner"] {
+    position: running(page-header);
+    width: 210mm;
+    height: 25mm;
+    margin: 0;
+    overflow: hidden;
+    background-size: auto 100%;
+    background-repeat: repeat-x;
+}
+footer[role="contentinfo"] {
+    position: running(page-footer);
+    width: 210mm;
+    height: 20mm;
+    margin: 0;
+    background-size: auto 100%;
+    background-repeat: repeat-x;
+}
+/* running elements are extracted from flow — restore picto visibility */
+.diff-picto { display: block !important; }
+</style>
+<?php endif; ?>
 </head>
 <body>
 
@@ -337,8 +368,8 @@ footer a { color: #fff; }
 
 <div class="page">
 
-  <header role="banner"<?php if (!$forPdf && $pi['haut']): ?>
-      style="height:70px; background-image:url('<?= $pi['haut'] ?>'); background-repeat:repeat-x; background-size:auto 100%;"<?php endif; ?>>
+  <header role="banner"<?php if ((!$forPdf || $pdfEngine === 'weasyprint') && $pi['haut']): ?>
+      style="background-image:url('<?= $pi['haut'] ?>');"<?php endif; ?>>
     <?php if ($diffPicto): ?>
     <img src="<?= $diffPicto ?>" alt="" class="diff-picto" aria-hidden="true">
     <?php endif; ?>
@@ -625,7 +656,7 @@ footer a { color: #fff; }
   <!-- ══════════════════════════════════════════════════
        PIED DE PAGE : producteur
   ═══════════════════════════════════════════════════ -->
-  <?php if ($producteur && !$forPdf): ?>
+  <?php if ($producteur && (!$forPdf || $pdfEngine === 'weasyprint')): ?>
   <footer role="contentinfo"<?php if ($pi['pied']): ?> style="background-image:url('<?= $pi['pied'] ?>')"<?php endif; ?>>
     <address>
       <strong><?= Html::encode($producteur->raison_sociale ?? '') ?></strong><br>

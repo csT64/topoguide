@@ -25,7 +25,7 @@ class TopoguideServiceWeasy
         $view = new View();
         return $view->renderFile(
             Yii::getAlias('@app/views/topoguide/fiche.php'),
-            ['model' => $this->iti, 'lang' => $this->lang, 'forPdf' => $forPdf]
+            ['model' => $this->iti, 'lang' => $this->lang, 'forPdf' => $forPdf, 'pdfEngine' => 'weasyprint']
         );
     }
 
