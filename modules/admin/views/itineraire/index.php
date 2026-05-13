@@ -64,8 +64,9 @@ endforeach;
         ],
         [
             'class'    => 'yii\grid\ActionColumn',
-            'template' => '{view} {update} {delete} {pdf} {carte}',
+            'template' => '{view} {update} {delete} {html} {pdf} {carte}',
             'buttons'  => [
+                'html'  => fn ($url, $m) => Html::a('HTML', Url::to(['/topoguide/view', 'lang' => 'fr', 'id' => $m->id]), ['target' => '_blank', 'class' => 'btn btn-xs btn-success']),
                 'pdf'   => fn ($url, $m) => Html::a('PDF', Url::to(['/topoguide/pdf', 'lang' => 'fr', 'id' => $m->id]), ['target' => '_blank', 'class' => 'btn btn-xs btn-info']),
                 'carte' => fn ($url, $m) => Html::a('Carte ✎', ['/admin/itineraire/carte', 'id' => $m->id], ['class' => 'btn btn-xs btn-default']),
             ],

@@ -250,7 +250,8 @@ h2 { font-size: 14pt; color: #1f5468; font-weight: bold; padding-bottom: 2mm; ma
 
 /* ── Footer ───────────────────────────────────────── */
 footer {
-    margin-top: 8mm;
+    display: block;
+    width: 100%;
     font-size: 9pt;
     color: #fff;
     background-repeat: repeat-x;
@@ -258,8 +259,7 @@ footer {
     background-color: transparent;
     min-height: 18mm;
     padding: 4mm 6mm;
-display:block;
-text-align: center;
+    text-align: center;
 }
 footer address { font-style: normal; }
 footer a { color: #fff; }
@@ -303,24 +303,14 @@ footer a { color: #fff; }
   <a href="#" onclick="window.print();return false;">Imprimer</a>
 </nav>
 
-<div class="page">
-
-  <!-- Image décorative haut de page -->
-
-
-  <!-- ══════════════════════════════════════════════════
-       EN-TÊTE : logos + titre + commune + type
-  ═══════════════════════════════════════════════════ -->
-  
-  <header role="banner"<?php if (!$forPdf && $pi['haut']): ?>
+<header role="banner"<?php if (!$forPdf && $pi['haut']): ?>
     style="height:70px; background-image:url('<?= $pi['haut'] ?>'); background-repeat:repeat-x; background-size:auto 100%;"<?php endif; ?>>
-
-
-    <!-- Picto difficulté (décoratif, info dans la table infos) -->
     <?php if ($diffPicto): ?>
     <img src="<?= $diffPicto ?>" alt="" class="diff-picto" aria-hidden="true" height="55">
     <?php endif; ?>
-  </header>
+</header>
+
+<div class="page">
     <!-- Titre -->
     <h1 class="fiche-title"><?= Html::encode($titre) ?></h1>
 
@@ -594,29 +584,28 @@ footer a { color: #fff; }
   <!-- ══════════════════════════════════════════════════
        PIED DE PAGE : producteur
   ═══════════════════════════════════════════════════ -->
-  <!-- Image décorative bas de page -->
-  <?php if ($producteur && !$forPdf): ?>
-  <footer role="contentinfo"<?php if ($pi['pied']): ?> style="background-image:url('<?= $pi['pied'] ?>')"<?php endif; ?>>
-    <address>
-      <strong><?= Html::encode($producteur->raison_sociale ?? '') ?></strong><br>
-      <?php foreach (['adresse_1', 'adresse_2', 'adresse_3'] as $field): ?>
-        <?php if (!empty($producteur->$field)): ?>
-          <?= Html::encode($producteur->$field) ?><br>
-        <?php endif; ?>
-      <?php endforeach; ?>
-      <?php if ($producteur->code_postal || $producteur->commune): ?>
-        <?= Html::encode(trim($producteur->code_postal . ' ' . $producteur->commune)) ?><br>
-      <?php endif; ?>
-      <?php if ($producteur->telephone): ?>
-        <a href="tel:<?= Html::encode($producteur->telephone) ?>"><?= Html::encode($producteur->telephone) ?></a><br>
-      <?php endif; ?>
-      <?php if ($producteur->url): ?>
-        <a href="<?= Html::encode($producteur->url) ?>"><?= Html::encode($producteur->url) ?></a>
-      <?php endif; ?>
-    </address>
-  </footer>
-  <?php endif; ?>
-
 </div><!-- .page -->
+
+<?php if ($producteur && !$forPdf): ?>
+<footer role="contentinfo"<?php if ($pi['pied']): ?> style="background-image:url('<?= $pi['pied'] ?>')"<?php endif; ?>>
+  <address>
+    <strong><?= Html::encode($producteur->raison_sociale ?? '') ?></strong><br>
+    <?php foreach (['adresse_1', 'adresse_2', 'adresse_3'] as $field): ?>
+      <?php if (!empty($producteur->$field)): ?>
+        <?= Html::encode($producteur->$field) ?><br>
+      <?php endif; ?>
+    <?php endforeach; ?>
+    <?php if ($producteur->code_postal || $producteur->commune): ?>
+      <?= Html::encode(trim($producteur->code_postal . ' ' . $producteur->commune)) ?><br>
+    <?php endif; ?>
+    <?php if ($producteur->telephone): ?>
+      <a href="tel:<?= Html::encode($producteur->telephone) ?>"><?= Html::encode($producteur->telephone) ?></a><br>
+    <?php endif; ?>
+    <?php if ($producteur->url): ?>
+      <a href="<?= Html::encode($producteur->url) ?>"><?= Html::encode($producteur->url) ?></a>
+    <?php endif; ?>
+  </address>
+</footer>
+<?php endif; ?>
 </body>
 </html>
