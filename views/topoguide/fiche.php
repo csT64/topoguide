@@ -185,18 +185,29 @@ a    { color: #1f5468; }
 
 /* ── Conteneur page ───────────────────────────────── */
 .page { padding: 0 9mm; }
-header{position:relative;}
-/* ── Logos header ─────────────────────────────────── */
+
+/* ── Header / Footer bord perdu ───────────────────── */
+/* Les éléments dépassent du padding de .page via marges négatives */
+header { position: relative; margin: 0 -9mm; }
+footer { display: block; width: auto; margin: 0 -9mm; }
+
+/* ── Titre + logo producteur ──────────────────────── */
+.titre-logo-row { overflow: hidden; width: 100%; margin-bottom: 2mm; }
+.titre-block { float: left; max-width: 75%; }
+.logo-block  { float: right; max-width: 25%; text-align: right; padding-top: 2mm; }
+.logo-block img { max-height: 30mm; max-width: 100%; }
+
+/* ── Logos header (ancien, conservé) ─────────────── */
 .logos-row { width: 100%; margin-bottom: 6mm; }
 .logos-row td { vertical-align: middle; }
 .logos-row .td-right { text-align: right; }
 
-/* ── Titre & badges ───────────────────────────────── */
-.fiche-title { font-size: 24pt; font-weight: bold; color: #000; line-height: 1.1; margin-bottom: 3mm; }
-.fiche-commune { font-size: 20pt; color: #000; margin-bottom: 3mm; }
-.fiche-type { display: inline-block; background: #1f5468; color: #fff; padding: 0 10px; font-size: 11pt; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4mm; font-weight:900;}
+/* ── Titres & badges ──────────────────────────────── */
+.fiche-title    { font-size: 24pt; font-weight: bold; color: #000; line-height: 1.1; margin-bottom: 3mm; }
+.fiche-commune  { font-size: 20pt; color: #000; margin-bottom: 3mm; }
+.fiche-type     { display: inline-block; background: #1f5468; color: #fff; padding: 0 10px; font-size: 11pt; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4mm; font-weight: 900; }
 .fiche-homologue { display: inline-block; color: #E21D3B; font-weight: bold; font-size: 10pt; margin-bottom: 3mm; }
-.diff-picto {position:absolute;top:40px;left:90%;z-index:100;}
+.diff-picto { position: absolute; top: 40px; left: 90%; z-index: 100; }
 
 /* ── Descriptif + photos ──────────────────────────── */
 .desc-photo-table { width: 100%; margin-bottom: 4mm; }
@@ -272,6 +283,7 @@ footer a { color: #fff; }
 @media screen {
     body  { background: #f0f0f0; }
     .page { max-width: 210mm; margin: 0 auto; background: #fff; padding: 20px 9mm; box-shadow: 0 0 10px rgba(0,0,0,.15); }
+    header { margin-top: -20px; }  /* annule le padding-top de .page à l'écran */
 }
 
 /* ── Type itinéraire picto ────────────────────────── */
@@ -303,40 +315,49 @@ footer a { color: #fff; }
   <a href="#" onclick="window.print();return false;">Imprimer</a>
 </nav>
 
-<header role="banner"<?php if (!$forPdf && $pi['haut']): ?>
-    style="height:70px; background-image:url('<?= $pi['haut'] ?>'); background-repeat:repeat-x; background-size:auto 100%;"<?php endif; ?>>
+<div class="page">
+
+  <header role="banner"<?php if (!$forPdf && $pi['haut']): ?>
+      style="height:70px; background-image:url('<?= $pi['haut'] ?>'); background-repeat:repeat-x; background-size:auto 100%;"<?php endif; ?>>
     <?php if ($diffPicto): ?>
     <img src="<?= $diffPicto ?>" alt="" class="diff-picto" aria-hidden="true" height="55">
     <?php endif; ?>
-</header>
+  </header>
 
-<div class="page">
-    <!-- Titre -->
-    <h1 class="fiche-title"><?= Html::encode($titre) ?></h1>
+  <!-- Titre + logo producteur -->
+  <div class="titre-logo-row">
+    <div class="titre-block">
+      <h1 class="fiche-title"><?= Html::encode($titre) ?></h1>
 
-    <?php if ($homologue): ?>
-    <p class="fiche-homologue"><?= Html::encode($lHomologue) ?></p>
-    <?php endif; ?>
-
-    <!-- Commune de départ -->
-    <?php if ($commune): ?>
-    <h2 class="fiche-commune">
-      <?php if ($pi['where']): ?>
-      <img src="<?= $pi['where'] ?>" alt="Commune de départ" class="picto-where" height="64">
+      <?php if ($homologue): ?>
+      <p class="fiche-homologue"><?= Html::encode($lHomologue) ?></p>
       <?php endif; ?>
-      <?= Html::encode($commune) ?>
-    </h2>
-    <?php endif; ?>
 
-    <!-- Badge type itinéraire -->
-    <?php if ($type): ?>
-    <h3 class="fiche-type-wrap">
-      <?php if ($pi['typeiti']): ?>
-      <img src="<?= $pi['typeiti'] ?>" alt="" aria-hidden="true" width="16" height="32">
+      <?php if ($commune): ?>
+      <h2 class="fiche-commune">
+        <?php if ($pi['where']): ?>
+        <img src="<?= $pi['where'] ?>" alt="Commune de départ" class="picto-where" height="32">
+        <?php endif; ?>
+        <?= Html::encode($commune) ?>
+      </h2>
       <?php endif; ?>
-      <span class="fiche-type" aria-label="Type d'itinéraire : <?= Html::encode($type) ?>"><?= Html::encode(mb_strtoupper($type)) ?></span>
-    </h3>
+
+      <?php if ($type): ?>
+      <h3 class="fiche-type-wrap">
+        <?php if ($pi['typeiti']): ?>
+        <img src="<?= $pi['typeiti'] ?>" alt="" aria-hidden="true" width="16" height="32">
+        <?php endif; ?>
+        <span class="fiche-type" aria-label="Type d'itinéraire : <?= Html::encode($type) ?>"><?= Html::encode(mb_strtoupper($type)) ?></span>
+      </h3>
+      <?php endif; ?>
+    </div><!-- .titre-block -->
+
+    <?php if ($logoSrc): ?>
+    <div class="logo-block">
+      <img src="<?= $logoSrc ?>" alt="<?= Html::encode($producteur->raison_sociale ?? '') ?>">
+    </div>
     <?php endif; ?>
+  </div><!-- .titre-logo-row -->
 
 
 
@@ -400,7 +421,7 @@ footer a { color: #fff; }
       <table class="info-row" role="presentation">
         <tr>
           <?php if ($pi['where']): ?>
-          <td class="td-picto"><img src="<?= $pi['where'] ?>" alt="" height="42"></td>
+          <td class="td-picto"><img src="<?= $pi['where'] ?>" alt="" height="32"></td>
           <?php endif; ?>
           <th class="td-label" scope="row"><?= $lDepart ?></th>
           <td class="td-value"><?= Html::encode($commune) ?></td>
@@ -584,28 +605,28 @@ footer a { color: #fff; }
   <!-- ══════════════════════════════════════════════════
        PIED DE PAGE : producteur
   ═══════════════════════════════════════════════════ -->
-</div><!-- .page -->
-
-<?php if ($producteur && !$forPdf): ?>
-<footer role="contentinfo"<?php if ($pi['pied']): ?> style="background-image:url('<?= $pi['pied'] ?>')"<?php endif; ?>>
-  <address>
-    <strong><?= Html::encode($producteur->raison_sociale ?? '') ?></strong><br>
-    <?php foreach (['adresse_1', 'adresse_2', 'adresse_3'] as $field): ?>
-      <?php if (!empty($producteur->$field)): ?>
-        <?= Html::encode($producteur->$field) ?><br>
+  <?php if ($producteur && !$forPdf): ?>
+  <footer role="contentinfo"<?php if ($pi['pied']): ?> style="background-image:url('<?= $pi['pied'] ?>')"<?php endif; ?>>
+    <address>
+      <strong><?= Html::encode($producteur->raison_sociale ?? '') ?></strong><br>
+      <?php foreach (['adresse_1', 'adresse_2', 'adresse_3'] as $field): ?>
+        <?php if (!empty($producteur->$field)): ?>
+          <?= Html::encode($producteur->$field) ?><br>
+        <?php endif; ?>
+      <?php endforeach; ?>
+      <?php if ($producteur->code_postal || $producteur->commune): ?>
+        <?= Html::encode(trim($producteur->code_postal . ' ' . $producteur->commune)) ?><br>
       <?php endif; ?>
-    <?php endforeach; ?>
-    <?php if ($producteur->code_postal || $producteur->commune): ?>
-      <?= Html::encode(trim($producteur->code_postal . ' ' . $producteur->commune)) ?><br>
-    <?php endif; ?>
-    <?php if ($producteur->telephone): ?>
-      <a href="tel:<?= Html::encode($producteur->telephone) ?>"><?= Html::encode($producteur->telephone) ?></a><br>
-    <?php endif; ?>
-    <?php if ($producteur->url): ?>
-      <a href="<?= Html::encode($producteur->url) ?>"><?= Html::encode($producteur->url) ?></a>
-    <?php endif; ?>
-  </address>
-</footer>
-<?php endif; ?>
+      <?php if ($producteur->telephone): ?>
+        <a href="tel:<?= Html::encode($producteur->telephone) ?>"><?= Html::encode($producteur->telephone) ?></a><br>
+      <?php endif; ?>
+      <?php if ($producteur->url): ?>
+        <a href="<?= Html::encode($producteur->url) ?>"><?= Html::encode($producteur->url) ?></a>
+      <?php endif; ?>
+    </address>
+  </footer>
+  <?php endif; ?>
+
+</div><!-- .page -->
 </body>
 </html>
