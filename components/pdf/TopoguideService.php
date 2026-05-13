@@ -116,7 +116,7 @@ class TopoguideService
         $adresse = implode(' &mdash; ', $parts);
 
         $bgCss = file_exists($imgPath)
-            ? 'background-image:url("file://' . $imgPath . '");background-repeat: repeat-x;background-size:100%;'
+            ? 'background-image:url("file://' . $imgPath . '");background-repeat:repeat-x;background-size:100%;'
             : '';
 
         return '<html style="margin:0;padding:0;"><head><meta charset="UTF-8"><style>'
@@ -128,137 +128,35 @@ class TopoguideService
             . 'vertical-align:middle;padding:0 9mm;}'
             . '</style></head>'
             . '<body style="margin:0;padding:0;">'
-            . '<table border="1" style="border:1px solid red;"><tr><td>' . $adresse . '</td></tr></table>'
+            . '<table><tr><td>' . $adresse . '</td></tr></table>'
             . '</body></html>';
     }
 
-    
     private function buildHeaderHtml(string $pix): string
-{
-    $height  = '80px';
-    $imgPath = $pix . '/haut_page.png';
-
-    // Picto difficulté
-    $difficulte = $this->iti->getDifficulteVal();
-
-    $diffMap = [
-        'Très facile' => 1,
-        'Very easy'   => 1,
-        'Muy fácil'   => 1,
-
-        'Facile'      => 2,
-        'Easy'        => 2,
-        'Fácil'       => 2,
-
-        'Moyenne'     => 3,
-        'Average'     => 3,
-        'Medio'       => 3,
-    ];
-
-    $diffNiv  = $diffMap[$difficulte] ?? 4;
-    $diffPath = $pix . '/picto-niv-' . $diffNiv . '.png';
-
-    // Fond header
-    $bgImg = '';
-    if (file_exists($imgPath)) {
-        $bgImg = '<img 
-            class="bg"
-            src="file://' . $imgPath . '"
-            alt="">';
-    }
-
-    // Picto difficulté
-    $diffImg = '';
-    if (file_exists($diffPath)) {
-        $diffImg = '<img 
-            class="diff"
-            src="file://' . $diffPath . '"
-            alt="">';
-    }
-
-    return '
-<html>
-<head>
-<meta charset="UTF-8">
-
-<style>
-html,
-body{
-    margin:0;
-    padding:0;
-    width:210mm;
-    height:' . $height . ';
-}
-
-body{
-    position:relative;
-    height:180px;
-}
-
-/* image de fond */
-.bg{
-    position:relative;
-
-    width:1480px;
-display:block;
-margin:0;
-padding:0;
-}
-
-/* picto difficulté */
-.diff{
-    position:absolute;
-
-    top:40%;
-    left:160%;
-;
-}
-</style>
-
-</head>
-
-<body>
-
-' . $bgImg . '
-
-' . $diffImg . '
-
-</body>
-</html>';
-}
-    
-    private function buildHeaderHtmlold(string $pix): string
     {
-        $height  = '20mm';
-        $imgPath = $pix . '/haut_page.png';
-
-        // Picto difficulté — même logique que fiche.php
+        $imgPath  = $pix . '/haut_page.png';
         $difficulte = $this->iti->getDifficulteVal();
-        $diffMap    = ['Très facile' => 1, 'Very easy' => 1, 'Muy fácil' => 1,
-                       'Facile' => 2, 'Easy' => 2, 'Fácil' => 2,
-                       'Moyenne' => 3, 'Average' => 3, 'Medio' => 3];
-        $diffNiv    = $diffMap[$difficulte] ?? 4;
-        $diffPath   = $pix . '/picto-niv-' . $diffNiv . '.png';
+        $diffMap  = [
+            'Très facile' => 1, 'Very easy' => 1, 'Muy fácil' => 1,
+            'Facile'      => 2, 'Easy'      => 2, 'Fácil'     => 2,
+            'Moyenne'     => 3, 'Average'   => 3, 'Medio'     => 3,
+        ];
+        $diffNiv  = $diffMap[$difficulte] ?? 4;
+        $diffPath = $pix . '/picto-niv-' . $diffNiv . '.png';
 
-        $bgCss = file_exists($imgPath)
-            ? 'display:block;overflow:hidden;background-size:100%;background-image:url("file://' . $imgPath . '");'
-            : '';
-        
-      $diffImg =  '<img src="file://' . $imgPath . '" style="">';
-        
+        $bgImg   = file_exists($imgPath)  ? '<img class="bg"   src="file://' . $imgPath  . '" alt="">' : '';
+        $diffImg = file_exists($diffPath) ? '<img class="diff" src="file://' . $diffPath . '" alt="">' : '';
 
-        $diffImg = file_exists($diffPath)
-            ? '<img src="file://' . $diffPath . '" style="position:absolute;top:5mm;right:5mm;height:15mm;" alt="">'
-            : '';
-
-        return '<html style="margin:0;padding:0;"><head><meta charset="UTF-8"><style>'
-            . '*{margin:0;padding:0;}'
-            . 'html,body{width:100%;border:1px solid blue;}'
-            . 'body{' . $bgCss . '}'
+        // Valeurs empiriques validées sur QtWebKit 5.12 :
+        // .bg  width:1480px — couvre toute la largeur A4 à la résolution de rendu wkhtmltopdf
+        // .diff left:160%  — positionne le picto en haut à droite dans ce contexte de rendu
+        return '<html><head><meta charset="UTF-8"><style>'
+            . 'html,body{margin:0;padding:0;width:210mm;height:80px;}'
+            . 'body{position:relative;height:180px;}'
+            . '.bg{display:block;position:relative;width:1480px;margin:0;padding:0;}'
+            . '.diff{position:absolute;top:40%;left:160%;}'
             . '</style></head>'
-            . '<body style="margin:0;padding:0;" >'
-            . $diffImg
-            . '</body></html>';
+            . '<body>' . $bgImg . $diffImg . '</body></html>';
     }
 
     // ── Envoi HTTP ─────────────────────────────────────────────────────────────
