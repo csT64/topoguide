@@ -342,7 +342,7 @@ footer a { color: #fff; }
 }
 header[role="banner"] {
     position: running(page-header);
-    width: 100%;
+    width: 210mm;
     height: 25mm;
     margin: 0;
     overflow: hidden;
@@ -350,7 +350,7 @@ header[role="banner"] {
 }
 footer[role="contentinfo"] {
     position: running(page-footer);
-    width: 100%;
+    width: 210mm;
     height: 20mm;
     margin: 0;
     border-top: 3px solid red; /* DEBUG — à supprimer */
@@ -384,6 +384,34 @@ footer[role="contentinfo"] {
     <img src="<?= $diffPicto ?>" alt="" class="diff-picto" aria-hidden="true">
     <?php endif; ?>
   </header>
+
+<?php
+// Closure réutilisée : footer identique en deux positions selon le moteur
+$renderFooter = function() use ($producteur, $pi): void {
+    if (!$producteur) return; ?>
+  <footer role="contentinfo"<?php if ($pi['pied']): ?> style="background-image:url('<?= $pi['pied'] ?>')"<?php endif; ?>>
+    <address>
+      <strong><?= Html::encode($producteur->raison_sociale ?? '') ?></strong><br>
+      <?php foreach (['adresse_1', 'adresse_2', 'adresse_3'] as $field): ?>
+        <?php if (!empty($producteur->$field)): ?>
+          <?= Html::encode($producteur->$field) ?><br>
+        <?php endif; ?>
+      <?php endforeach; ?>
+      <?php if ($producteur->code_postal || $producteur->commune): ?>
+        <?= Html::encode(trim($producteur->code_postal . ' ' . $producteur->commune)) ?><br>
+      <?php endif; ?>
+      <?php if ($producteur->telephone): ?>
+        <a href="tel:<?= Html::encode($producteur->telephone) ?>"><?= Html::encode($producteur->telephone) ?></a><br>
+      <?php endif; ?>
+      <?php if ($producteur->url): ?>
+        <a href="<?= Html::encode($producteur->url) ?>"><?= Html::encode($producteur->url) ?></a>
+      <?php endif; ?>
+    </address>
+  </footer>
+<?php }; ?>
+
+<?php // WeasyPrint : footer en début de document pour que position:running() soit actif dès la page 1 ?>
+<?php if ($pdfEngine === 'weasyprint'): $renderFooter(); endif; ?>
 
   <!-- Titre + logo producteur -->
   <div class="titre-logo-row">
@@ -664,29 +692,9 @@ footer[role="contentinfo"] {
   </main>
 
   <!-- ══════════════════════════════════════════════════
-       PIED DE PAGE : producteur
+       PIED DE PAGE : producteur (écran uniquement — WeasyPrint est en début de document)
   ═══════════════════════════════════════════════════ -->
-  <?php if ($producteur && (!$forPdf || $pdfEngine === 'weasyprint')): ?>
-  <footer role="contentinfo"<?php if ($pi['pied']): ?> style="background-image:url('<?= $pi['pied'] ?>')"<?php endif; ?>>
-    <address>
-      <strong><?= Html::encode($producteur->raison_sociale ?? '') ?></strong><br>
-      <?php foreach (['adresse_1', 'adresse_2', 'adresse_3'] as $field): ?>
-        <?php if (!empty($producteur->$field)): ?>
-          <?= Html::encode($producteur->$field) ?><br>
-        <?php endif; ?>
-      <?php endforeach; ?>
-      <?php if ($producteur->code_postal || $producteur->commune): ?>
-        <?= Html::encode(trim($producteur->code_postal . ' ' . $producteur->commune)) ?><br>
-      <?php endif; ?>
-      <?php if ($producteur->telephone): ?>
-        <a href="tel:<?= Html::encode($producteur->telephone) ?>"><?= Html::encode($producteur->telephone) ?></a><br>
-      <?php endif; ?>
-      <?php if ($producteur->url): ?>
-        <a href="<?= Html::encode($producteur->url) ?>"><?= Html::encode($producteur->url) ?></a>
-      <?php endif; ?>
-    </address>
-  </footer>
-  <?php endif; ?>
+  <?php if (!$forPdf && $pdfEngine !== 'weasyprint'): $renderFooter(); endif; ?>
 
 </div><!-- .page -->
 </body>
