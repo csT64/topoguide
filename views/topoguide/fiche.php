@@ -336,10 +336,13 @@ footer a { color: #fff; }
 /* ── WeasyPrint : en-têtes/pieds répétés via CSS Paged Media ── */
 @page {
     size: A4 portrait;
-    margin: 25mm 0 20mm 0;
+    /* 9mm gauche/droite pour espacement contenu — header/footer couvrent les 210mm */
+    margin: 25mm 9mm 20mm 9mm;
     @top-center    { content: element(page-header); }
     @bottom-center { content: element(page-footer); }
 }
+/* Supprime le padding du div : les marges @page gèrent l'espacement */
+.page { padding: 0; }
 header[role="banner"] {
     position: running(page-header);
     width: 210mm;
