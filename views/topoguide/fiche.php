@@ -204,7 +204,7 @@ footer { display: block; width: auto; margin: 0 -9mm; }
 
 /* ── Titres & badges ──────────────────────────────── */
 .fiche-title    { font-size: 24pt; font-weight: bold; color: #000; line-height: 1.1; }
-.fiche-commune  { font-size: 20pt; color: #000; }
+.fiche-commune  { font-size: 20pt; color: #000; padding-bottom: 0; margin-bottom: 0; }
 .fiche-type     { display: inline-block; background: #1f5468; color: #fff; padding: 0 10px; font-size: 11pt; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4mm; font-weight: 900; }
 .fiche-homologue { display: inline-block; color: #E21D3B; font-weight: bold; font-size: 10pt; margin-bottom: 3mm; }
 .diff-picto { position: absolute; top: 0; left: 90%; z-index: 100; height: 100%; width: auto; }
@@ -218,7 +218,7 @@ footer { display: block; width: auto; margin: 0 -9mm; }
 .photos-two-row { width: 100%; }
 .photos-two-row td { width: 50%; vertical-align: top; }
 .photos-two-row td:first-child { padding-right: 2mm; }
-.desc-full { width: 100%; clear:both;}
+.desc-full { width: 100%; clear: both; margin-bottom: 4mm; }
 img.photo { max-width: 100%; display: block; }
 figcaption { font-size: 8pt; color: #666; margin-top: 1mm; }
 
@@ -301,6 +301,7 @@ footer a { color: #fff; }
     section { page-break-inside: avoid; }
     h2 { page-break-after: avoid; }
     .diff-picto { display: none !important; }
+    .picto-where { height: 32px !important; margin-left: 0; }
 }
 </style>
 </head>
