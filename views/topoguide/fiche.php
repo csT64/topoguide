@@ -207,9 +207,26 @@ a    { color: #1f5468; }
 .page { padding: 0 9mm; }
 
 /* ── Header / Footer bord perdu ───────────────────── */
-/* Les éléments dépassent du padding de .page via marges négatives */
-header { position: relative; margin: 0 -9mm; }
-footer { display: block; width: auto; margin: 0 -9mm; }
+/* Dépassent du padding de .page via marges négatives */
+header {
+    position: relative;
+    margin: 0 -9mm;
+    min-height: 25mm;
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+}
+footer {
+    display: block;
+    width: 100%;
+    margin: 0 -9mm;
+    min-height: 18mm;
+    padding: 4mm 6mm;
+    font-size: 9pt;
+    color: #fff;
+    text-align: center;
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+}
 
 /* ── Titre + logo producteur ──────────────────────── */
 .titre-logo-row { overflow: hidden; width: 100%; margin-top: 4mm; }
@@ -280,18 +297,6 @@ h2 { font-size: 14pt; color: #1f5468; font-weight: bold; padding-bottom: 2mm; ma
 .rando-link { font-size: 9pt; margin-top: 4mm; }
 
 /* ── Footer ───────────────────────────────────────── */
-footer {
-    display: block;
-    width: 100%;
-    font-size: 9pt;
-    color: #fff;
-    background-repeat: repeat-x;
-    background-size: auto 100%;
-    background-color: transparent;
-    min-height: 18mm;
-    padding: 4mm 6mm;
-    text-align: center;
-}
 footer address { font-style: normal; }
 footer a { color: #fff; }
 
@@ -326,32 +331,37 @@ footer a { color: #fff; }
 </style>
 <?php if ($pdfEngine === 'weasyprint'): ?>
 <style>
-/* ── WeasyPrint : CSS Paged Media ─────────────────── */
+/* ── WeasyPrint : position:fixed répété sur chaque page ── */
 @page {
     size: A4 portrait;
-    margin: 25mm 0mm 20mm 0mm;
-    @top-center    { content: element(page-header); }
-    @bottom-center { content: element(page-footer); }
+    margin: 25mm 0 20mm 0;
 }
 header[role="banner"] {
-    position: running(page-header);
-    width: 210mm;
+    position: fixed;
+    top: 0; left: 0; right: 0;
     height: 25mm;
     margin: 0;
+    min-height: 0;
     overflow: hidden;
-    background-size: auto 100%;
-    background-repeat: repeat-x;
+    /* DEBUG bordure rouge — à retirer une fois le positionnement validé */
+    border: 2px solid red;
 }
 footer[role="contentinfo"] {
-    position: running(page-footer);
-    width: 210mm;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
     height: 20mm;
     margin: 0;
-    background-size: auto 100%;
-    background-repeat: repeat-x;
+    min-height: 0;
+    /* DEBUG bordure rouge — à retirer une fois le positionnement validé */
+    border-top: 2px solid red;
 }
-/* running elements are extracted from flow — restore picto visibility */
-.diff-picto { display: block !important; }
+/* Restaure la visibilité du picto masqué par @media print générique */
+.diff-picto {
+    display: block !important;
+    position: absolute;
+    top: 0; right: 0; left: auto;
+    height: 100%; width: auto;
+}
 </style>
 <?php endif; ?>
 </head>

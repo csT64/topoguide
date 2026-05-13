@@ -81,7 +81,7 @@ class TopoguideController extends Controller
         Yii::$app->response->format = Response::FORMAT_RAW;
         Yii::$app->response->headers->set('Content-Type', 'text/html; charset=utf-8');
 
-        return $svc->renderHtml(true);
+        return $svc->renderHtml(false);
     }
 
     // ── Debug PDF (visualisation des HTML intermédiaires) ─────────────────────
