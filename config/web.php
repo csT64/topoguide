@@ -55,6 +55,9 @@ $config = [
                 // Debug PDF — visualise les HTML intermédiaires dans le navigateur
                 'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf-<part:(header|footer|content)>' => 'topoguide/pdf-debug',
 
+                // Debug WeasyPrint — HTML avec CSS paged media (pour test CLI)
+                'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.weasy' => 'topoguide/weasy-debug',
+
                 // Cartes Leaflet interactives
                 'gmap/simple' => 'gmap/simple',
                 'gmap/gpx'    => 'gmap/gpx',

@@ -67,6 +67,23 @@ class TopoguideController extends Controller
         $svc->generate();
     }
 
+    // ── Debug WeasyPrint (HTML avec CSS paged media, pour test CLI) ──────────────
+    // URL : /topoguide/fr/ID.weasy
+    // Usage : weasyprint http://topoguide.local/topoguide/fr/ID.weasy output.pdf
+
+    public function actionWeasyDebug(string $lang, string $id): string
+    {
+        $this->validateLang($lang);
+        Yii::$app->language = $lang;
+        $iti = $this->loadItineraire($id);
+        $svc = new TopoguideServiceWeasy($iti, $lang);
+
+        Yii::$app->response->format = Response::FORMAT_RAW;
+        Yii::$app->response->headers->set('Content-Type', 'text/html; charset=utf-8');
+
+        return $svc->renderHtml(true);
+    }
+
     // ── Debug PDF (visualisation des HTML intermédiaires) ─────────────────────
     // URLs : /topoguide/fr/ID.pdf-header | .pdf-footer | .pdf-content
 
