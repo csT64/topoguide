@@ -192,7 +192,7 @@ header { position: relative; margin: 0 -9mm; }
 footer { display: block; width: auto; margin: 0 -9mm; }
 
 /* ── Titre + logo producteur ──────────────────────── */
-.titre-logo-row { overflow: hidden; width: 100%; margin-bottom: 2mm; }
+.titre-logo-row { overflow: hidden; width: 100%; margin-top: 4mm; }
 .titre-block { float: left; max-width: 75%; }
 .logo-block  { float: right; max-width: 25%; text-align: right; padding-top: 2mm; }
 .logo-block img { max-height: 30mm; max-width: 100%; }
@@ -203,11 +203,11 @@ footer { display: block; width: auto; margin: 0 -9mm; }
 .logos-row .td-right { text-align: right; }
 
 /* ── Titres & badges ──────────────────────────────── */
-.fiche-title    { font-size: 24pt; font-weight: bold; color: #000; line-height: 1.1; margin-bottom: 3mm; }
-.fiche-commune  { font-size: 20pt; color: #000; margin-bottom: 3mm; }
+.fiche-title    { font-size: 24pt; font-weight: bold; color: #000; line-height: 1.1; }
+.fiche-commune  { font-size: 20pt; color: #000; }
 .fiche-type     { display: inline-block; background: #1f5468; color: #fff; padding: 0 10px; font-size: 11pt; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4mm; font-weight: 900; }
 .fiche-homologue { display: inline-block; color: #E21D3B; font-weight: bold; font-size: 10pt; margin-bottom: 3mm; }
-.diff-picto { position: absolute; top: 40px; left: 90%; z-index: 100; }
+.diff-picto { position: absolute; top: 0; left: 90%; z-index: 100; height: 100%; width: auto; }
 
 /* ── Descriptif + photos ──────────────────────────── */
 .desc-photo-table { width: 100%; margin-bottom: 4mm; }
@@ -291,7 +291,7 @@ footer a { color: #fff; }
 .fiche-type-wrap img {display: inline-block; line-height:32px;padding:0;margin:0;float:left;}
 
 /* ── Commune (picto-where) ────────────────────────── */
-.picto-where { vertical-align: middle; margin-right: 4px; }
+.picto-where { vertical-align: middle; margin-left: -15px; margin-right: 0; }
 
 /* ── Impression / PDF ─────────────────────────────── */
 @media print {
@@ -320,7 +320,7 @@ footer a { color: #fff; }
   <header role="banner"<?php if (!$forPdf && $pi['haut']): ?>
       style="height:70px; background-image:url('<?= $pi['haut'] ?>'); background-repeat:repeat-x; background-size:auto 100%;"<?php endif; ?>>
     <?php if ($diffPicto): ?>
-    <img src="<?= $diffPicto ?>" alt="" class="diff-picto" aria-hidden="true" height="55">
+    <img src="<?= $diffPicto ?>" alt="" class="diff-picto" aria-hidden="true">
     <?php endif; ?>
   </header>
 
@@ -336,7 +336,7 @@ footer a { color: #fff; }
       <?php if ($commune): ?>
       <h2 class="fiche-commune">
         <?php if ($pi['where']): ?>
-        <img src="<?= $pi['where'] ?>" alt="Commune de départ" class="picto-where" height="32">
+        <img src="<?= $pi['where'] ?>" alt="Commune de départ" class="picto-where" height="62">
         <?php endif; ?>
         <?= Html::encode($commune) ?>
       </h2>
