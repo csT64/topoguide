@@ -14,4 +14,10 @@ return [
 
     // Chemin vers wkhtmltopdf (génération PDF)
     'wkhtmltopdf'    => '/usr/local/bin/wkhtmltopdf',
+
+    // Moteur PDF : 'wkhtmltopdf' | 'weasyprint'
+    'pdfEngine'      => 'wkhtmltopdf',
+
+    // Chemin vers weasyprint (pip install weasyprint)
+    'weasyprint'     => '/usr/local/bin/weasyprint',
 ];

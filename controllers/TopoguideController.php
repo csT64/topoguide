@@ -8,6 +8,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use app\models\Itineraire;
 use app\components\pdf\TopoguideService;
+use app\components\pdf\TopoguideServiceWeasy;
 
 class TopoguideController extends Controller
 {
@@ -59,7 +60,11 @@ class TopoguideController extends Controller
         Yii::$app->language = $lang;
         $iti = $this->loadItineraire($id);
 
-        (new TopoguideService($iti, $lang))->generate();
+        $engine = Yii::$app->params['pdfEngine'] ?? 'wkhtmltopdf';
+        $svc = $engine === 'weasyprint'
+            ? new TopoguideServiceWeasy($iti, $lang)
+            : new TopoguideService($iti, $lang);
+        $svc->generate();
     }
 
     // ── Debug PDF (visualisation des HTML intermédiaires) ─────────────────────
