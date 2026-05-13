@@ -63,6 +63,14 @@ class TopoguideService
         file_put_contents($tmpHeader, $this->buildHeaderHtml($pix));
         file_put_contents($tmpFooter, $this->buildFooterHtml($pix . '/pied_page_noir.png', '20mm'));
 
+        $producteur = \app\models\Producteur::findOne($this->iti->getProducteurId());
+        $author     = $producteur->raison_sociale ?? '';
+        $subject    = implode(', ', array_filter([
+            $this->iti->commune_depart,
+            $this->iti->getDifficulteVal(),
+            $this->iti->getDureeVal(),
+        ]));
+
         $cmd = sprintf(
             '%s --quiet --encoding utf-8 --print-media-type'
             . ' --enable-local-file-access'
@@ -70,12 +78,16 @@ class TopoguideService
             . ' --margin-top 25mm --margin-bottom 20mm --margin-left 0 --margin-right 0'
             . ' --header-html %s --header-spacing 0'
             . ' --footer-html %s --footer-spacing 0'
+            . ' --title %s --author %s --subject %s'
             . ' %s %s 2>&1',
             escapeshellarg($bin),
             escapeshellarg($webroot),
             escapeshellarg($mapDir),
             escapeshellarg($tmpHeader),
             escapeshellarg($tmpFooter),
+            escapeshellarg($this->iti->getTitle()),
+            escapeshellarg($author),
+            escapeshellarg($subject),
             escapeshellarg($tmpIn),
             escapeshellarg($tmpOut)
         );

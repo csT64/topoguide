@@ -162,6 +162,16 @@ $langAttr = match ($lang) { 'en' => 'en', 'es' => 'es', default => 'fr' };
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= Html::encode($titre) ?></title>
+<?php
+    $metaDesc = implode(' — ', array_filter([
+        $titre,
+        $commune      ? $model->commune_depart                 : null,
+        $type         ? $model->getTypeVal()                   : null,
+        $difficulte   ? $model->getDifficulteVal()             : null,
+        $producteur   ? ($producteur->raison_sociale ?? null)  : null,
+    ]));
+?>
+<meta name="description" content="<?= Html::encode($metaDesc) ?>">
 <?php $fontsDir = Yii::getAlias('@app') . '/fonts'; ?>
 <style>
 <?php if ($forPdf): ?>
