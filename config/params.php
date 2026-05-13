@@ -19,5 +19,5 @@ return [
     'pdfEngine'      => 'wkhtmltopdf',
 
     // Chemin vers weasyprint (pip install weasyprint)
-    'weasyprint'     => '/usr/local/bin/weasyprint',
+    'weasyprint'     => '/home/triton/.local/bin/weasyprint',
 ];
