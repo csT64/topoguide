@@ -230,6 +230,7 @@ footer {
 
 /* ── Titre + logo producteur ──────────────────────── */
 .titre-logo-row { overflow: hidden; width: 100%; margin-top: 4mm; }
+.titre-logo-row::after { content: ''; display: block; clear: both; }
 .titre-block { float: left; max-width: 75%; }
 .logo-block  { float: right; max-width: 25%; text-align: right; padding-top: 2mm; }
 .logo-block img { max-height: 30mm; max-width: 100%; }
@@ -356,6 +357,8 @@ footer[role="contentinfo"] {
     width: 210mm;
     height: 20mm;
     margin: 0;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
     border-top: 3px solid red; /* DEBUG — à supprimer */
 }
 .diff-picto {
