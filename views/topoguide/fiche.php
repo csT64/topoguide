@@ -162,10 +162,19 @@ $langAttr = match ($lang) { 'en' => 'en', 'es' => 'es', default => 'fr' };
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= Html::encode($titre) ?></title>
+<?php $fontsDir = Yii::getAlias('@app') . '/fonts'; ?>
+<style>
+<?php if ($forPdf): ?>
+@font-face { font-family:'Atkinson'; font-weight:400; font-style:normal;  src:url('file://<?= $fontsDir ?>/AtkinsonHyperlegible-Regular.ttf') format('truetype'); }
+@font-face { font-family:'Atkinson'; font-weight:700; font-style:normal;  src:url('file://<?= $fontsDir ?>/AtkinsonHyperlegible-Bold.ttf') format('truetype'); }
+@font-face { font-family:'Atkinson'; font-weight:400; font-style:italic;  src:url('file://<?= $fontsDir ?>/AtkinsonHyperlegible-Italic.ttf') format('truetype'); }
+@font-face { font-family:'Atkinson'; font-weight:700; font-style:italic;  src:url('file://<?= $fontsDir ?>/AtkinsonHyperlegible-BoldItalic.ttf') format('truetype'); }
+<?php endif; ?>
+</style>
 <style>
 /* ── Reset & base ─────────────────────────────────── */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: Arial, Helvetica, sans-serif; font-size: 11pt; color: #222; background: #fff; }
+body { font-family: 'Atkinson', Arial, Helvetica, sans-serif; font-size: 12pt; line-height: 1.5; color: #222; background: #fff; }
 img  { border: 0; }
 a    { color: #1f5468; }
 
