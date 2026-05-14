@@ -211,16 +211,17 @@ a    { color: #1f5468; }
 header {
     position: relative;
     margin: 0 -9mm;
-    min-height: 25mm;
+    min-height: 20mm;
     background-repeat: repeat-x;
-    background-size: auto 100%;
+    background-size: 800px 80%;
 }
 footer {
     font-size: 9pt;
     color: #fff;
     text-align: center;
+    
 }
-footer address { font-style: normal; }
+footer address { font-style: normal; padding-top:2mm;}
 footer a { color: #fff; }
 
 /* ── Titre + logo producteur ──────────────────────── */
@@ -313,7 +314,9 @@ h2 { font-size: 14pt; color: #1f5468; font-weight: bold; padding-bottom: 2mm; ma
 }
 
 /* ── Type itinéraire picto ────────────────────────── */
-.fiche-type-wrap { display: inline-block; line-height:32px;padding:0;margin:0; float:left;}
+.fiche-type-wrap { display: block; width:100%;line-height:32px;padding:0;margin:0;}
+.fiche-type-wrap span{ display: inline-block; line-height:32px;padding:0;margin:0; float:left;padding-left:10px;padding-right:10px;}
+
 .fiche-type-wrap img {display: inline-block; line-height:32px;padding:0;margin:0;float:left;}
 
 /* ── Commune (picto-where) ────────────────────────── */
@@ -348,30 +351,29 @@ h2 { font-size: 14pt; color: #1f5468; font-weight: bold; padding-bottom: 2mm; ma
 header[role="banner"] {
     position: running(page-header);
     width: 210mm;
-    height: 25mm;
+    height: 45mm;
     margin: 0;
     overflow: hidden;
-    border: 3px solid red; /* DEBUG — à supprimer */
 }
+
 footer[role="contentinfo"] {
     position: running(page-footer);
     width: 210mm;
     height: 20mm;
     margin: 0;
-    padding: 3mm 9mm;
+    padding-top: 2mm;
     /* Dimensions explicites : évite que % soit calculé depuis le bloc contenant */
     background-size: 210mm 20mm;
     background-repeat: no-repeat;
-    border-top: 3px solid red; /* DEBUG — à supprimer */
 }
 .diff-picto {
     display: block !important;
     position: absolute;
-    top: 50px; right: 0; left: auto;
-    height: calc(100% - 50px); width: auto;
+    top: 50px; right: 90px; left: auto;
+    height: 100px; width: auto;
 }
 /* Image + span fiche-type côte à côte dans WeasyPrint */
-.fiche-type-wrap { display: flex; align-items: center; gap: 4px; }
+.fiche-type-wrap { display:inline-block; padding:0;margin:0; }
 </style>
 <?php endif; ?>
 </head>
