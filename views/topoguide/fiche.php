@@ -173,6 +173,9 @@ $langAttr = match ($lang) { 'en' => 'en', 'es' => 'es', default => 'fr' };
     ]));
 ?>
 <meta name="description" content="<?= Html::encode($metaDesc) ?>">
+<?php if ($producteur && $producteur->raison_sociale): ?>
+<meta name="author" content="<?= Html::encode($producteur->raison_sociale) ?>">
+<?php endif; ?>
 <?php $fontsDir = Yii::getAlias('@app') . '/fonts'; ?>
 <style>
 <?php if ($forPdf): ?>
