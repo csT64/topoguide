@@ -49,13 +49,15 @@ $config = [
                 // Carte statique JPG
                 'topoguide/carte/<id:[A-Z0-9]+>' => 'topoguide/carte',
 
-                // PDF public
+                // PDF public (moteur selon params.php)
                 'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf' => 'topoguide/pdf',
 
-                // Debug PDF — visualise les HTML intermédiaires dans le navigateur
-                'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf-<part:(header|footer|content)>' => 'topoguide/pdf-debug',
+                // PDF explicitement par moteur
+                'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf-wk'    => 'topoguide/pdf-wk',
+                'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf-weasy' => 'topoguide/pdf-weasy',
 
-                // Debug WeasyPrint — HTML avec CSS paged media (pour test CLI)
+                // Debug HTML — visualise le HTML intermédiaire dans le navigateur
+                'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf-<part:(header|footer|content)>' => 'topoguide/pdf-debug',
                 'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.weasy' => 'topoguide/weasy-debug',
 
                 // Cartes Leaflet interactives

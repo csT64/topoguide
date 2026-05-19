@@ -64,11 +64,14 @@ endforeach;
         ],
         [
             'class'    => 'yii\grid\ActionColumn',
-            'template' => '{view} {update} {delete} {html} {pdf} {carte}',
+            'template' => '{view} {update} {delete} {html} {html_wk} {html_wp} {pdf_wk} {pdf_wp} {carte}',
             'buttons'  => [
-                'html'  => fn ($url, $m) => Html::a('HTML', Url::to(['/topoguide/view', 'lang' => 'fr', 'id' => $m->id]), ['target' => '_blank', 'class' => 'btn btn-xs btn-success']),
-                'pdf'   => fn ($url, $m) => Html::a('PDF', Url::to(['/topoguide/pdf', 'lang' => 'fr', 'id' => $m->id]), ['target' => '_blank', 'class' => 'btn btn-xs btn-info']),
-                'carte' => fn ($url, $m) => Html::a('Carte ✎', ['/admin/itineraire/carte', 'id' => $m->id], ['class' => 'btn btn-xs btn-default']),
+                'html'     => fn ($url, $m) => Html::a('Écran',    Url::to(['/topoguide/view',       'lang' => 'fr', 'id' => $m->id]),                    ['target' => '_blank', 'class' => 'btn btn-xs btn-success']),
+                'html_wk'  => fn ($url, $m) => Html::a('WK:HTML',  Url::to(['/topoguide/pdf-debug',  'lang' => 'fr', 'id' => $m->id, 'part' => 'content']), ['target' => '_blank', 'class' => 'btn btn-xs btn-default']),
+                'html_wp'  => fn ($url, $m) => Html::a('WP:HTML',  Url::to(['/topoguide/weasy-debug','lang' => 'fr', 'id' => $m->id]),                    ['target' => '_blank', 'class' => 'btn btn-xs btn-default']),
+                'pdf_wk'   => fn ($url, $m) => Html::a('WK:PDF',   Url::to(['/topoguide/pdf-wk',     'lang' => 'fr', 'id' => $m->id]),                    ['target' => '_blank', 'class' => 'btn btn-xs btn-info']),
+                'pdf_wp'   => fn ($url, $m) => Html::a('WP:PDF',   Url::to(['/topoguide/pdf-weasy',  'lang' => 'fr', 'id' => $m->id]),                    ['target' => '_blank', 'class' => 'btn btn-xs btn-warning']),
+                'carte'    => fn ($url, $m) => Html::a('Carte ✎',  ['/admin/itineraire/carte',        'id' => $m->id],                                     ['class'  => 'btn btn-xs btn-default']),
             ],
             'urlCreator' => function ($action, $model) {
                 $map = ['view' => 'view', 'update' => 'update', 'delete' => 'delete'];
