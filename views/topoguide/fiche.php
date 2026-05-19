@@ -176,6 +176,7 @@ $langAttr = match ($lang) { 'en' => 'en', 'es' => 'es', default => 'fr' };
 <?php if ($producteur && $producteur->raison_sociale): ?>
 <meta name="author" content="<?= Html::encode($producteur->raison_sociale) ?>">
 <?php endif; ?>
+<meta name="dcterms.title" content="<?= Html::encode($titre) ?>">
 <?php $fontsDir = Yii::getAlias('@app') . '/fonts'; ?>
 <style>
 <?php if ($forPdf): ?>
@@ -385,6 +386,14 @@ footer[role="contentinfo"] {
 }
 /* Image + span fiche-type côte à côte dans WeasyPrint */
 .fiche-type-wrap { display:inline-block; padding:0;margin:0; }
+</style>
+<?php endif; ?>
+<?php if ($pdfEngine === 'prince'): ?>
+<style>
+@prince-pdf {
+    pdf-profile: "PDF/UA-1";
+    tagged-pdf: auto;
+}
 </style>
 <?php endif; ?>
 </head>
