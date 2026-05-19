@@ -389,8 +389,6 @@ footer[role="contentinfo"] {
 <?php endif; ?>
 </head>
 <body>
-<!-- DEBUG pdfEngine=<?= htmlspecialchars($pdfEngine) ?> forPdf=<?= $forPdf ? 'true' : 'false' ?> -->
-
 <a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
 
 <!-- Navigation (écran uniquement) -->
