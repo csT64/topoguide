@@ -9,6 +9,7 @@ use yii\web\Response;
 use app\models\Itineraire;
 use app\components\pdf\TopoguideService;
 use app\components\pdf\TopoguideServiceWeasy;
+use app\components\pdf\TopoguideServicePrince;
 
 class TopoguideController extends Controller
 {
@@ -81,16 +82,33 @@ class TopoguideController extends Controller
         (new TopoguideServiceWeasy($this->loadItineraire($id), $lang))->generate();
     }
 
-    // ── Debug WeasyPrint (HTML avec CSS paged media, pour test CLI) ──────────────
-    // URL : /topoguide/fr/ID.weasy
-    // Usage : weasyprint http://topoguide.local/topoguide/fr/ID.weasy output.pdf
+    public function actionPdfPrince(string $lang, string $id): void
+    {
+        $this->validateLang($lang);
+        Yii::$app->language = $lang;
+        (new TopoguideServicePrince($this->loadItineraire($id), $lang))->generate();
+    }
+
+    // ── Debug WeasyPrint / PrinceXML (HTML avec CSS paged media) ─────────────────
+    // URLs : /topoguide/fr/ID.weasy  |  /topoguide/fr/ID.prince-html
 
     public function actionWeasyDebug(string $lang, string $id): string
     {
         $this->validateLang($lang);
         Yii::$app->language = $lang;
-        $iti = $this->loadItineraire($id);
-        $svc = new TopoguideServiceWeasy($iti, $lang);
+        $svc = new TopoguideServiceWeasy($this->loadItineraire($id), $lang);
+
+        Yii::$app->response->format = Response::FORMAT_RAW;
+        Yii::$app->response->headers->set('Content-Type', 'text/html; charset=utf-8');
+
+        return $svc->renderHtml(false);
+    }
+
+    public function actionPrinceDebug(string $lang, string $id): string
+    {
+        $this->validateLang($lang);
+        Yii::$app->language = $lang;
+        $svc = new TopoguideServicePrince($this->loadItineraire($id), $lang);
 
         Yii::$app->response->format = Response::FORMAT_RAW;
         Yii::$app->response->headers->set('Content-Type', 'text/html; charset=utf-8');

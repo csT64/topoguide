@@ -333,7 +333,7 @@ h2 { font-size: 14pt; color: #1f5468; font-weight: bold; padding-bottom: 2mm; ma
 @media print {
     .no-print { display: none !important; }
     .page { padding: 0 9mm; }
-<?php if ($pdfEngine !== 'weasyprint'): ?>
+<?php if (!in_array($pdfEngine, ['weasyprint', 'prince'])): ?>
     @page { size: A4 portrait; margin: 0; }
     .diff-picto { display: none !important; }
 <?php endif; ?>
@@ -342,9 +342,9 @@ h2 { font-size: 14pt; color: #1f5468; font-weight: bold; padding-bottom: 2mm; ma
     .picto-where { height: 32px !important; margin-left: 0; }
 }
 </style>
-<?php if ($pdfEngine === 'weasyprint'): ?>
+<?php if (in_array($pdfEngine, ['weasyprint', 'prince'])): ?>
 <style>
-/* ── WeasyPrint : en-têtes/pieds répétés via CSS Paged Media ── */
+/* ── WeasyPrint / PrinceXML : en-têtes/pieds répétés via CSS Paged Media ── */
 @page {
     size: A4 portrait;
     /* 9mm gauche/droite pour espacement contenu — header/footer couvrent les 210mm */
@@ -400,7 +400,7 @@ footer[role="contentinfo"] {
 
 <div class="page">
 
-  <header role="banner"<?php if ((!$forPdf || $pdfEngine === 'weasyprint') && $pi['haut']): ?>
+  <header role="banner"<?php if ((!$forPdf || in_array($pdfEngine, ['weasyprint', 'prince'])) && $pi['haut']): ?>
       style="background-image:url('<?= $pi['haut'] ?>');"<?php endif; ?>>
     <?php if ($diffPicto): ?>
     <img src="<?= $diffPicto ?>" alt="" class="diff-picto" aria-hidden="true">
@@ -433,7 +433,7 @@ $renderFooter = function() use ($producteur, $pi): void {
 <?php }; ?>
 
 <?php // WeasyPrint : footer en début de document pour que position:running() soit actif dès la page 1 ?>
-<?php if ($pdfEngine === 'weasyprint'): $renderFooter(); endif; ?>
+<?php if (in_array($pdfEngine, ['weasyprint', 'prince'])): $renderFooter(); endif; ?>
 
   <!-- Titre + logo producteur -->
   <div class="titre-logo-row">
@@ -716,7 +716,7 @@ $renderFooter = function() use ($producteur, $pi): void {
   <!-- ══════════════════════════════════════════════════
        PIED DE PAGE : producteur (écran uniquement — WeasyPrint est en début de document)
   ═══════════════════════════════════════════════════ -->
-  <?php if (!$forPdf && $pdfEngine !== 'weasyprint'): $renderFooter(); endif; ?>
+  <?php if (!$forPdf && !in_array($pdfEngine, ['weasyprint', 'prince'])): $renderFooter(); endif; ?>
 
 </div><!-- .page -->
 </body>

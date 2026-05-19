@@ -166,7 +166,7 @@ class TopoguideService
     private function sendPdf(string $pdf): void
     {
         $slug     = preg_replace('/[^a-zA-Z0-9_-]/', '_', $this->iti->getTitle());
-        $filename = 'topoguide_' . $slug . '.pdf';
+        $filename = 'topoguide_' . $slug . '_wk.pdf';
 
         Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
         Yii::$app->response->headers->set('Content-Type', 'application/pdf');

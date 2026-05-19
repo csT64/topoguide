@@ -5,9 +5,8 @@ namespace app\components\pdf;
 use Yii;
 use yii\base\View;
 use app\models\Itineraire;
-use app\models\Producteur;
 
-class TopoguideServiceWeasy
+class TopoguideServicePrince
 {
     public function __construct(
         private Itineraire $iti,
@@ -25,20 +24,20 @@ class TopoguideServiceWeasy
         $view = new View();
         return $view->renderFile(
             Yii::getAlias('@app/views/topoguide/fiche.php'),
-            ['model' => $this->iti, 'lang' => $this->lang, 'forPdf' => $forPdf, 'pdfEngine' => 'weasyprint']
+            ['model' => $this->iti, 'lang' => $this->lang, 'forPdf' => $forPdf, 'pdfEngine' => 'prince']
         );
     }
 
     private function convertToPdf(string $html): string
     {
-        $bin    = Yii::$app->params['weasyprint'] ?? 'weasyprint';
-        $tmpIn  = tempnam(sys_get_temp_dir(), 'topo_weasy_') . '.html';
-        $tmpOut = tempnam(sys_get_temp_dir(), 'topo_weasy_') . '.pdf';
+        $bin    = Yii::$app->params['prince'] ?? '/usr/bin/prince';
+        $tmpIn  = tempnam(sys_get_temp_dir(), 'topo_prince_') . '.html';
+        $tmpOut = tempnam(sys_get_temp_dir(), 'topo_prince_') . '.pdf';
 
         file_put_contents($tmpIn, $html);
 
         $cmd = sprintf(
-            '%s %s %s 2>&1',
+            '%s %s --pdf-profile=PDF/UA-1 -o %s 2>&1',
             escapeshellarg($bin),
             escapeshellarg($tmpIn),
             escapeshellarg($tmpOut)
@@ -50,7 +49,7 @@ class TopoguideServiceWeasy
 
         if ($code !== 0 || !file_exists($tmpOut)) {
             throw new \RuntimeException(
-                'WeasyPrint a échoué (exit ' . $code . ') : ' . implode("\n", $output)
+                'PrinceXML a échoué (exit ' . $code . ') : ' . implode("\n", $output)
             );
         }
 
@@ -63,7 +62,7 @@ class TopoguideServiceWeasy
     private function sendPdf(string $pdf): void
     {
         $slug     = preg_replace('/[^a-zA-Z0-9_-]/', '_', $this->iti->getTitle());
-        $filename = 'topoguide_' . $slug . '_weasy.pdf';
+        $filename = 'topoguide_' . $slug . '_prince.pdf';
 
         Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
         Yii::$app->response->headers->set('Content-Type', 'application/pdf');

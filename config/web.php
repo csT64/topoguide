@@ -53,12 +53,14 @@ $config = [
                 'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf' => 'topoguide/pdf',
 
                 // PDF explicitement par moteur
-                'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf-wk'    => 'topoguide/pdf-wk',
-                'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf-weasy' => 'topoguide/pdf-weasy',
+                'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf-wk'     => 'topoguide/pdf-wk',
+                'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf-weasy'  => 'topoguide/pdf-weasy',
+                'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf-prince' => 'topoguide/pdf-prince',
 
                 // Debug HTML — visualise le HTML intermédiaire dans le navigateur
                 'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf-<part:(header|footer|content)>' => 'topoguide/pdf-debug',
-                'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.weasy' => 'topoguide/weasy-debug',
+                'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.weasy'       => 'topoguide/weasy-debug',
+                'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.prince-html' => 'topoguide/prince-debug',
 
                 // Cartes Leaflet interactives
                 'gmap/simple' => 'gmap/simple',

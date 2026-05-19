@@ -15,9 +15,12 @@ return [
     // Chemin vers wkhtmltopdf (génération PDF)
     'wkhtmltopdf'    => '/usr/local/bin/wkhtmltopdf',
 
-    // Moteur PDF : 'wkhtmltopdf' | 'weasyprint'
+    // Moteur PDF par défaut : 'wkhtmltopdf' | 'weasyprint' | 'prince'
     'pdfEngine'      => 'wkhtmltopdf',
 
     // Chemin vers weasyprint (pip install weasyprint)
     'weasyprint'     => '/home/triton/.local/bin/weasyprint',
+
+    // Chemin vers PrinceXML (https://www.princexml.com)
+    'prince'         => '/usr/bin/prince',
 ];
