@@ -114,7 +114,7 @@ class TopoguideController extends Controller
         return match ($part) {
             'header'  => $svc->debugHeaderHtml(),
             'footer'  => $svc->debugFooterHtml(),
-            default   => $svc->renderHtml(true),
+            default   => $svc->renderHtml(false),
         };
     }
 }
