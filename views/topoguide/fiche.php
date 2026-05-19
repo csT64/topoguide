@@ -214,10 +214,14 @@ a    { color: #1f5468; }
 header {
     position: relative;
     margin: 0 -9mm;
-    min-height: 20mm;
+    /*min-height: 10mm;*/
     background-repeat: repeat-x;
-    background-size: 800px 80%;
+    background-repeat-y:no-repeat;
+    background-size: 210mm 75%;
+    
 }
+
+main{padding:20px;}
 footer {
     font-size: 9pt;
     color: #fff;
@@ -228,7 +232,7 @@ footer address { font-style: normal; padding-top:2mm;}
 footer a { color: #fff; }
 
 /* ── Titre + logo producteur ──────────────────────── */
-.titre-logo-row { overflow: hidden; width: 100%; margin-top: 4mm; }
+.titre-logo-row { overflow: hidden; width: 100%; margin-top:0; padding-top:0;padding-bottom:0;padding-left:20px;padding-right:20px;}
 .titre-logo-row::after { content: ''; display: block; clear: both; }
 .titre-block { float: left; max-width: 75%; }
 .logo-block  { float: right; max-width: 25%; text-align: right; padding-top: 2mm; }
@@ -244,7 +248,7 @@ footer a { color: #fff; }
 .fiche-commune  { font-size: 20pt; color: #000; padding-bottom: 0; margin-bottom: 0; }
 .fiche-type     { display: inline-block; background: #1f5468; color: #fff; padding: 0 10px; font-size: 11pt; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4mm; font-weight: 900; }
 .fiche-homologue { display: inline-block; color: #E21D3B; font-weight: bold; font-size: 10pt; margin-bottom: 3mm; }
-.diff-picto { position: absolute; top: 0; left: 90%; z-index: 100; height: 100%; width: auto; }
+/*.diff-picto { position: absolute; top: 0; left: 100%; z-index: 100; height: 100%; width: auto; }*/
 
 /* ── Descriptif + photos ──────────────────────────── */
 .desc-photo-table { width: 100%; margin-bottom: 4mm; }
@@ -304,7 +308,7 @@ h2 { font-size: 14pt; color: #1f5468; font-weight: bold; padding-bottom: 2mm; ma
 @media screen {
     body  { background: #f0f0f0; }
     .page { max-width: 210mm; margin: 0 auto; background: #fff; padding: 20px 9mm; box-shadow: 0 0 10px rgba(0,0,0,.15); }
-    header { margin-top: -20px; }  /* annule le padding-top de .page à l'écran */
+    /*header { margin-top: -20px;margin-left:-20px;border:1px solid red; }   annule le padding-top de .page à l'écran */
     footer {
         display: block;
         width: 100%;
@@ -344,7 +348,7 @@ h2 { font-size: 14pt; color: #1f5468; font-weight: bold; padding-bottom: 2mm; ma
 @page {
     size: A4 portrait;
     /* 9mm gauche/droite pour espacement contenu — header/footer couvrent les 210mm */
-    margin: 25mm 9mm 20mm 9mm;
+    margin: 25mm 0mm 20mm 0mm;
     @top-center    { content: element(page-header); }
     @bottom-center { content: element(page-footer); }
 }
@@ -354,9 +358,12 @@ h2 { font-size: 14pt; color: #1f5468; font-weight: bold; padding-bottom: 2mm; ma
 header[role="banner"] {
     position: running(page-header);
     width: 210mm;
-    height: 45mm;
+    height: 35mm;
     margin: 0;
     overflow: hidden;
+    padding:0;
+    background-color:#ffffff;
+    border:0 none;
 }
 
 footer[role="contentinfo"] {
@@ -372,8 +379,9 @@ footer[role="contentinfo"] {
 .diff-picto {
     display: block !important;
     position: absolute;
-    top: 50px; right: 90px; left: auto;
+    top: 20px; right: 10px; left: auto;
     height: 100px; width: auto;
+    z-index:200000;
 }
 /* Image + span fiche-type côte à côte dans WeasyPrint */
 .fiche-type-wrap { display:inline-block; padding:0;margin:0; }
