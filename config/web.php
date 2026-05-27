@@ -1,14 +1,17 @@
 <?php
 
-$params = require __DIR__ . '/params.php';
-$db     = require __DIR__ . '/db.php';
+$params      = require __DIR__ . '/params.php';
+$db          = require __DIR__ . '/db.php';
+$localParams = file_exists(__DIR__ . '/params-local.php')
+    ? require __DIR__ . '/params-local.php'
+    : [];
 
 $config = [
     'id'       => 'topoguide',
     'name'     => 'Topoguide',
     'basePath' => dirname(__DIR__),
     'language' => 'fr',
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log', 'tourinsoftclient\components\TourinsoftClientBootstrap'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -21,12 +24,19 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass'  => 'app\models\User',
+            'identityClass'   => 'app\models\User',
             'enableAutoLogin' => true,
             'loginUrl'        => ['/admin/default/login'],
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
+        ],
+        'queue' => [
+            'class'     => 'yii\queue\db\Queue',
+            'db'        => 'db',
+            'tableName' => '{{%queue}}',
+            'channel'   => 'default',
+            'mutex'     => 'yii\mutex\MysqlMutex',
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -35,6 +45,14 @@ $config = [
                     'class'  => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
                     'logFile' => '@runtime/logs/app.log',
+                ],
+                [
+                    'class'       => 'yii\log\FileTarget',
+                    'levels'      => ['error', 'warning', 'info'],
+                    'categories'  => ['extraction.*'],
+                    'logFile'     => '@runtime/logs/extraction.log',
+                    'maxFileSize' => 2048,
+                    'maxLogFiles' => 5,
                 ],
             ],
         ],
@@ -57,7 +75,7 @@ $config = [
                 'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf-weasy'  => 'topoguide/pdf-weasy',
                 'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf-prince' => 'topoguide/pdf-prince',
 
-                // Debug HTML — visualise le HTML intermédiaire dans le navigateur
+                // Debug HTML
                 'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf-<part:(header|footer|content)>' => 'topoguide/pdf-debug',
                 'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.weasy'       => 'topoguide/weasy-debug',
                 'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.prince-html' => 'topoguide/prince-debug',
@@ -80,6 +98,11 @@ $config = [
     'modules' => [
         'admin' => [
             'class' => 'app\modules\admin\Module',
+        ],
+        'tourinsoft-client' => [
+            'class'             => 'tourinsoftclient\Module',
+            'extractorApiUrl'   => $localParams['extractorApiUrl']   ?? 'http://extracteur-tourinsoft.local/api/v1',
+            'extractorApiToken' => $localParams['extractorApiToken'] ?? 'change-me',
         ],
     ],
     'params' => $params,
