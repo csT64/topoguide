@@ -135,8 +135,7 @@ apt-get install -f
 ### WeasyPrint
 
 ```bash
-apt install python3-pip python3-cffi python3-brotli libpango-1.0-0 \
-            libpangoft2-1.0-0 libharfbuzz-subset0
+apt install python3-pip python3-cffi python3-brotli libpango-1.0-0 libpangoft2-1.0-0
 pip3 install weasyprint
 # Vérifier
 weasyprint --version
@@ -145,33 +144,33 @@ weasyprint --version
 ### PrinceXML
 
 ```bash
-# Télécharger depuis https://www.princexml.com/download/
-# Version Linux Debian :
-wget https://www.princexml.com/releases/prince-XX-linux-generic-x86_64.tar.gz
-tar xzf prince-XX-linux-generic-x86_64.tar.gz
-cd prince-XX-linux-generic-x86_64
-./install.sh
+wget https://www.princexml.com/download/prince_16.2-1_debian11_amd64.deb
+apt install ./prince_16.2-1_debian11_amd64.deb
+rm -f prince_16.2-1_debian11_amd64.deb
 # Vérifier
 prince --version
 ```
 
 ---
 
-## 8. Certificat HTTPS (ACME / DNS challenge)
+## 8. Certificat HTTPS (certbot + DNS challenge Gandi)
+
+Serveur interne → HTTP challenge impossible → DNS challenge manuel.
 
 ```bash
-# Via acme.sh (DNS challenge pour IP interne)
-acme.sh --issue --dns dns_PROVIDER -d topoguide.aadt64.fr
-
-# Installer le certificat
-acme.sh --install-cert -d topoguide.aadt64.fr \
-    --cert-file      /etc/ssl/topoguide/cert.pem \
-    --key-file       /etc/ssl/topoguide/key.pem \
-    --fullchain-file /etc/ssl/topoguide/fullchain.pem \
-    --reloadcmd      "systemctl reload apache2"
-
-mkdir -p /etc/ssl/topoguide
+certbot certonly --manual --preferred-challenges dns -d topoguide.aadt64.fr
 ```
+
+Certbot affiche un enregistrement TXT à créer chez Gandi :
+```
+_acme-challenge.topoguide.aadt64.fr  TXT  "xxxxxxxxxxxxxxxx"
+```
+
+Attendre 1-2 min la propagation DNS, puis valider dans certbot.
+
+Certificats générés dans :
+- `/etc/letsencrypt/live/topoguide.aadt64.fr/fullchain.pem`
+- `/etc/letsencrypt/live/topoguide.aadt64.fr/privkey.pem`
 
 ---
 
