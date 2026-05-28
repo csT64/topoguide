@@ -66,9 +66,14 @@ php yii migrate --migrationPath=@vendor/yiisoft/yii2-queue/src/drivers/db/migrat
 
 ## 4. Exécuter les migrations du module
 
+### Installation fraîche — une seule commande
+
 ```bash
-php yii migrate --migrationPath=@vendor/adt64/tourinsoft-client/src/migrations
+php yii migrate --migrationPath=@vendor/adt64/tourinsoft-client/src/migrations/install
 ```
+
+Cette migration consolidée crée les 4 tables en une passe, avec toutes les colonnes
+finales déjà incluses (soft delete, versioning, logs LONGTEXT). Pas de données de démo.
 
 Tables créées :
 
@@ -79,8 +84,14 @@ Tables créées :
 | `tc_jobs` | Historique des jobs d'import |
 | `tc_notifications` | Notifications envoyées |
 
-Les migrations suivantes sont également présentes pour les évolutions de schéma :
-`m251201_*`, `m260126_*`, `m260418_*` — elles s'appliquent dans le même ordre.
+### Mise à jour d'une installation existante
+
+Si le module était déjà installé via les migrations individuelles, appliquer uniquement
+les migrations incrémentales (ne pas réexécuter le chemin `install/`) :
+
+```bash
+php yii migrate --migrationPath=@vendor/adt64/tourinsoft-client/src/migrations
+```
 
 ---
 
