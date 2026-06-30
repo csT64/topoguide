@@ -17,6 +17,8 @@ composer.phar
 # Config locale (contient les credentials — ne jamais versionner)
 /config/db.php
 /config/web-local.php
+/config/params-local.php
+/config/env-local.php
 
 # Fichiers générés par Yii2
 /runtime/*
