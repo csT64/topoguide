@@ -99,23 +99,15 @@ if (!empty($balisage)) {
     }
 }
 
-// Pictos SVG/PNG — pour PDF : préférer PNG (wkhtmltopdf ne rend pas les SVG) ; pour HTML : préférer SVG
-$piSrc = function(string $name) use ($src, $pix, $forPdf): string {
-    if ($forPdf) {
-        return $src($pix . '/' . $name . '.png') ?: $src($pix . '/' . $name . '.svg');
-    }
-    return $src($pix . '/' . $name . '.svg') ?: $src($pix . '/' . $name . '.png');
-};
-
 $pi = [
-    'where'    => $piSrc('picto-where'),
-    'distance' => $piSrc('picto-distance'),
-    'denivele' => $piSrc('picto-denivele'),
-    'duree'    => $piSrc('picto-duree'),
-    'parking'  => $piSrc('picto-parking'),
+    'where'    => $src($pix . '/picto-where.png'),
+    'distance' => $src($pix . '/picto-distance.png'),
+    'denivele' => $src($pix . '/picto-denivele.png'),
+    'duree'    => $src($pix . '/picto-duree.png'),
+    'parking'  => $src($pix . '/picto-parking.png'),
     'loop'     => $src($pix . '/picto-loop.png'),
-    '112'      => $piSrc('picto-112'),
-    'alerte'   => $piSrc('picto-attention'),
+    '112'      => $src($pix . '/picto-112.svg'),   // TODO : remplacer par .png
+    'alerte'   => $src($pix . '/picto-attention.png'),
     'haut'     => $src($pix . '/haut_page.png'),
     'pied'     => $src($pix . '/pied_page_noir.png'),
     'typeiti'  => $src($pix . '/typeIti.png'),
