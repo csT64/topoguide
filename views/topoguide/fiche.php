@@ -79,9 +79,9 @@ $photo1 = $photo2 = null;
 foreach ([0 => 'photo1', 1 => 'photo2'] as $i => $var) {
     if (!empty($photos[$i])) {
         $p   = $photos[$i];
-        $url = is_array($p) ? ($p['url'] ?? $p['Photo']['Url'] ?? '') : (string)$p;
+        $url = is_array($p) ? ($p['url'] ?? '') : (string)$p;
         if ($url) {
-            $$var = ['url' => $url, 'titre' => is_array($p) ? ($p['titre'] ?? $p['Photo']['Titre'] ?? '') : ''];
+            $$var = ['url' => $url, 'titre' => is_array($p) ? ($p['titre'] ?? '') : ''];
         }
     }
 }
