@@ -37,6 +37,16 @@ AdminAsset::register($this);
       <li><?= Html::a('Villes', ['/admin/ville/index']) ?></li>
       <li><?= Html::a('Cartes', ['/admin/carte/index']) ?></li>
       <li><?= Html::a('Logs', ['/admin/log/index']) ?></li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+          TourInSoft <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><?= Html::a('Sources',          '/tourinsoft-client/sources/index') ?></li>
+          <li><?= Html::a('Configurations',   '/tourinsoft-client/config/index') ?></li>
+          <li><?= Html::a('Dashboard',        '/tourinsoft-client/dashboard/index') ?></li>
+        </ul>
+      </li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
       <?php if (\Yii::$app->user->isGuest): ?>

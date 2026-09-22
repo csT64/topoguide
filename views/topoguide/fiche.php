@@ -8,7 +8,8 @@ use app\models\Producteur;
 /** @var string $lang */
 /** @var bool $forPdf */
 
-$forPdf = $forPdf ?? false;
+$forPdf     = $forPdf     ?? false;
+$withPdfCss = $withPdfCss ?? $forPdf;
 
 // ── Données ──────────────────────────────────────────────────────────────────
 $titre       = $model->getTitle();
@@ -330,7 +331,7 @@ h2 { font-size: 14pt; color: #1f5468; font-weight: bold; padding-bottom: 2mm; ma
     .picto-where { height: 32px !important; margin-left: 0; }
 }
 </style>
-<?php if ($forPdf): ?>
+<?php if ($withPdfCss): ?>
 <style>
 /* ── WeasyPrint : en-têtes/pieds répétés via CSS Paged Media ── */
 @page {
