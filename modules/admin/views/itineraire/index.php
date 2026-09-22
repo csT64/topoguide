@@ -86,18 +86,6 @@ endforeach;
                 ['target' => '_blank', 'class' => 'btn btn-xs btn-success']
             ),
         ],
-        // ── wkhtmltopdf ───────────────────────────────────────────────────────
-        [
-            'label'       => '<abbr title="wkhtmltopdf">wk</abbr>',
-            'encodeLabel' => false,
-            'format'      => 'raw',
-            'value'       => function ($m) {
-                return
-                    Html::a('HTML', Url::to(['/topoguide/pdf-debug', 'lang' => 'fr', 'id' => $m->id, 'part' => 'content']), ['target' => '_blank', 'class' => 'btn btn-xs btn-default'])
-                    . ' '
-                    . Html::a('PDF', Url::to(['/topoguide/pdf-wk', 'lang' => 'fr', 'id' => $m->id]), ['target' => '_blank', 'class' => 'btn btn-xs btn-info']);
-            },
-        ],
         // ── WeasyPrint ────────────────────────────────────────────────────────
         [
             'label'       => '<abbr title="WeasyPrint">weasy</abbr>',

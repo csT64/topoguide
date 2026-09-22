@@ -7,7 +7,6 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use app\models\Itineraire;
-use app\components\pdf\TopoguideService;
 use app\components\pdf\TopoguideServiceWeasy;
 use app\components\pdf\TopoguideServicePrince;
 
@@ -61,18 +60,11 @@ class TopoguideController extends Controller
         Yii::$app->language = $lang;
         $iti = $this->loadItineraire($id);
 
-        $engine = Yii::$app->params['pdfEngine'] ?? 'wkhtmltopdf';
-        $svc = $engine === 'weasyprint'
-            ? new TopoguideServiceWeasy($iti, $lang)
-            : new TopoguideService($iti, $lang);
+        $engine = Yii::$app->params['pdfEngine'] ?? 'weasyprint';
+        $svc = $engine === 'prince'
+            ? new TopoguideServicePrince($iti, $lang)
+            : new TopoguideServiceWeasy($iti, $lang);
         $svc->generate();
-    }
-
-    public function actionPdfWk(string $lang, string $id): void
-    {
-        $this->validateLang($lang);
-        Yii::$app->language = $lang;
-        (new TopoguideService($this->loadItineraire($id), $lang))->generate();
     }
 
     public function actionPdfWeasy(string $lang, string $id): void
@@ -89,7 +81,7 @@ class TopoguideController extends Controller
         (new TopoguideServicePrince($this->loadItineraire($id), $lang))->generate();
     }
 
-    // ── Debug WeasyPrint / PrinceXML (HTML avec CSS paged media) ─────────────────
+    // ── Debug HTML (visualisation avant génération PDF) ──────────────────────────
     // URLs : /topoguide/fr/ID.weasy  |  /topoguide/fr/ID.prince-html
 
     public function actionWeasyDebug(string $lang, string $id): string
@@ -116,23 +108,5 @@ class TopoguideController extends Controller
         return $svc->renderHtml(false);
     }
 
-    // ── Debug PDF (visualisation des HTML intermédiaires) ─────────────────────
-    // URLs : /topoguide/fr/ID.pdf-header | .pdf-footer | .pdf-content
 
-    public function actionPdfDebug(string $lang, string $id, string $part = 'content'): string
-    {
-        $this->validateLang($lang);
-        Yii::$app->language = $lang;
-        $iti  = $this->loadItineraire($id);
-        $svc  = new TopoguideService($iti, $lang);
-
-        Yii::$app->response->format = Response::FORMAT_RAW;
-        Yii::$app->response->headers->set('Content-Type', 'text/html; charset=utf-8');
-
-        return match ($part) {
-            'header'  => $svc->debugHeaderHtml(),
-            'footer'  => $svc->debugFooterHtml(),
-            default   => $svc->renderHtml(false),
-        };
-    }
 }
