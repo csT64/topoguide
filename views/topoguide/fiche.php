@@ -368,6 +368,14 @@ footer[role="contentinfo"] {
     z-index: 200000;
 }
 .fiche-type-wrap { display: inline-block; padding: 0; margin: 0; }
+
+/* ── Pictos : forcer les dimensions (WeasyPrint ignore les attributs HTML) */
+.td-picto img    { height: 42px; width: auto; }
+.td-picto img[height="32"] { height: 32px; }
+.alerte-icon img { height: 32px; width: auto; }
+.balisage-img    { height: 42px; width: auto; }
+.picto-where     { height: 62px !important; width: auto; }
+img[aria-hidden="true"] { height: 32px; width: 16px; }
 </style>
 <?php endif; ?>
 </head>
