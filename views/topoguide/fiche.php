@@ -8,8 +8,7 @@ use app\models\Producteur;
 /** @var string $lang */
 /** @var bool $forPdf */
 
-$forPdf    = $forPdf    ?? false;
-$pdfEngine = $pdfEngine ?? '';
+$forPdf = $forPdf ?? false;
 
 // ── Données ──────────────────────────────────────────────────────────────────
 $titre       = $model->getTitle();
@@ -326,27 +325,20 @@ h2 { font-size: 14pt; color: #1f5468; font-weight: bold; padding-bottom: 2mm; ma
 @media print {
     .no-print { display: none !important; }
     .page { padding: 0 9mm; }
-<?php if (!in_array($pdfEngine, ['weasyprint', 'prince'])): ?>
-    @page { size: A4 portrait; margin: 0; }
-    .diff-picto { display: none !important; }
-<?php endif; ?>
     section { page-break-inside: avoid; }
     h2 { page-break-after: avoid; }
     .picto-where { height: 32px !important; margin-left: 0; }
 }
 </style>
-<?php if (in_array($pdfEngine, ['weasyprint', 'prince'])): ?>
+<?php if ($forPdf): ?>
 <style>
-/* ── WeasyPrint / PrinceXML : en-têtes/pieds répétés via CSS Paged Media ── */
+/* ── WeasyPrint : en-têtes/pieds répétés via CSS Paged Media ── */
 @page {
     size: A4 portrait;
-    /* 9mm gauche/droite pour espacement contenu — header/footer couvrent les 210mm */
     margin: 25mm 0mm 20mm 0mm;
     @top-center    { content: element(page-header); }
     @bottom-center { content: element(page-footer); }
 }
-/* Les marges @page gèrent l'espacement horizontal ; 50px en haut pour
-   aérer le contenu par rapport à la ligne de fin du header */
 .page { padding: 50px 0 0 0; }
 header[role="banner"] {
     position: running(page-header);
@@ -354,18 +346,16 @@ header[role="banner"] {
     height: 35mm;
     margin: 0;
     overflow: hidden;
-    padding:0;
-    background-color:#ffffff;
-    border:0 none;
+    padding: 0;
+    background-color: #ffffff;
+    border: 0 none;
 }
-
 footer[role="contentinfo"] {
     position: running(page-footer);
     width: 210mm;
     height: 20mm;
     margin: 0;
     padding-top: 2mm;
-    /* Dimensions explicites : évite que % soit calculé depuis le bloc contenant */
     background-size: 210mm 20mm;
     background-repeat: no-repeat;
 }
@@ -374,18 +364,9 @@ footer[role="contentinfo"] {
     position: absolute;
     top: 20px; right: 10px; left: auto;
     height: 100px; width: auto;
-    z-index:200000;
+    z-index: 200000;
 }
-/* Image + span fiche-type côte à côte dans WeasyPrint */
-.fiche-type-wrap { display:inline-block; padding:0;margin:0; }
-</style>
-<?php endif; ?>
-<?php if ($pdfEngine === 'prince'): ?>
-<style>
-@prince-pdf {
-    pdf-profile: "PDF/UA-1";
-    tagged-pdf: auto;
-}
+.fiche-type-wrap { display: inline-block; padding: 0; margin: 0; }
 </style>
 <?php endif; ?>
 </head>
@@ -401,8 +382,7 @@ footer[role="contentinfo"] {
 
 <div class="page">
 
-  <header role="banner"<?php if ((!$forPdf || in_array($pdfEngine, ['weasyprint', 'prince'])) && $pi['haut']): ?>
-      style="background-image:url('<?= $pi['haut'] ?>');"<?php endif; ?>>
+  <header role="banner"<?php if ($pi['haut']): ?> style="background-image:url('<?= $pi['haut'] ?>')"<?php endif; ?>>
     <?php if ($diffPicto): ?>
     <img src="<?= $diffPicto ?>" alt="" class="diff-picto" aria-hidden="true">
     <?php endif; ?>
@@ -433,8 +413,8 @@ $renderFooter = function() use ($producteur, $pi): void {
   </footer>
 <?php }; ?>
 
-<?php // WeasyPrint : footer en début de document pour que position:running() soit actif dès la page 1 ?>
-<?php if (in_array($pdfEngine, ['weasyprint', 'prince'])): $renderFooter(); endif; ?>
+<?php // Footer en début de document : position:running() actif dès la page 1 ?>
+<?php if ($forPdf): $renderFooter(); endif; ?>
 
   <!-- Titre + logo producteur -->
   <div class="titre-logo-row">
@@ -717,7 +697,7 @@ $renderFooter = function() use ($producteur, $pi): void {
   <!-- ══════════════════════════════════════════════════
        PIED DE PAGE : producteur (écran uniquement — WeasyPrint est en début de document)
   ═══════════════════════════════════════════════════ -->
-  <?php if (!$forPdf && !in_array($pdfEngine, ['weasyprint', 'prince'])): $renderFooter(); endif; ?>
+  <?php if (!$forPdf): $renderFooter(); endif; ?>
 
 </div><!-- .page -->
 </body>
