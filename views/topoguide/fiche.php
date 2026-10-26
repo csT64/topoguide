@@ -260,7 +260,7 @@ figcaption { font-size: 8pt; color: #666; margin-top: 1mm; }
 .sep { border: none; border-top: 1px solid #1f5468; margin: 4mm 0; }
 
 /* ── Tableau infos ────────────────────────────────── */
-.info-row { width: 100%; margin-bottom: 2mm; }
+.info-row { width: 100%; margin-bottom: 2mm; margin-top:3mm;clear:both;}
 .info-row td { vertical-align: middle; padding: 2px 4px; }
 .td-picto { width: 10mm; text-align: center; }
 .td-label { font-size: 11pt; color: #1f5468; font-weight: bold; white-space: nowrap; padding-right: 4px; }
@@ -336,11 +336,11 @@ h2 { font-size: 14pt; color: #1f5468; font-weight: bold; padding-bottom: 2mm; ma
 /* ── WeasyPrint : en-têtes/pieds répétés via CSS Paged Media ── */
 @page {
     size: A4 portrait;
-    margin: 25mm 0mm 20mm 0mm;
+    margin: 35mm 0mm 20mm 0mm;
     @top-center    { content: element(page-header); }
     @bottom-center { content: element(page-footer); }
 }
-.page { padding: 50px 0 0 0; }
+.page { padding: 0px 0 0 0; }
 header[role="banner"] {
     position: running(page-header);
     width: 210mm;
@@ -374,7 +374,7 @@ footer[role="contentinfo"] {
 .td-picto img[height="32"] { height: 32px; }
 .alerte-icon img { height: 32px; width: auto; }
 .balisage-img    { height: 42px; width: auto; }
-.picto-where     { height: 62px !important; width: auto; }
+.picto-where     { height: 42px !important; width: auto;padding:10px;margin-left:-8px; }
 img[aria-hidden="true"] { height: 32px; width: 16px; }
 </style>
 <?php endif; ?>
@@ -393,7 +393,7 @@ img[aria-hidden="true"] { height: 32px; width: 16px; }
 
   <header role="banner"<?php if ($pi['haut']): ?> style="background-image:url('<?= $pi['haut'] ?>')"<?php endif; ?>>
     <?php if ($diffPicto): ?>
-    <img src="<?= $diffPicto ?>" alt="" class="diff-picto" aria-hidden="true">
+    <img src="<?= $diffPicto ?>" alt="<?= $difficulte ?>" class="diff-picto">
     <?php endif; ?>
   </header>
 
@@ -410,7 +410,7 @@ $renderFooter = function() use ($producteur, $pi): void {
         <?php endif; ?>
       <?php endforeach; ?>
       <?php if ($producteur->code_postal || $producteur->commune): ?>
-        <?= Html::encode(trim($producteur->code_postal . ' ' . $producteur->commune)) ?><br>
+        <?= Html::encode(trim($producteur->code_postal . ' ' . $producteur->commune)) ?> - 
       <?php endif; ?>
       <?php if ($producteur->telephone): ?>
         <a href="tel:<?= Html::encode($producteur->telephone) ?>"><?= Html::encode($producteur->telephone) ?></a><br>
@@ -437,7 +437,7 @@ $renderFooter = function() use ($producteur, $pi): void {
       <?php if ($commune): ?>
       <h2 class="fiche-commune">
         <?php if ($pi['where']): ?>
-        <img src="<?= $pi['where'] ?>" alt="Commune de départ" class="picto-where" height="62">
+        <img src="<?= $pi['where'] ?>" alt="Commune de départ" class="picto-where" style:"margin-left:60px;height:32px;">
         <?php endif; ?>
         <?= Html::encode($commune) ?>
       </h2>
@@ -591,7 +591,7 @@ $renderFooter = function() use ($producteur, $pi): void {
         </tr>
       </table>
       <?php endif; ?>
-
+    <hr class="sep" aria-hidden="true">
       <!-- Alerte pastorale -->
       <table class="alerte-row" role="presentation">
         <tr>
