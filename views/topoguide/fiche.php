@@ -107,10 +107,11 @@ $pi = [
     'parking'  => $src($pix . '/picto-parking.png'),
     'loop'     => $src($pix . '/picto-loop.png'),
     '112'      => $src($pix . '/picto-112.svg'),   // TODO : remplacer par .png
-    'alerte'   => $src($pix . '/picto-attention.png'),
+    'alerte'   => $src($pix . '/picto-attention.svg'),
     'haut'     => $src($pix . '/haut_page.png'),
     'pied'     => $src($pix . '/pied_page_noir.png'),
     'typeiti'  => $src($pix . '/typeIti.png'),
+    'poi'  => $src($pix . '/picto-poi.png'),
 ];
 
 // ── Labels multilingues ──────────────────────────────────────────────────────
@@ -272,7 +273,7 @@ figcaption { font-size: 8pt; color: #666; margin-top: 1mm; }
 .alerte-row td { vertical-align: middle; font-size: 11pt;font-weight:900; }
 .alerte-icon { width: 10mm; text-align: center; }
 .alerte-text { padding-left: 4px; }
-
+.puce-etoile{ padding-left: 4px;position:relative; display:inline-block;top: 7px;}
 /* ── Sections ─────────────────────────────────────── */
 section { margin-top: 5mm; }
 h2 { font-size: 14pt; color: #1f5468; font-weight: bold; padding-bottom: 2mm; margin-bottom: 3mm; }
@@ -608,7 +609,12 @@ $renderFooter = function() use ($producteur, $pi): void {
     <!-- À ne pas manquer (POI) ──────────────────────── -->
     <?php if (!empty($poi)): ?>
     <section aria-labelledby="sec-poi">
-      <h2 id="sec-poi"><?= Html::encode($sl['poi']) ?></h2>
+
+      <h2 id="sec-poi">
+      <?php if ($pi['alerte']): ?>
+          <span class="puce-etoile"><img src="<?= $pi['poi'] ?>" alt="" height="32"></span>
+      <?php endif; ?>
+        <?= Html::encode($sl['poi']) ?></h2>
       <ul class="poi-list">
         <?php foreach ($poi as $p): ?>
           <?php
@@ -640,7 +646,12 @@ $renderFooter = function() use ($producteur, $pi): void {
     <!-- Étapes ──────────────────────────────────────── -->
     <?php if (!empty($etapes)): ?>
     <section aria-labelledby="sec-etapes">
-      <h2 id="sec-etapes"><?= Html::encode($sl['etapes']) ?></h2>
+      <h2 id="sec-etapes">
+              <?php if ($pi['alerte']): ?>
+          <span class="puce-etoile"><img src="<?= $pi['poi'] ?>" alt="" height="32"></span>
+      <?php endif; ?>
+        
+        <?= Html::encode($sl['etapes']) ?></h2>
       <ol style="padding-left:5mm;margin:0;">
         <?php foreach ($etapes as $i => $e): ?>
           <?php
@@ -680,7 +691,12 @@ $renderFooter = function() use ($producteur, $pi): void {
     <!-- Points d'attention ──────────────────────────── -->
     <?php if (!empty($attentions)): ?>
     <section aria-labelledby="sec-attention">
-      <h2 id="sec-attention"><?= Html::encode($sl['warn']) ?></h2>
+      <h2 id="sec-attention">
+            <?php if ($pi['alerte']): ?>
+          <span class="puce-etoile"><img src="<?= $pi['poi'] ?>" alt="" height="32"></span>
+      <?php endif; ?>
+      <?= Html::encode($sl['warn']) ?></h2>
+      
       <ul class="bullet-list">
         <?php foreach ($attentions as $a): ?>
           <?php $desc = is_array($a) ? ($a['descriptif'] ?? $a['Descriptif'] ?? '') : (string)$a;
