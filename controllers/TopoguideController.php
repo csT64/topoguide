@@ -36,9 +36,10 @@ class TopoguideController extends Controller
     {
         $this->validateLang($lang);
         Yii::$app->language = $lang;
-        $iti = $this->loadItineraire($id);
+        $iti   = $this->loadItineraire($id);
+        $itiFr = $lang !== 'fr' ? Itineraire::findFr($id) : null;
 
-        return $this->render('fiche', ['model' => $iti, 'lang' => $lang, 'forPdf' => false]);
+        return $this->render('fiche', ['model' => $iti, 'lang' => $lang, 'forPdf' => false, 'modelFr' => $itiFr]);
     }
 
     // ── Carte statique JPG ────────────────────────────────────────────────────
@@ -58,12 +59,13 @@ class TopoguideController extends Controller
     {
         $this->validateLang($lang);
         Yii::$app->language = $lang;
-        $iti = $this->loadItineraire($id);
+        $iti   = $this->loadItineraire($id);
+        $itiFr = $lang !== 'fr' ? Itineraire::findFr($id) : null;
 
         $engine = Yii::$app->params['pdfEngine'] ?? 'weasyprint';
         $svc = $engine === 'prince'
-            ? new TopoguideServicePrince($iti, $lang)
-            : new TopoguideServiceWeasy($iti, $lang);
+            ? new TopoguideServicePrince($iti, $lang, $itiFr)
+            : new TopoguideServiceWeasy($iti, $lang, $itiFr);
         $svc->generate();
     }
 
@@ -71,14 +73,18 @@ class TopoguideController extends Controller
     {
         $this->validateLang($lang);
         Yii::$app->language = $lang;
-        (new TopoguideServiceWeasy($this->loadItineraire($id), $lang))->generate();
+        $iti   = $this->loadItineraire($id);
+        $itiFr = $lang !== 'fr' ? Itineraire::findFr($id) : null;
+        (new TopoguideServiceWeasy($iti, $lang, $itiFr))->generate();
     }
 
     public function actionPdfPrince(string $lang, string $id): void
     {
         $this->validateLang($lang);
         Yii::$app->language = $lang;
-        (new TopoguideServicePrince($this->loadItineraire($id), $lang))->generate();
+        $iti   = $this->loadItineraire($id);
+        $itiFr = $lang !== 'fr' ? Itineraire::findFr($id) : null;
+        (new TopoguideServicePrince($iti, $lang, $itiFr))->generate();
     }
 
     // ── Debug HTML (visualisation avant génération PDF) ──────────────────────────
@@ -88,7 +94,9 @@ class TopoguideController extends Controller
     {
         $this->validateLang($lang);
         Yii::$app->language = $lang;
-        $svc = new TopoguideServiceWeasy($this->loadItineraire($id), $lang);
+        $iti   = $this->loadItineraire($id);
+        $itiFr = $lang !== 'fr' ? Itineraire::findFr($id) : null;
+        $svc   = new TopoguideServiceWeasy($iti, $lang, $itiFr);
 
         Yii::$app->response->format = Response::FORMAT_RAW;
         Yii::$app->response->headers->set('Content-Type', 'text/html; charset=utf-8');
@@ -100,7 +108,9 @@ class TopoguideController extends Controller
     {
         $this->validateLang($lang);
         Yii::$app->language = $lang;
-        $svc = new TopoguideServicePrince($this->loadItineraire($id), $lang);
+        $iti   = $this->loadItineraire($id);
+        $itiFr = $lang !== 'fr' ? Itineraire::findFr($id) : null;
+        $svc   = new TopoguideServicePrince($iti, $lang, $itiFr);
 
         Yii::$app->response->format = Response::FORMAT_RAW;
         Yii::$app->response->headers->set('Content-Type', 'text/html; charset=utf-8');

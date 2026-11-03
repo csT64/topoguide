@@ -5,11 +5,21 @@ use app\models\Producteur;
 
 /** @var yii\web\View $this */
 /** @var app\models\Itineraire $model */
+/** @var app\models\Itineraire|null $modelFr */
 /** @var string $lang */
 /** @var bool $forPdf */
 
 $forPdf     = $forPdf     ?? false;
 $withPdfCss = $withPdfCss ?? $forPdf;
+$modelFr    = $modelFr    ?? null;
+
+// Map de fallback fr indexée par id d'item (pour étapes, poi, etc.)
+$frEtapes = [];
+if ($modelFr) {
+    foreach ($modelFr->getEtapes() as $e) {
+        if (isset($e['id'])) $frEtapes[$e['id']] = $e;
+    }
+}
 
 // ── Données ──────────────────────────────────────────────────────────────────
 $titre       = $model->getTitle();
@@ -659,9 +669,10 @@ $renderFooter = function() use ($producteur, $pi): void {
         <?php foreach ($etapes as $i => $e): ?>
           <?php
           if (is_array($e)) {
+              $eFr   = $frEtapes[$e['id'] ?? ''] ?? [];
               $step  = (int)($e['ordre'] ?? $e['Ordre'] ?? $i + 1);
-              $eNom  = (string)($e['nom_etape']  ?? $e['NomEtape']  ?? $e['etapes']['thes_libelle'] ?? '');
-              $eDesc = (string)($e['descriptif'] ?? $e['Descriptif'] ?? '');
+              $eNom  = (string)($e['nom_etape']  ?? $e['NomEtape']  ?? $e['etapes']['thes_libelle'] ?? $eFr['nom_etape'] ?? '');
+              $eDesc = (string)($e['descriptif'] ?? $e['Descriptif'] ?? $eFr['descriptif'] ?? '');
           } else {
               $step = $i + 1; $eNom = (string)$e; $eDesc = '';
           }

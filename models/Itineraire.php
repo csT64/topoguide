@@ -12,6 +12,15 @@ class Itineraire extends ActiveRecord
         return Yii::$app->language; // 'fr', 'en' ou 'es'
     }
 
+    public static function findFr(string $id): ?self
+    {
+        $saved = Yii::$app->language;
+        Yii::$app->language = 'fr';
+        $model = self::findOne(['id' => $id]);
+        Yii::$app->language = $saved;
+        return $model;
+    }
+
     public function rules(): array
     {
         return [

@@ -10,7 +10,8 @@ class TopoguideServicePrince
 {
     public function __construct(
         private Itineraire $iti,
-        private string $lang
+        private string $lang,
+        private ?Itineraire $itiFr = null
     ) {}
 
     public function generate(): void
@@ -24,7 +25,7 @@ class TopoguideServicePrince
         $view = new View();
         return $view->renderFile(
             Yii::getAlias('@app/views/topoguide/fiche.php'),
-            ['model' => $this->iti, 'lang' => $this->lang, 'forPdf' => $forPdf, 'withPdfCss' => true]
+            ['model' => $this->iti, 'lang' => $this->lang, 'forPdf' => $forPdf, 'withPdfCss' => true, 'modelFr' => $this->itiFr]
         );
     }
 
