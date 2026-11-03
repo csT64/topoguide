@@ -20,6 +20,12 @@ if ($modelFr) {
         if (isset($e['id'])) $frEtapes[$e['id']] = $e;
     }
 }
+$frPoi = [];
+if ($modelFr) {
+    foreach ($modelFr->getPoi() as $p) {
+        if (isset($p['id'])) $frPoi[$p['id']] = $p;
+    }
+}
 
 // ── Données ──────────────────────────────────────────────────────────────────
 $titre       = $model->getTitle();
@@ -40,7 +46,12 @@ $photos      = $model->getPhotos();
 $etapes      = $model->getEtapes();
 $poi         = array_values(array_filter(
     $model->getPoi(),
-    fn($p) => is_array($p) ? (!empty($p['nom']) || !empty($p['descriptif'])) : !empty(trim((string)$p))
+    function($p) use ($frPoi) {
+        if (!is_array($p)) return !empty(trim((string)$p));
+        $pFr = $frPoi[$p['id'] ?? ''] ?? [];
+        return !empty($p['nom']) || !empty($p['Nom']) || !empty($pFr['nom'])
+            || !empty($p['descriptif']) || !empty($p['Descriptif']) || !empty($pFr['descriptif']);
+    }
 ));
 $equipements = $model->getEquipements();
 $attentions  = $model->getAttentions();
@@ -631,8 +642,9 @@ $renderFooter = function() use ($producteur, $pi): void {
       <ul class="poi-list">
         <?php foreach ($poi as $p): ?>
           <?php
-          $nom  = is_array($p) ? trim($p['nom'] ?? $p['Nom'] ?? '')               : trim((string)$p);
-          $desc = is_array($p) ? trim($p['descriptif'] ?? $p['Descriptif'] ?? '') : '';
+          $pFr  = is_array($p) ? ($frPoi[$p['id'] ?? ''] ?? []) : [];
+          $nom  = is_array($p) ? trim($p['nom'] ?? $p['Nom'] ?? $pFr['nom'] ?? '')               : trim((string)$p);
+          $desc = is_array($p) ? trim($p['descriptif'] ?? $p['Descriptif'] ?? $pFr['descriptif'] ?? '') : '';
           if (!$nom && !$desc) continue;
           ?>
           <li>
