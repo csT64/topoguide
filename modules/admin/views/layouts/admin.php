@@ -36,6 +36,7 @@ AdminAsset::register($this);
       <li><?= Html::a('Producteurs', ['/admin/producteur/index']) ?></li>
       <li><?= Html::a('Villes', ['/admin/ville/index']) ?></li>
       <li><?= Html::a('Cartes', ['/admin/carte/index']) ?></li>
+      <li><?= Html::a('Qualité', ['/admin/qualite/index']) ?></li>
       <li><?= Html::a('Logs', ['/admin/log/index']) ?></li>
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
