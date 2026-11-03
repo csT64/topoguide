@@ -98,7 +98,15 @@ class Itineraire extends ActiveRecord
         return trim($this->locomotion ?? '');
     }
 
-    public function getPhotos(): array    { return $this->decodeJson('photo'); }
+    public function getPhotos(): array
+    {
+        $raw = trim($this->photo ?? '');
+        if (!$raw) return [];
+        $arr = json_decode($raw, true);
+        if (is_array($arr)) return $arr;
+        // URL brute (non encodée JSON)
+        return [$raw];
+    }
     public function getEtapes(): array    { return $this->decodeJson('etapes'); }
     public function getPoi(): array       { return $this->decodeJson('point_d_interet'); }
     public function getEquipements(): array { return $this->decodeJson('equipement'); }
