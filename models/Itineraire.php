@@ -75,7 +75,12 @@ class Itineraire extends ActiveRecord
 
     public function getTypeVal(): string
     {
-        return trim($this->type ?? '');
+        $raw = trim($this->type ?? '');
+        $arr = json_decode($raw, true);
+        if (is_array($arr)) {
+            return implode('#', array_filter(array_map('trim', $arr)));
+        }
+        return $raw;
     }
 
     public function getDureeVal(): string
