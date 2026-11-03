@@ -34,7 +34,7 @@ class ProducteurController extends Controller
             $model->logo = $this->handleLogoUpload($model) ?? $model->logo;
             if ($model->save()) {
                 Yii::$app->session->addFlash('success', 'Producteur créé.');
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['view', 'id' => $model->syndic_object_id]);
             }
         }
 
@@ -52,7 +52,7 @@ class ProducteurController extends Controller
             }
             if ($model->save()) {
                 Yii::$app->session->addFlash('success', 'Producteur mis à jour.');
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['view', 'id' => $model->syndic_object_id]);
             }
         }
 
@@ -78,14 +78,14 @@ class ProducteurController extends Controller
             mkdir($dir, 0775, true);
         }
 
-        $filename = $model->id . '.png';
+        $filename = $model->syndic_object_id . '.png';
         $file->saveAs($dir . $filename);
         return $filename;
     }
 
     private function findModel(string $id): Producteur
     {
-        $model = Producteur::findOne(['id' => $id]);
+        $model = Producteur::findOne(['syndic_object_id' => $id]);
         if ($model === null) {
             throw new NotFoundHttpException("Producteur $id introuvable.");
         }

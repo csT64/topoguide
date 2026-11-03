@@ -4,13 +4,13 @@ use yii\widgets\DetailView;
 
 /** @var app\models\Producteur $model */
 /** @var yii\web\View $this */
-$this->title = $model->raison_sociale ?: $model->id;
+$this->title = $model->raison_sociale ?: $model->syndic_object_id;
 ?>
 <h2><?= Html::encode($this->title) ?></h2>
 
 <p>
-  <?= Html::a('Modifier', ['update', 'id' => $model->id], ['class' => 'btn btn-warning btn-sm']) ?>
-  <?= Html::a('Supprimer', ['delete', 'id' => $model->id], [
+  <?= Html::a('Modifier', ['update', 'id' => $model->syndic_object_id], ['class' => 'btn btn-warning btn-sm']) ?>
+  <?= Html::a('Supprimer', ['delete', 'id' => $model->syndic_object_id], [
     'class' => 'btn btn-danger btn-sm',
     'data'  => ['confirm' => 'Supprimer ce producteur ?', 'method' => 'post'],
   ]) ?>
@@ -22,7 +22,7 @@ $this->title = $model->raison_sociale ?: $model->id;
     <?= DetailView::widget([
       'model' => $model,
       'attributes' => [
-        'id', 'raison_sociale',
+        'syndic_object_id', 'raison_sociale',
         'adresse_1', 'adresse_2', 'adresse_3',
         'code_postal', 'commune',
         'telephone', 'url',

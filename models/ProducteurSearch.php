@@ -10,7 +10,7 @@ class ProducteurSearch extends Producteur
     public function rules(): array
     {
         return [
-            [['id', 'raison_sociale', 'commune'], 'safe'],
+            [['syndic_object_id', 'raison_sociale', 'commune'], 'safe'],
         ];
     }
 
@@ -34,7 +34,7 @@ class ProducteurSearch extends Producteur
             return $dataProvider;
         }
 
-        $query->andFilterWhere(['like', 'id', $this->id])
+        $query->andFilterWhere(['like', 'syndic_object_id', $this->syndic_object_id])
               ->andFilterWhere(['like', 'raison_sociale', $this->raison_sociale])
               ->andFilterWhere(['like', 'commune', $this->commune]);
 

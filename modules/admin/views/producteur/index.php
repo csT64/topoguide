@@ -15,7 +15,7 @@ $this->title = 'Producteurs';
   'dataProvider' => $dataProvider,
   'filterModel'  => $searchModel,
   'columns' => [
-    'id',
+    'syndic_object_id',
     'raison_sociale',
     'commune',
     'telephone',

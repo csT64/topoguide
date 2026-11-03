@@ -37,7 +37,7 @@ class Itineraire extends ActiveRecord
 
     public function getProducteur(): \yii\db\ActiveQuery
     {
-        return $this->hasOne(Producteur::class, ['id' => 'auteur']);
+        return $this->hasOne(Producteur::class, ['syndic_object_id' => 'auteur']);
     }
 
     public function getVille(): \yii\db\ActiveQuery
