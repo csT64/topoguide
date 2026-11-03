@@ -1,16 +1,14 @@
 <?php
-use Yii;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\grid\GridView;
 
 /** @var app\models\ProducteurSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 $this->title = 'Producteurs';
 
-$onlyUsed   = (bool)($searchModel->onlyUsed ?? false);
-$toggleUrl  = array_merge(Yii::$app->request->queryParams, [
-    'ProducteurSearch[onlyUsed]' => $onlyUsed ? '0' : '1',
-]);
+$onlyUsed  = (bool)($searchModel->onlyUsed ?? false);
+$toggleUrl = Url::current(['ProducteurSearch[onlyUsed]' => $onlyUsed ? '0' : '1']);
 ?>
 <h2>
   <?= Html::encode($this->title) ?>
