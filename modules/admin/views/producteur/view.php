@@ -22,21 +22,23 @@ $this->title = $model->raison_sociale ?: $model->syndic_object_id;
     <?= DetailView::widget([
       'model' => $model,
       'attributes' => [
-        'syndic_object_id', 'raison_sociale',
+        'syndic_object_id',
+        'raison_sociale',
         'adresse_1', 'adresse_2', 'adresse_3',
         'code_postal', 'commune',
-        'telephone', 'url',
+        'telephone', 'url:url',
+        'is_active:boolean',
       ],
     ]) ?>
   </div>
   <div class="col-md-6">
     <h4>Logo</h4>
-    <?php if ($model->logo): ?>
-      <img src="<?= Html::encode(Yii::$app->request->baseUrl . '/producteur/' . $model->logo) ?>"
+    <?php if ($model->hasLogo()): ?>
+      <img src="<?= Html::encode($model->getLogoUrl()) ?>"
            style="max-width:300px; border:1px solid #ddd; padding:8px">
-      <p class="text-muted" style="margin-top:5px"><?= Html::encode($model->logo) ?></p>
+      <p class="text-muted" style="margin-top:5px"><?= Html::encode($model->getLogoFilename()) ?></p>
     <?php else: ?>
-      <p class="text-muted">Aucun logo</p>
+      <p class="text-muted">Aucun logo — <?= Html::a('Ajouter via Modifier', ['update', 'id' => $model->syndic_object_id]) ?></p>
     <?php endif; ?>
   </div>
 </div>

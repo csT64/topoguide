@@ -14,18 +14,36 @@ $this->title = 'Producteurs';
 <?= GridView::widget([
   'dataProvider' => $dataProvider,
   'filterModel'  => $searchModel,
+  'tableOptions' => ['class' => 'table table-striped table-hover table-condensed'],
   'columns' => [
-    'syndic_object_id',
-    'raison_sociale',
-    'commune',
-    'telephone',
+    [
+      'attribute' => 'syndic_object_id',
+      'label'     => 'Identifiant',
+    ],
+    [
+      'attribute' => 'raison_sociale',
+      'label'     => 'Nom',
+    ],
+    [
+      'attribute' => 'commune',
+      'label'     => 'Commune',
+    ],
+    [
+      'attribute' => 'telephone',
+      'label'     => 'Téléphone',
+      'enableSorting' => false,
+    ],
     [
       'label'  => 'Logo',
       'format' => 'raw',
-      'value'  => fn($m) => $m->logo
-          ? Html::img(Yii::$app->request->baseUrl . '/producteur/' . $m->logo, ['style' => 'max-height:32px'])
+      'enableSorting' => false,
+      'value'  => fn($m) => $m->hasLogo()
+          ? Html::img($m->getLogoUrl(), ['style' => 'max-height:36px; max-width:120px'])
           : '<span class="text-muted">—</span>',
     ],
-    ['class' => 'yii\grid\ActionColumn', 'template' => '{view} {update} {delete}'],
+    [
+      'class'    => 'yii\grid\ActionColumn',
+      'template' => '{view} {update} {delete}',
+    ],
   ],
 ]); ?>

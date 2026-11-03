@@ -31,7 +31,7 @@ class ProducteurController extends Controller
         $model = new Producteur();
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->logo = $this->handleLogoUpload($model) ?? $model->logo;
+            $this->handleLogoUpload($model);
             if ($model->save()) {
                 Yii::$app->session->addFlash('success', 'Producteur créé.');
                 return $this->redirect(['view', 'id' => $model->syndic_object_id]);
@@ -46,10 +46,7 @@ class ProducteurController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post())) {
-            $uploaded = $this->handleLogoUpload($model);
-            if ($uploaded !== null) {
-                $model->logo = $uploaded;
-            }
+            $this->handleLogoUpload($model);
             if ($model->save()) {
                 Yii::$app->session->addFlash('success', 'Producteur mis à jour.');
                 return $this->redirect(['view', 'id' => $model->syndic_object_id]);
@@ -66,11 +63,11 @@ class ProducteurController extends Controller
         return $this->redirect(['index']);
     }
 
-    private function handleLogoUpload(Producteur $model): ?string
+    private function handleLogoUpload(Producteur $model): void
     {
-        $file = UploadedFile::getInstance($model, 'logoFile');
-        if ($file === null) {
-            return null;
+        $model->logoFile = UploadedFile::getInstance($model, 'logoFile');
+        if ($model->logoFile === null) {
+            return;
         }
 
         $dir = Yii::getAlias('@webroot/producteur/');
@@ -78,9 +75,7 @@ class ProducteurController extends Controller
             mkdir($dir, 0775, true);
         }
 
-        $filename = $model->syndic_object_id . '.png';
-        $file->saveAs($dir . $filename);
-        return $filename;
+        $model->logoFile->saveAs($dir . $model->getLogoFilename());
     }
 
     private function findModel(string $id): Producteur

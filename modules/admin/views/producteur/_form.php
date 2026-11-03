@@ -9,7 +9,7 @@ use yii\widgets\ActiveForm;
 
 <div class="row">
   <div class="col-md-6">
-    <?= $form->field($model, 'id')->textInput(['readonly' => !$model->isNewRecord]) ?>
+    <?= $form->field($model, 'syndic_object_id')->textInput(['readonly' => !$model->isNewRecord]) ?>
     <?= $form->field($model, 'raison_sociale')->textInput() ?>
     <?= $form->field($model, 'adresse_1')->textInput() ?>
     <?= $form->field($model, 'adresse_2')->textInput() ?>
@@ -20,19 +20,22 @@ use yii\widgets\ActiveForm;
   <div class="col-md-6">
     <?= $form->field($model, 'telephone')->textInput() ?>
     <?= $form->field($model, 'url')->textInput(['type' => 'url']) ?>
+
     <div class="form-group">
       <label class="control-label">Logo actuel</label>
-      <?php if ($model->logo): ?>
+      <?php if ($model->hasLogo()): ?>
         <div>
-          <img src="<?= Html::encode(Yii::$app->request->baseUrl . '/producteur/' . $model->logo) ?>"
-               style="max-height:80px; max-width:200px; border:1px solid #ddd; padding:4px">
-          <br><small class="text-muted"><?= Html::encode($model->logo) ?></small>
+          <img src="<?= Html::encode($model->getLogoUrl()) ?>"
+               style="max-height:80px; max-width:200px; border:1px solid #ddd; padding:4px; display:block; margin-bottom:6px">
+          <small class="text-muted"><?= Html::encode($model->getLogoFilename()) ?></small>
         </div>
       <?php else: ?>
         <p class="text-muted">Aucun logo</p>
       <?php endif; ?>
     </div>
-    <?= $form->field($model, 'logoFile')->fileInput(['accept' => 'image/*'])->label('Nouveau logo') ?>
+
+    <?= $form->field($model, 'logoFile')->fileInput(['accept' => 'image/*'])->label('Nouveau logo (PNG/JPG)') ?>
+    <p class="help-block">Le fichier sera enregistré sous <code><?= Html::encode($model->syndic_object_id . '.png') ?></code>.</p>
   </div>
 </div>
 

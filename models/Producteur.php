@@ -29,6 +29,22 @@ class Producteur extends ActiveRecord
             [['source_group_id'], 'integer'],
             [['is_active'], 'boolean'],
             [['extraction_date', 'deleted_at', 'created_at', 'updated_at'], 'safe'],
+            [['logoFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png,jpg,jpeg,gif,svg,webp'],
         ];
+    }
+
+    public function getLogoFilename(): string
+    {
+        return $this->syndic_object_id . '.png';
+    }
+
+    public function hasLogo(): bool
+    {
+        return file_exists(\Yii::getAlias('@webroot/producteur/') . $this->getLogoFilename());
+    }
+
+    public function getLogoUrl(): string
+    {
+        return \Yii::$app->request->baseUrl . '/producteur/' . $this->getLogoFilename();
     }
 }
