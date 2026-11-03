@@ -7,10 +7,13 @@ use yii\data\ActiveDataProvider;
 
 class ProducteurSearch extends Producteur
 {
+    public bool $onlyUsed = false;
+
     public function rules(): array
     {
         return [
             [['syndic_object_id', 'raison_sociale', 'commune'], 'safe'],
+            [['onlyUsed'], 'boolean'],
         ];
     }
 
@@ -32,6 +35,12 @@ class ProducteurSearch extends Producteur
 
         if (!$this->validate()) {
             return $dataProvider;
+        }
+
+        if ($this->onlyUsed) {
+            $query->andWhere(['in', 'syndic_object_id',
+                (new \yii\db\Query())->select('auteur')->from('fr')->distinct()
+            ]);
         }
 
         $query->andFilterWhere(['like', 'syndic_object_id', $this->syndic_object_id])
