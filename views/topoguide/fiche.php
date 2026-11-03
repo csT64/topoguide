@@ -28,7 +28,10 @@ $balisage    = (string)($model->balisage_fichier ?? '');
 $homologue   = !empty($model->homologue_ffr);
 $photos      = $model->getPhotos();
 $etapes      = $model->getEtapes();
-$poi         = $model->getPoi();
+$poi         = array_values(array_filter(
+    $model->getPoi(),
+    fn($p) => is_array($p) ? (!empty($p['nom']) || !empty($p['descriptif'])) : !empty(trim((string)$p))
+));
 $equipements = $model->getEquipements();
 $attentions  = $model->getAttentions();
 
@@ -657,7 +660,7 @@ $renderFooter = function() use ($producteur, $pi): void {
           <?php
           if (is_array($e)) {
               $step  = (int)($e['ordre'] ?? $e['Ordre'] ?? $i + 1);
-              $eNom  = (string)($e['nom_etape']  ?? $e['NomEtape']  ?? '');
+              $eNom  = (string)($e['nom_etape']  ?? $e['NomEtape']  ?? $e['etapes']['thes_libelle'] ?? '');
               $eDesc = (string)($e['descriptif'] ?? $e['Descriptif'] ?? '');
           } else {
               $step = $i + 1; $eNom = (string)$e; $eDesc = '';
