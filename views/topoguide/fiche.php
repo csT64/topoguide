@@ -712,7 +712,16 @@ $renderFooter = function() use ($producteur, $pi): void {
         <?= Html::encode($sl['equip']) ?></h2>
       <ul class="bullet-list">
         <?php foreach ($equipements as $eq): ?>
-          <?php $nom = is_array($eq) ? ($eq['nom'] ?? $eq['Nom'] ?? '') : (string)$eq;
+          <?php
+          if (!is_array($eq)) { $nom = trim((string)$eq); }
+          else {
+              $nom = trim($eq['nom'] ?? $eq['Nom'] ?? '');
+              if (!$nom) {
+                  foreach ($eq as $val) {
+                      if (is_array($val) && !empty($val['thes_libelle'])) { $nom = trim($val['thes_libelle']); break; }
+                  }
+              }
+          }
           if (!$nom) continue; ?>
           <li><?= Html::encode($nom) ?></li>
         <?php endforeach; ?>
@@ -724,16 +733,24 @@ $renderFooter = function() use ($producteur, $pi): void {
     <?php if (!empty($attentions)): ?>
     <section aria-labelledby="sec-attention">
       <h2 id="sec-attention">
-            <?php if ($pi['alerte']): ?>
+        <?php if ($pi['alerte']): ?>
           <span class="puce-etoile"><img src="<?= $pi['poi'] ?>" alt="" height="32"></span>
-      <?php endif; ?>
-      <?= Html::encode($sl['warn']) ?></h2>
-      
+        <?php endif; ?>
+        <?= Html::encode($sl['warn']) ?></h2>
       <ul class="bullet-list">
         <?php foreach ($attentions as $a): ?>
-          <?php $desc = is_array($a) ? ($a['descriptif'] ?? $a['Descriptif'] ?? '') : (string)$a;
+          <?php
+          if (!is_array($a)) { $desc = trim((string)$a); }
+          else {
+              $desc = trim($a['descriptif'] ?? $a['Descriptif'] ?? $a['nom'] ?? $a['Nom'] ?? '');
+              if (!$desc) {
+                  foreach ($a as $val) {
+                      if (is_array($val) && !empty($val['thes_libelle'])) { $desc = trim($val['thes_libelle']); break; }
+                  }
+              }
+          }
           if (!$desc) continue; ?>
-          <li><?= Html::encode(trim($desc)) ?></li>
+          <li><?= Html::encode($desc) ?></li>
         <?php endforeach; ?>
       </ul>
     </section>
