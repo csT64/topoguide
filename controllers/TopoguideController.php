@@ -9,6 +9,8 @@ use yii\web\Response;
 use app\models\Itineraire;
 use app\components\pdf\TopoguideServiceWeasy;
 use app\components\pdf\TopoguideServicePrince;
+use app\components\cache\TopoguideCacheService;
+use app\components\map\StaticMapService;
 
 class TopoguideController extends Controller
 {
@@ -28,6 +30,78 @@ class TopoguideController extends Controller
         if (!in_array($lang, ['fr', 'en', 'es'], true)) {
             throw new NotFoundHttpException("Langue invalide : $lang");
         }
+    }
+
+    // ── Lazy cache : PDF et HTML accessibles ─────────────────────────────────
+    // GET /topoguide/{lang}/{id}.pdf   → format=pdf
+    // GET /topoguide/{lang}/{id}.html  → format=html
+
+    public function actionServe(string $lang, string $id, string $format = 'pdf'): void
+    {
+        $this->validateLang($lang);
+        if (!in_array($format, ['pdf', 'html'], true)) {
+            throw new NotFoundHttpException("Format invalide : $format");
+        }
+
+        Yii::$app->language = $lang;
+        $iti   = $this->loadItineraire($id);
+        $cache = new TopoguideCacheService();
+
+        // Identifiant stable TourInSoft pour nommer les fichiers cache
+        $cacheId = $iti->syndic_object_id ?: $iti->id;
+
+        // Vérification 1 — fiche inactive ou supprimée (indépendant de updated_at)
+        if (!$iti->is_active || $iti->deleted_at !== null) {
+            $cache->purge($lang, $cacheId);
+            throw new NotFoundHttpException("Cette fiche n'est plus disponible.");
+        }
+
+        // Vérification 2 — fraîcheur du cache (indépendante de is_active/deleted_at)
+        $meta       = $cache->readMeta($lang, $cacheId);
+        $needsRegen = ($meta === null)
+            || !$cache->hasFile($lang, $cacheId, $format)
+            || $cache->isCacheStale($meta, $iti->updated_at);
+
+        if ($needsRegen) {
+            $itiFr = $lang !== 'fr' ? Itineraire::findFr($id) : null;
+
+            // Carte statique requise pour le PDF
+            if (!$iti->hasCarteCache()) {
+                (new StaticMapService())->generate($iti);
+            }
+
+            $engine = Yii::$app->params['pdfEngine'] ?? 'weasyprint';
+            $svc = $engine === 'prince'
+                ? new TopoguideServicePrince($iti, $lang, $itiFr)
+                : new TopoguideServiceWeasy($iti, $lang, $itiFr);
+
+            if ($format === 'pdf') {
+                $content = $svc->generateToString();
+            } else {
+                $content = $svc->renderHtml(false);
+            }
+
+            $cache->writeFile($lang, $cacheId, $format, $content);
+            // Méta commune aux deux formats — écrite après chaque regénération
+            $cache->writeMeta($lang, $cacheId, $iti->updated_at ?? date('Y-m-d H:i:s'));
+        }
+
+        $content = $cache->readFile($lang, $cacheId, $format);
+
+        Yii::$app->response->format = Response::FORMAT_RAW;
+
+        if ($format === 'pdf') {
+            $slug = preg_replace('/[^a-zA-Z0-9_-]/', '_', $iti->getTitle());
+            Yii::$app->response->headers->set('Content-Type', 'application/pdf');
+            Yii::$app->response->headers->set('Content-Disposition', 'inline; filename="topoguide_' . $slug . '.pdf"');
+        } else {
+            Yii::$app->response->headers->set('Content-Type', 'text/html; charset=utf-8');
+        }
+
+        Yii::$app->response->headers->set('Content-Length', (string)strlen($content));
+        Yii::$app->response->content = $content;
+        Yii::$app->response->send();
+        Yii::$app->end();
     }
 
     // ── Page HTML publique ────────────────────────────────────────────────────

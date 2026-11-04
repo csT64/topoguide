@@ -21,6 +21,11 @@ class TopoguideServiceWeasy
         $this->sendPdf($pdf);
     }
 
+    public function generateToString(): string
+    {
+        return $this->convertToPdf($this->renderHtml());
+    }
+
     public function renderHtml(bool $forPdf = true): string
     {
         $view = new View();

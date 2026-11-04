@@ -67,8 +67,17 @@ $config = [
                 // Carte statique JPG
                 'topoguide/carte/<id:[A-Z0-9]+>' => 'topoguide/carte',
 
-                // PDF public (moteur selon params.php)
-                'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf' => 'topoguide/pdf',
+                // PDF et HTML accessibles — cache lazy (moteur selon params.php)
+                [
+                    'pattern' => 'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf',
+                    'route'   => 'topoguide/serve',
+                    'defaults' => ['format' => 'pdf'],
+                ],
+                [
+                    'pattern' => 'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.html',
+                    'route'   => 'topoguide/serve',
+                    'defaults' => ['format' => 'html'],
+                ],
 
                 // PDF explicitement par moteur
                 'topoguide/<lang:[a-z]{2}>/<id:[A-Z0-9]+>.pdf-weasy'  => 'topoguide/pdf-weasy',
