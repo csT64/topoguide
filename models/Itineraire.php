@@ -94,7 +94,14 @@ class Itineraire extends ActiveRecord
 
     public function getDureeVal(): string
     {
-        return trim($this->duree ?? '');
+        $raw = trim($this->duree ?? '');
+        if (!$raw) return '';
+        $arr = json_decode($raw, true);
+        if (is_array($arr)) {
+            $items = array_values(array_unique(array_filter(array_map('trim', $arr))));
+            return implode(' / ', $items);
+        }
+        return $raw;
     }
 
     public function getBoucleVal(): string

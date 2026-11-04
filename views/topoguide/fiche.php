@@ -301,10 +301,12 @@ figcaption { font-size: 8pt; color: #666; margin-top: 1mm; }
 /* ── Sections ─────────────────────────────────────── */
 section { margin-top: 5mm; }
 h2 { font-size: 14pt; color: #1f5468; font-weight: bold; padding-bottom: 2mm; margin-bottom: 3mm; }
+#sec-poi, #sec-etapes, #sec-equip { font-size: 24pt; color: #222; }
 
 /* ── POI ──────────────────────────────────────────── */
 .poi-list { list-style: none; padding: 0; margin: 0; }
-.poi-list li { margin-bottom: 2mm; }
+.poi-list li { margin-bottom: 2mm; padding-left: 4mm; position: relative; }
+.poi-list li::before { content: "•"; position: absolute; left: 0; color: #555; font-size: 14pt; line-height: 1.2; }
 .poi-nom { color: #1f5468; font-weight: bold; }
 
 /* ── Étapes ───────────────────────────────────────── */
@@ -438,7 +440,7 @@ $renderFooter = function() use ($producteur, $pi): void {
         <?= Html::encode(trim($producteur->code_postal . ' ' . $producteur->commune)) ?> - 
       <?php endif; ?>
       <?php if ($producteur->telephone): ?>
-        <a href="tel:<?= Html::encode($producteur->telephone) ?>"><?= Html::encode($producteur->telephone) ?></a><br>
+        <a href="tel:<?= Html::encode($producteur->telephone) ?>"><?= Html::encode($producteur->telephone) ?></a><?php if ($producteur->url): ?> — <?php endif; ?>
       <?php endif; ?>
       <?php if ($producteur->url): ?>
         <a href="<?= Html::encode($producteur->url) ?>"><?= Html::encode($producteur->url) ?></a>
@@ -703,7 +705,11 @@ $renderFooter = function() use ($producteur, $pi): void {
     <!-- Équipements ─────────────────────────────────── -->
     <?php if (!empty($equipements)): ?>
     <section aria-labelledby="sec-equip">
-      <h2 id="sec-equip"><?= Html::encode($sl['equip']) ?></h2>
+      <h2 id="sec-equip">
+        <?php if ($pi['alerte']): ?>
+          <span class="puce-etoile"><img src="<?= $pi['poi'] ?>" alt="" height="32"></span>
+        <?php endif; ?>
+        <?= Html::encode($sl['equip']) ?></h2>
       <ul class="bullet-list">
         <?php foreach ($equipements as $eq): ?>
           <?php $nom = is_array($eq) ? ($eq['nom'] ?? $eq['Nom'] ?? '') : (string)$eq;
