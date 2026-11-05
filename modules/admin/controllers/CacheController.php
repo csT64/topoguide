@@ -9,7 +9,6 @@ use app\models\Itineraire;
 
 class CacheController extends Controller
 {
-    public $layout = '@app/modules/admin/views/layouts/admin';
 
     public function actionIndex(): string
     {

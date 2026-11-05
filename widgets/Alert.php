@@ -3,70 +3,44 @@
 namespace app\widgets;
 
 use Yii;
+use yii\bootstrap5\Alert as BootstrapAlert;
+use yii\bootstrap5\Widget;
 
 /**
- * Alert widget renders a message from session flash. All flash messages are displayed
- * in the sequence they were assigned using setFlash. You can set message as following:
- *
- * ```php
- * Yii::$app->session->setFlash('error', 'This is the message');
- * Yii::$app->session->setFlash('success', 'This is the message');
- * Yii::$app->session->setFlash('info', 'This is the message');
- * ```
- *
- * Multiple messages could be set as follows:
- *
- * ```php
- * Yii::$app->session->setFlash('error', ['Error 1', 'Error 2']);
- * ```
- *
- * @author Kartik Visweswaran <kartikv2@gmail.com>
- * @author Alexander Makarov <sam@rmcreative.ru>
+ * Affiche les messages flash de session (setFlash('success'|'danger'|'warning'|'info'|'error', ...)).
+ * Charte graphique Tourisme 64 : role="alert" pour erreurs et avertissements, role="status" sinon.
  */
-class Alert extends \yii\bootstrap5\Widget
+class Alert extends Widget
 {
-    /**
-     * @var array the alert types configuration for the flash messages.
-     * This array is setup as $key => $value, where:
-     * - key: the name of the session flash variable
-     * - value: the bootstrap alert type (i.e. danger, success, info, warning)
-     */
+    /** @var array type de flash => classe d'alerte Bootstrap */
     public $alertTypes = [
-        'error'   => 'alert-danger',
-        'danger'  => 'alert-danger',
+        'error' => 'alert-danger',
+        'danger' => 'alert-danger',
         'success' => 'alert-success',
-        'info'    => 'alert-info',
-        'warning' => 'alert-warning'
+        'info' => 'alert-info',
+        'warning' => 'alert-warning',
     ];
-    /**
-     * @var array the options for rendering the close button tag.
-     * Array will be passed to [[\yii\bootstrap\Alert::closeButton]].
-     */
-    public $closeButton = [];
 
-
-    /**
-     * {@inheritdoc}
-     */
     public function run()
     {
         $session = Yii::$app->session;
-        $appendClass = isset($this->options['class']) ? ' ' . $this->options['class'] : '';
+        if (!$session->getIsActive() && !$session->getHasSessionId()) {
+            return;
+        }
 
         foreach (array_keys($this->alertTypes) as $type) {
-            $flash = $session->getFlash($type);
-
-            foreach ((array) $flash as $i => $message) {
-                echo \yii\bootstrap5\Alert::widget([
+            foreach ((array) $session->getFlash($type) as $i => $message) {
+                echo BootstrapAlert::widget([
                     'body' => $message,
-                    'closeButton' => $this->closeButton,
                     'options' => array_merge($this->options, [
                         'id' => $this->getId() . '-' . $type . '-' . $i,
-                        'class' => $this->alertTypes[$type] . $appendClass,
+                        'class' => $this->alertTypes[$type],
+                        // Message de statut (RGAA 7.5) : erreurs et avertissements annoncés tout de suite,
+                        // succès et informations annoncés sans interrompre
+                        'role' => in_array($type, ['error', 'danger', 'warning'], true) ? 'alert' : 'status',
                     ]),
                 ]);
             }
-
             $session->removeFlash($type);
         }
     }

@@ -8,7 +8,6 @@ use yii\web\Response;
 
 class LogController extends Controller
 {
-    public $layout = '@app/modules/admin/views/layouts/admin';
 
     public function actionIndex(): string
     {

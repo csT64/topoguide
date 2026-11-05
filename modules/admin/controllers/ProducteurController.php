@@ -12,7 +12,6 @@ use app\models\ProducteurSearch;
 
 class ProducteurController extends Controller
 {
-    public $layout = '@app/modules/admin/views/layouts/admin';
 
     public function actionIndex(): string
     {

@@ -1,32 +1,35 @@
 <?php
 
-/**
- * @link https://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
- */
-
 namespace app\assets;
 
+use yii\bootstrap5\BootstrapAsset;
+use yii\bootstrap5\BootstrapPluginAsset;
 use yii\web\AssetBundle;
+use yii\web\View;
+use yii\web\YiiAsset;
 
 /**
- * Main application asset bundle.
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
+ * Feuilles de style et scripts de la charte graphique Tourisme 64.
+ * Ordre imposé : Bootstrap (dépendance), tokens.css, composants.css, puis site.css (propre à l'appli).
  */
 class AppAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/site.css',
+        'css/tokens.css',      // jetons et remap Bootstrap — commun, ne pas modifier
+        'css/composants.css',  // composants communs — ne pas modifier
+        'css/site.css',        // styles propres à l'application
     ];
     public $js = [
+        'js/color-mode.js',
+    ];
+    public $jsOptions = [
+        'position' => View::POS_HEAD,
     ];
     public $depends = [
-        'yii\web\YiiAsset',
-        'yii\bootstrap5\BootstrapAsset'
+        YiiAsset::class,
+        BootstrapAsset::class,
+        BootstrapPluginAsset::class,
     ];
 }

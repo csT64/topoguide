@@ -8,7 +8,6 @@ use app\models\QualiteService;
 
 class QualiteController extends Controller
 {
-    public $layout = '@app/modules/admin/views/layouts/admin';
 
     public function actionIndex(): string
     {

@@ -11,8 +11,6 @@ use app\models\LoginForm;
 
 class DefaultController extends Controller
 {
-    public $layout = '@app/modules/admin/views/layouts/admin';
-
     public function behaviors(): array
     {
         return [

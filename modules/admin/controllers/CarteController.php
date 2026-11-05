@@ -10,7 +10,6 @@ use app\models\Itineraire;
 
 class CarteController extends Controller
 {
-    public $layout = '@app/modules/admin/views/layouts/admin';
 
     public function actionIndex(): string
     {

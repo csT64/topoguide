@@ -1,4 +1,6 @@
 <?php
+
+use app\helpers\Icon;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -7,211 +9,179 @@ use yii\helpers\Url;
 /** @var string $generatedAt */
 
 $this->title = 'Qualité des données';
+$this->params['breadcrumbs'][] = $this->title;
 
-$severityColor = [
-    'error'   => 'danger',
-    'warning' => 'warning',
-    'info'    => 'info',
-];
+// Comptage global
+$nbErrors = 0;
+$nbWarnings = 0;
+foreach ($sections as $s) {
+    foreach ($s['checks'] as $c) {
+        if ($c['count'] > 0) {
+            if ($c['severity'] === 'error')   $nbErrors++;
+            if ($c['severity'] === 'warning') $nbWarnings++;
+        }
+    }
+}
 
-/**
- * Retourne la classe Bootstrap d'une ligne selon le résultat.
- */
-$rowClass = function(array $check) use ($severityColor): string {
-    if ($check['count'] === 0) return 'success';
-    return $severityColor[$check['severity']] ?? 'active';
-};
-
-/**
- * Retourne une icône texte selon le résultat.
- */
-$icon = function(array $check): string {
-    if ($check['count'] === 0) return '✔';
+/** Retourne la variante pill en fonction de la sévérité et du résultat. */
+$pillVariant = function(array $check): string {
+    if ($check['count'] === 0) return 'pill-ok';
     return match($check['severity']) {
-        'error'   => '✖',
-        'warning' => '⚠',
-        default   => '·',
+        'error'   => 'pill-danger',
+        'warning' => 'pill-warn',
+        default   => 'pill-neutral',
     };
 };
 
-/**
- * Retourne les liens des ID échantillon.
- * Pour la table producteur, on lie vers /admin/producteur.
- * Pour fr/en/es, on lie vers la vue admin itineraire.
- */
+/** Liens vers les fiches admin pour les ID d'échantillon. */
 $sampleLinks = function(array $check): string {
     if (empty($check['sample'])) return '';
     $links = [];
     foreach ($check['sample'] as $id) {
-        // Producteurs : syndic_object_id (commence par ORGAQU)
         if (str_starts_with((string)$id, 'ORGAQU') || str_starts_with((string)$id, 'ORG')) {
-            $links[] = Html::a(
-                Html::encode($id),
-                Url::to(['/admin/producteur/view', 'id' => $id]),
-                ['target' => '_blank', 'title' => 'Voir le producteur']
-            );
+            $links[] = Html::a(Html::encode($id), Url::to(['/admin/producteur/view', 'id' => $id]), ['target' => '_blank', 'title' => 'Voir le producteur']);
         } else {
-            $links[] = Html::a(
-                Html::encode($id),
-                Url::to(['/admin/itineraire/view', 'id' => $id, 'lang' => 'fr']),
-                ['target' => '_blank', 'title' => 'Voir la fiche admin']
-            );
+            $links[] = Html::a(Html::encode($id), Url::to(['/admin/itineraire/view', 'id' => $id, 'lang' => 'fr']), ['target' => '_blank', 'title' => 'Voir la fiche admin']);
         }
     }
     return implode(' ', $links);
 };
+
+$pctEn = $overview['pctEn'];
+$pctEs = $overview['pctEs'];
 ?>
-
-<div style="display:flex; align-items:baseline; gap:16px; margin-bottom:10px;">
-  <h2 style="margin:0"><?= Html::encode($this->title) ?></h2>
-  <small class="text-muted">Généré le <?= Html::encode($generatedAt) ?></small>
-  <?= Html::a('&#8635; Actualiser', ['index'], ['class' => 'btn btn-default btn-xs']) ?>
-</div>
-
-<!-- ── Vue globale ─────────────────────────────────────────────────── -->
-<div class="row" style="margin-bottom:10px;">
-
-  <div class="col-md-2 col-sm-4">
-    <div class="panel panel-primary" style="margin-bottom:8px;">
-      <div class="panel-heading" style="padding:6px 10px;">Fiches FR</div>
-      <div class="panel-body text-center" style="padding:8px;">
-        <h3 style="margin:0;"><?= $overview['totalFr'] ?></h3>
-        <small class="text-muted"><?= $overview['activeFr'] ?> actives</small>
-      </div>
+<div class="qualite-index">
+    <div class="page-header">
+        <div>
+            <h1><?= Html::encode($this->title) ?></h1>
+            <p class="page-header-sub">Généré le <?= Html::encode($generatedAt) ?></p>
+        </div>
+        <div class="page-header-actions">
+            <?= Html::a(Icon::svg('refresh') . ' Actualiser', ['index'], ['class' => 'btn btn-outline-secondary']) ?>
+        </div>
     </div>
-  </div>
 
-  <div class="col-md-2 col-sm-4">
-    <?php $colorEn = $overview['pctEn'] >= 90 ? 'success' : ($overview['pctEn'] >= 50 ? 'warning' : 'danger'); ?>
-    <div class="panel panel-<?= $colorEn ?>" style="margin-bottom:8px;">
-      <div class="panel-heading" style="padding:6px 10px;">Fiches EN</div>
-      <div class="panel-body text-center" style="padding:8px;">
-        <h3 style="margin:0;"><?= $overview['totalEn'] ?></h3>
-        <small><?= $overview['pctEn'] ?>% de couverture</small>
-      </div>
+    <!-- Vue globale -->
+    <h2 class="visually-hidden">Chiffres clés</h2>
+    <div class="stat-cards mb-4">
+        <div class="stat-card">
+            <div class="stat-card-icon"><?= Icon::svg('files', ['class' => 'ic-lg']) ?></div>
+            <h3>Fiches FR</h3>
+            <p class="kpi"><?= $overview['totalFr'] ?></p>
+            <p class="stat-card-sub mb-0"><?= $overview['activeFr'] ?> actives</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-icon"><?= Icon::svg('files', ['class' => 'ic-lg']) ?></div>
+            <h3>Fiches EN</h3>
+            <p class="kpi"><?= $overview['totalEn'] ?></p>
+            <div class="bar mb-1"><span style="width:<?= $pctEn ?>%"></span></div>
+            <p class="stat-card-sub mb-0">
+                <span class="pill <?= $pctEn >= 90 ? 'pill-ok' : ($pctEn >= 50 ? 'pill-warn' : 'pill-danger') ?>">
+                    <span class="pill-dot"></span><?= $pctEn ?>% couverture
+                </span>
+            </p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-icon"><?= Icon::svg('files', ['class' => 'ic-lg']) ?></div>
+            <h3>Fiches ES</h3>
+            <p class="kpi"><?= $overview['totalEs'] ?></p>
+            <div class="bar mb-1"><span style="width:<?= $pctEs ?>%"></span></div>
+            <p class="stat-card-sub mb-0">
+                <span class="pill <?= $pctEs >= 90 ? 'pill-ok' : ($pctEs >= 50 ? 'pill-warn' : 'pill-danger') ?>">
+                    <span class="pill-dot"></span><?= $pctEs ?>% couverture
+                </span>
+            </p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-icon"><?= Icon::svg('building-community', ['class' => 'ic-lg']) ?></div>
+            <h3>Producteurs</h3>
+            <p class="kpi"><?= $overview['totalProd'] ?></p>
+            <p class="stat-card-sub mb-0"><?= $overview['prodRef'] ?> référencés dans les fiches</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-icon"><?= Icon::svg('list-check', ['class' => 'ic-lg']) ?></div>
+            <h3>Score global</h3>
+            <p class="kpi"><?= $nbErrors + $nbWarnings ?></p>
+            <p class="stat-card-sub mb-0">
+                <?php if ($nbErrors === 0 && $nbWarnings === 0): ?>
+                    <span class="pill pill-ok"><span class="pill-dot"></span>Tout est OK</span>
+                <?php elseif ($nbErrors > 0): ?>
+                    <span class="pill pill-danger"><span class="pill-dot"></span><?= $nbErrors ?> erreur(s)</span>
+                    <?php if ($nbWarnings > 0): ?>
+                        <span class="pill pill-warn ms-1"><span class="pill-dot"></span><?= $nbWarnings ?> alerte(s)</span>
+                    <?php endif ?>
+                <?php else: ?>
+                    <span class="pill pill-warn"><span class="pill-dot"></span><?= $nbWarnings ?> alerte(s)</span>
+                <?php endif ?>
+            </p>
+        </div>
     </div>
-  </div>
 
-  <div class="col-md-2 col-sm-4">
-    <?php $colorEs = $overview['pctEs'] >= 90 ? 'success' : ($overview['pctEs'] >= 50 ? 'warning' : 'danger'); ?>
-    <div class="panel panel-<?= $colorEs ?>" style="margin-bottom:8px;">
-      <div class="panel-heading" style="padding:6px 10px;">Fiches ES</div>
-      <div class="panel-body text-center" style="padding:8px;">
-        <h3 style="margin:0;"><?= $overview['totalEs'] ?></h3>
-        <small><?= $overview['pctEs'] ?>% de couverture</small>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-3 col-sm-6">
-    <div class="panel panel-default" style="margin-bottom:8px;">
-      <div class="panel-heading" style="padding:6px 10px;">Producteurs</div>
-      <div class="panel-body text-center" style="padding:8px;">
-        <h3 style="margin:0;"><?= $overview['totalProd'] ?></h3>
-        <small class="text-muted"><?= $overview['prodRef'] ?> référencés dans les fiches</small>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-3 col-sm-6">
-    <?php
-    // Score global : nb de checks en erreur
-    $nbErrors = 0; $nbWarnings = 0;
-    foreach ($sections as $s) {
-        foreach ($s['checks'] as $c) {
-            if ($c['count'] > 0) {
-                if ($c['severity'] === 'error')   $nbErrors++;
-                if ($c['severity'] === 'warning')  $nbWarnings++;
-            }
-        }
-    }
-    $scoreColor = $nbErrors > 0 ? 'danger' : ($nbWarnings > 0 ? 'warning' : 'success');
-    $scoreLabel = $nbErrors > 0 ? "$nbErrors erreur(s), $nbWarnings alerte(s)" : ($nbWarnings > 0 ? "$nbWarnings alerte(s)" : 'Tout est OK');
-    ?>
-    <div class="panel panel-<?= $scoreColor ?>" style="margin-bottom:8px;">
-      <div class="panel-heading" style="padding:6px 10px;">Score global</div>
-      <div class="panel-body text-center" style="padding:8px;">
-        <h3 style="margin:0;"><?= $nbErrors + $nbWarnings ?></h3>
-        <small><?= Html::encode($scoreLabel) ?></small>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- ── Sections de vérification ────────────────────────────────────── -->
-<?php foreach ($sections as $section): ?>
-<div class="panel panel-default" style="margin-bottom:14px;">
-  <div class="panel-heading">
-    <h4 style="margin:0;"><?= Html::encode($section['icon'] ?? '') ?> <?= Html::encode($section['title']) ?></h4>
-  </div>
-  <div class="panel-body" style="padding:0;">
-    <table class="table table-condensed" style="margin:0;">
-      <thead>
-        <tr>
-          <th style="width:32px;"></th>
-          <th>Vérification</th>
-          <th style="width:90px; text-align:right;">Défauts</th>
-          <th style="width:200px;">Répartition</th>
-          <th>Exemples d'ID</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php foreach ($section['checks'] as $check): ?>
-        <?php $rc = $rowClass($check); ?>
-        <tr class="<?= $rc === 'success' ? '' : "warning-row-$rc" ?>" style="<?= $check['count'] > 0 ? "background-color: var(--row-bg-$rc, inherit);" : '' ?>">
-
-          <td style="text-align:center; font-size:15px; padding:6px 4px;
-            color:<?= match($rc) {
-              'danger'  => '#a94442',
-              'warning' => '#8a6d3b',
-              'info'    => '#31708f',
-              'success' => '#3c763d',
-              default   => '#555'
-            } ?>">
-            <?= $icon($check) ?>
-          </td>
-
-          <td style="padding:6px 8px;">
-            <?= Html::encode($check['label']) ?>
-            <?php if (!empty($check['note'])): ?>
-              <br><small class="text-muted"><?= Html::encode($check['note']) ?></small>
-            <?php endif; ?>
-          </td>
-
-          <td style="text-align:right; padding:6px 8px; font-weight:<?= $check['count'] > 0 ? 'bold' : 'normal' ?>; color:<?= $check['count'] > 0 ? ($rc === 'danger' ? '#a94442' : ($rc === 'warning' ? '#8a6d3b' : '#31708f')) : '#3c763d' ?>">
-            <?= $check['count'] > 0 ? $check['count'] . ' <small>(' . $check['pct'] . '%)</small>' : '—' ?>
-          </td>
-
-          <td style="padding:5px 8px; vertical-align:middle;">
-            <?php if ($check['count'] > 0 && $check['pct'] > 0): ?>
-            <div class="progress" style="margin:0; height:16px; background:#e8e8e8;">
-              <div class="progress-bar progress-bar-<?= $rc !== 'success' ? $rc : 'success' ?>"
-                   style="width:<?= max(3, $check['pct']) ?>%; min-width:3%; font-size:11px; line-height:16px;">
-                <?= $check['pct'] > 8 ? $check['pct'] . '%' : '' ?>
-              </div>
+    <!-- Sections de vérification -->
+    <?php foreach ($sections as $section): ?>
+        <section class="panel mb-4">
+            <h2 class="section-title">
+                <?= Icon::svg($section['icone'] ?? 'circle-check') ?>
+                <?= Html::encode($section['title']) ?>
+            </h2>
+            <div class="table-responsive">
+                <table class="table table-hover table-sm align-middle mb-0">
+                    <caption class="visually-hidden">Vérifications : <?= Html::encode($section['title']) ?></caption>
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width:120px">État</th>
+                            <th scope="col">Vérification</th>
+                            <th scope="col" style="width:100px" class="text-end">Défauts</th>
+                            <th scope="col" style="width:200px">Répartition</th>
+                            <th scope="col">Exemples</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($section['checks'] as $check): ?>
+                            <tr>
+                                <td>
+                                    <span class="pill <?= $pillVariant($check) ?>">
+                                        <span class="pill-dot"></span>
+                                        <?php if ($check['count'] === 0): ?>OK
+                                        <?php elseif ($check['severity'] === 'error'): ?>Erreur
+                                        <?php elseif ($check['severity'] === 'warning'): ?>Alerte
+                                        <?php else: ?>Info
+                                        <?php endif ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <?= Html::encode($check['label']) ?>
+                                    <?php if (!empty($check['note'])): ?>
+                                        <br><span class="texte-meta"><?= Html::encode($check['note']) ?></span>
+                                    <?php endif ?>
+                                </td>
+                                <td class="text-end fw-<?= $check['count'] > 0 ? 'semibold' : 'normal' ?>">
+                                    <?= $check['count'] > 0 ? $check['count'] . ' <small>(' . $check['pct'] . '%)</small>' : '—' ?>
+                                </td>
+                                <td>
+                                    <?php if ($check['count'] > 0 && $check['pct'] > 0): ?>
+                                        <div class="bar"><span style="width:<?= max(3, $check['pct']) ?>%"></span></div>
+                                    <?php else: ?>
+                                        <span class="texte-meta">Aucun défaut</span>
+                                    <?php endif ?>
+                                </td>
+                                <td class="small">
+                                    <?= $sampleLinks($check) ?>
+                                    <?php if ($check['count'] > 5): ?>
+                                        <span class="text-body-secondary">… +<?= $check['count'] - 5 ?></span>
+                                    <?php endif ?>
+                                </td>
+                            </tr>
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
             </div>
-            <?php else: ?>
-            <span class="text-success" style="font-size:12px;">Aucun défaut</span>
-            <?php endif; ?>
-          </td>
+        </section>
+    <?php endforeach ?>
 
-          <td style="padding:6px 8px; font-size:12px; color:#555;">
-            <?= $sampleLinks($check) ?>
-            <?php if ($check['count'] > 5): ?>
-              <span class="text-muted">… +<?= $check['count'] - 5 ?></span>
-            <?php endif; ?>
-          </td>
-
-        </tr>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
-  </div>
+    <p class="texte-meta">Les liens ouvrent la fiche admin dans un nouvel onglet.</p>
 </div>
-<?php endforeach; ?>
-
-<p class="text-muted" style="font-size:12px; margin-top:6px;">
-  ✖ Erreur critique &nbsp;|&nbsp; ⚠ Avertissement &nbsp;|&nbsp; · Information &nbsp;|&nbsp; ✔ OK
-  &nbsp;—&nbsp; Les liens ouvrent la fiche admin dans un nouvel onglet.
-</p>

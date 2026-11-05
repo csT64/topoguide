@@ -1,0 +1,330 @@
+/*
+ * Charte graphique des applications Yii « Tourisme 64 » — jetons de design (version 1.0).
+ *
+ * Référence : tourinsoft-client/docs/charte-graphique/CHARTE_GRAPHIQUE.md
+ * Origine : palette et typographies validées avec D. Saint-Pé (NSA-V2, §11.23, 2026-08-21),
+ * reprises dans NSA_LABELS_V3 ; contrastes revus le 2026-11-04 (RGAA 3.2 et 3.3).
+ *
+ * NE PAS MODIFIER dans une application : ce fichier est commun à toutes. Une couleur propre
+ * à une appli se déclare dans son site.css, en jeton --app-*, et passe outils/contrastes.py.
+ *
+ * Principe : les variables Bootstrap 5.3 (--bs-*) sont redéfinies à partir des jetons
+ * --color-* ; les composants Bootstrap dont la couleur est compilée en dur (boutons,
+ * pagination, cases à cocher, menus) sont recâblés plus bas. Chaque valeur existe en thème
+ * clair et en thème sombre (data-bs-theme, posé par color-mode.js).
+ *
+ * Règles de contraste (vérifiées par outils/contrastes.py et outils/audit-contrastes.js) :
+ *  - texte : 4,5:1 minimum (3:1 pour le grand texte, ≥ 24 px ou ≥ 18,66 px gras) ;
+ *  - composants et pictogrammes porteurs d'information : 3:1 ;
+ *  - --color-accent (#FF3B3B) : pictos, bordures, graphiques, jamais de texte ;
+ *    tout texte ou bouton rouge utilise --color-accent-strong ;
+ *  - --color-highlight (jaune) : jamais en couleur de texte ; texte posé dessus : #212121
+ *    dans les deux thèmes.
+ */
+
+/* ---------- Polices auto-hébergées (Inter + Plus Jakarta Sans, sous-ensemble latin)
+   — pas de CDN externe depuis un outil interne ADT64 (voir note RGPD de la proposition). */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/inter-latin-400.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('../fonts/inter-latin-500.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('../fonts/inter-latin-600.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../fonts/inter-latin-700.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('../fonts/plus-jakarta-sans-latin-600.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../fonts/plus-jakarta-sans-latin-700.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+    src: url('../fonts/plus-jakarta-sans-latin-800.woff2') format('woff2');
+}
+
+/* ---------- Jetons — thème clair (par défaut, et data-bs-theme="light" explicite) ---------- */
+:root,
+[data-bs-theme="light"] {
+    --color-ink: #212121;             /* texte principal, boutons principaux */
+    --color-paper: #ffffff;           /* fond de page et de carte ; texte sur aplat foncé */
+    --color-surface: #f7f5f3;         /* fond secondaire : barres de filtres, pied de page */
+    --color-surface-2: #efece9;       /* fond tertiaire : pastille neutre, piste de barre */
+    --color-muted: #6b6560;           /* texte secondaire (5,7:1 sur blanc) */
+    --color-border: #e2ddd8;          /* séparateurs et contours de cartes (décoratifs) */
+    --color-control-border: #857e78;  /* contour des champs et cases (3,4:1 au moins) */
+
+    --color-accent: #ff3b3b;          /* pictos, bordures, graphiques — jamais de texte */
+    --color-accent-strong: #c4272a;   /* texte, liens et boutons rouges (5,7:1 sur blanc) */
+    --color-accent-wash: #fdeceb;
+
+    --color-highlight: #ffda13;       /* toujours avec du texte #212121 dessus */
+    --color-highlight-wash: #fff9de;
+    --color-highlight-text: #7a6300;
+
+    --color-ok: #1e7a4c;
+    --color-ok-wash: #e8f5ee;
+
+    --color-focus: #1a5fb4;
+    --color-focus-rgb: 26, 95, 180;
+
+    /* Graphiques : une seule couleur de série (magnitude) ; carte de chaleur dérivée */
+    --viz-serie: #2a78d6;
+    --viz-serie-rgb: 42, 120, 214;
+    --heat-min: .08;
+    --heat-max: .85;                  /* au-delà, le texte #212121 passerait sous 4,5:1 */
+
+    --hover-mix: #000000;             /* survol des aplats : on assombrit en clair */
+
+    --font-display: 'Plus Jakarta Sans', Inter, system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+
+    --radius-card: 10px;
+    --shadow-card: 0 1px 2px rgba(33, 33, 33, .06), 0 4px 14px rgba(33, 33, 33, .06);
+}
+
+/* ---------- Jetons — thème sombre ---------- */
+[data-bs-theme="dark"] {
+    --color-ink: #f1efec;
+    --color-paper: #17181a;
+    --color-surface: #1f2022;
+    --color-surface-2: #28292b;
+    --color-muted: #a8a29b;
+    --color-border: #35363a;
+    --color-control-border: #807a74;
+
+    --color-accent: #ff5c5c;
+    --color-accent-strong: #ff8a8a;
+    --color-accent-wash: #3a1f1f;
+
+    --color-highlight: #ffda13;
+    --color-highlight-wash: #332c05;
+    --color-highlight-text: #ffe98a;
+
+    --color-ok: #3fbd82;
+    --color-ok-wash: #122a1e;
+
+    --color-focus: #6fa8ec;
+    --color-focus-rgb: 111, 168, 236;
+
+    --viz-serie: #3987e5;
+    --viz-serie-rgb: 57, 135, 229;
+    --heat-max: .75;
+
+    --hover-mix: #ffffff;             /* en sombre, les aplats sont clairs : on éclaircit */
+}
+
+/* ---------- Remap Bootstrap 5.3 : variables globales ---------- */
+:root,
+[data-bs-theme="light"],
+[data-bs-theme="dark"] {
+    --bs-body-font-family: var(--font-body);
+    --bs-body-color: var(--color-ink);
+    --bs-body-bg: var(--color-paper);
+    --bs-border-color: var(--color-border);
+    --bs-secondary-color: var(--color-muted);
+    --bs-emphasis-color: var(--color-ink);
+    --bs-secondary-bg: var(--color-surface-2);
+    --bs-tertiary-bg: var(--color-surface);
+    --bs-primary: var(--color-ink);
+    --bs-danger: var(--color-accent-strong);
+    --bs-warning: var(--color-highlight);
+    --bs-success: var(--color-ok);
+    --bs-link-color: var(--color-accent-strong);
+    --bs-link-hover-color: var(--color-ink);
+    --bs-focus-ring-color: rgba(var(--color-focus-rgb), .35);
+}
+/* Bootstrap lit aussi les couleurs en triplets RGB (liens, .text-*, .bg-*) : un triplet par thème */
+:root,
+[data-bs-theme="light"] {
+    --bs-body-color-rgb: 33, 33, 33;
+    --bs-body-bg-rgb: 255, 255, 255;
+    --bs-emphasis-color-rgb: 33, 33, 33;
+    --bs-secondary-bg-rgb: 239, 236, 233;
+    --bs-tertiary-bg-rgb: 247, 245, 243;
+    --bs-primary-rgb: 33, 33, 33;
+    --bs-danger-rgb: 196, 39, 42;
+    --bs-warning-rgb: 255, 218, 19;
+    --bs-success-rgb: 30, 122, 76;
+    --bs-link-color-rgb: 196, 39, 42;
+    --bs-link-hover-color-rgb: 33, 33, 33;
+}
+[data-bs-theme="dark"] {
+    --bs-body-color-rgb: 241, 239, 236;
+    --bs-body-bg-rgb: 23, 24, 26;
+    --bs-emphasis-color-rgb: 241, 239, 236;
+    --bs-secondary-bg-rgb: 40, 41, 43;
+    --bs-tertiary-bg-rgb: 31, 32, 34;
+    --bs-primary-rgb: 241, 239, 236;
+    --bs-danger-rgb: 255, 138, 138;
+    --bs-warning-rgb: 255, 218, 19;
+    --bs-success-rgb: 63, 189, 130;
+    --bs-link-color-rgb: 255, 138, 138;
+    --bs-link-hover-color-rgb: 241, 239, 236;
+}
+
+/* ---------- Boutons : couleurs compilées en dur par Bootstrap, recâblées sur les jetons ----------
+   Aplat : fond = jeton, texte = --color-paper (blanc en clair, quasi-noir en sombre).
+   Contour : texte et bordure = jeton, fond transparent ; au survol, aplat.
+   Survol/actif : jeton mélangé à --hover-mix (plus foncé en clair, plus clair en sombre),
+   ce qui augmente toujours le contraste avec le texte. */
+.btn-primary, .btn-outline-primary { --btn-jeton: var(--color-ink); }
+.btn-secondary, .btn-outline-secondary { --btn-jeton: var(--color-muted); }
+.btn-success, .btn-outline-success { --btn-jeton: var(--color-ok); }
+.btn-danger, .btn-outline-danger { --btn-jeton: var(--color-accent-strong); }
+
+.btn-primary, .btn-secondary, .btn-success, .btn-danger {
+    --bs-btn-color: var(--color-paper);
+    --bs-btn-bg: var(--btn-jeton);
+    --bs-btn-border-color: var(--btn-jeton);
+    --bs-btn-hover-color: var(--color-paper);
+    --bs-btn-hover-bg: color-mix(in srgb, var(--btn-jeton) 82%, var(--hover-mix));
+    --bs-btn-hover-border-color: var(--bs-btn-hover-bg);
+    --bs-btn-active-color: var(--color-paper);
+    --bs-btn-active-bg: color-mix(in srgb, var(--btn-jeton) 72%, var(--hover-mix));
+    --bs-btn-active-border-color: var(--bs-btn-active-bg);
+    --bs-btn-disabled-color: var(--color-paper);
+    --bs-btn-disabled-bg: var(--btn-jeton);
+    --bs-btn-disabled-border-color: var(--btn-jeton);
+    --bs-btn-focus-shadow-rgb: var(--color-focus-rgb);
+}
+.btn-outline-primary, .btn-outline-secondary, .btn-outline-success, .btn-outline-danger {
+    --bs-btn-color: var(--btn-jeton);
+    --bs-btn-border-color: var(--btn-jeton);
+    --bs-btn-hover-color: var(--color-paper);
+    --bs-btn-hover-bg: var(--btn-jeton);
+    --bs-btn-hover-border-color: var(--btn-jeton);
+    --bs-btn-active-color: var(--color-paper);
+    --bs-btn-active-bg: color-mix(in srgb, var(--btn-jeton) 82%, var(--hover-mix));
+    --bs-btn-active-border-color: var(--bs-btn-active-bg);
+    --bs-btn-disabled-color: var(--btn-jeton);
+    --bs-btn-disabled-border-color: var(--btn-jeton);
+    --bs-btn-focus-shadow-rgb: var(--color-focus-rgb);
+}
+/* Jaune : texte toujours #212121, dans les deux thèmes */
+.btn-warning {
+    --bs-btn-color: #212121;
+    --bs-btn-bg: var(--color-highlight);
+    --bs-btn-border-color: var(--color-highlight);
+    --bs-btn-hover-color: #212121;
+    --bs-btn-hover-bg: #f0cb00;
+    --bs-btn-hover-border-color: #f0cb00;
+    --bs-btn-active-color: #212121;
+    --bs-btn-active-bg: #e0bd00;
+    --bs-btn-active-border-color: #e0bd00;
+    --bs-btn-focus-shadow-rgb: var(--color-focus-rgb);
+}
+.btn-link { --bs-btn-focus-shadow-rgb: var(--color-focus-rgb); }
+
+/* ---------- Champs de formulaire : contour ≥ 3:1 (RGAA 3.3), focus visible ---------- */
+.form-control,
+.form-select,
+.form-check-input {
+    border-color: var(--color-control-border);
+}
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+    border-color: var(--color-focus);
+    box-shadow: 0 0 0 .25rem var(--bs-focus-ring-color);
+}
+.form-check-input:checked,
+.form-check-input[type="checkbox"]:indeterminate {
+    background-color: var(--color-ink);
+    border-color: var(--color-ink);
+}
+/* Coche et puce : blanches sur encre en clair, sombres sur encre claire en sombre */
+.form-check-input:checked[type="checkbox"] {
+    --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+}
+.form-check-input:checked[type="radio"] {
+    --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff'/%3e%3c/svg%3e");
+}
+[data-bs-theme="dark"] .form-check-input:checked[type="checkbox"] {
+    --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%2317181a' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+}
+[data-bs-theme="dark"] .form-check-input:checked[type="radio"] {
+    --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%2317181a'/%3e%3c/svg%3e");
+}
+
+/* ---------- Autres composants Bootstrap à couleur compilée ---------- */
+.pagination {
+    --bs-pagination-active-color: var(--color-paper);
+    --bs-pagination-active-bg: var(--color-ink);
+    --bs-pagination-active-border-color: var(--color-ink);
+    --bs-pagination-focus-box-shadow: 0 0 0 .25rem var(--bs-focus-ring-color);
+}
+.dropdown-menu {
+    --bs-dropdown-link-active-color: var(--color-paper);
+    --bs-dropdown-link-active-bg: var(--color-ink);
+}
+.nav-pills {
+    --bs-nav-pills-link-active-color: var(--color-paper);
+    --bs-nav-pills-link-active-bg: var(--color-ink);
+}
+.list-group {
+    --bs-list-group-active-color: var(--color-paper);
+    --bs-list-group-active-bg: var(--color-ink);
+    --bs-list-group-active-border-color: var(--color-ink);
+}
+.progress, .progress-stacked { --bs-progress-bar-bg: var(--color-ink); }
+
+/* ---------- Typographie ---------- */
+body { font-family: var(--font-body); }
+
+h1, h2, h3, .h1, .h2, .h3 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    text-wrap: balance;
+}
+h3, .h3 { font-weight: 700; }
+
+/* Chiffres clés (KPI) — Plus Jakarta Sans gras, chiffres alignés en colonne. */
+.kpi {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+}
+
+/* Anneau de focus visible partout (clavier) — RGAA 10.7. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+}

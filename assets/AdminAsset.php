@@ -2,17 +2,10 @@
 
 namespace app\assets;
 
-use yii\web\AssetBundle;
-
-class AdminAsset extends AssetBundle
+/**
+ * Alias de AppAsset (charte graphique Tourisme 64).
+ * Conservé pour compatibilité avec les vues qui l'enregistrent encore directement.
+ */
+class AdminAsset extends AppAsset
 {
-    public $css = [
-        'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
-    ];
-    public $js = [
-        'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
-    ];
-    public $depends = [
-        'yii\web\YiiAsset',
-    ];
 }

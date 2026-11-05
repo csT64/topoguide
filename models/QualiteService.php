@@ -57,8 +57,9 @@ class QualiteService
     private function sectionEssentiels(int $total): array
     {
         return [
-            'title' => 'Fiches FR — Champs essentiels',
-            'icon'  => '★',
+            'title'  => 'Fiches FR — Champs essentiels',
+            'icon'   => '★',
+            'icone'  => 'clipboard-check',
             'checks' => [
                 $this->frCheck('Titre manquant', 'error',
                     "(raison_sociale IS NULL OR raison_sociale = '') AND (titre_2 IS NULL OR titre_2 = '')", $total),
@@ -97,8 +98,9 @@ class QualiteService
         }
 
         return [
-            'title' => 'Fiches FR — Médias',
-            'icon'  => '◉',
+            'title'  => 'Fiches FR — Médias',
+            'icon'   => '◉',
+            'icone'  => 'download',
             'checks' => [
                 $this->frCheck('Photo absente', 'warning',
                     "photo IS NULL OR photo = ''", $total),
@@ -124,8 +126,9 @@ class QualiteService
     private function sectionContenu(int $total): array
     {
         return [
-            'title' => 'Fiches FR — Contenu détaillé',
-            'icon'  => '≡',
+            'title'  => 'Fiches FR — Contenu détaillé',
+            'icon'   => '≡',
+            'icone'  => 'list-search',
             'checks' => [
                 $this->frCheck('Étapes absentes', 'info',
                     "etapes IS NULL OR etapes = '' OR etapes = '[]'", $total),
@@ -192,8 +195,9 @@ class QualiteService
         }
 
         return [
-            'title' => 'Cohérence multilingue',
-            'icon'  => '⬡',
+            'title'  => 'Cohérence multilingue',
+            'icon'   => '⬡',
+            'icone'  => 'world',
             'checks' => $checks,
         ];
     }
@@ -214,8 +218,9 @@ class QualiteService
         $totalRef = count($refIds);
 
         return [
-            'title' => 'Producteurs',
-            'icon'  => '⌂',
+            'title'  => 'Producteurs',
+            'icon'   => '⌂',
+            'icone'  => 'building-community',
             'checks' => [
                 [
                     'label'    => 'Logo manquant (producteurs référencés dans les fiches)',
